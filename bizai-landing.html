@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BizAI — AI Tools for Small Businesses</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --lime: #C8F135;
+    --dark: #0D0E0A;
+    --card: #141510;
+    --border: rgba(200,241,53,0.15);
+    --text: #E8EAD8;
+    --muted: #6B6D5E;
+    --white: #F5F6EE;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(13,14,10,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 22px;
+    color: var(--lime);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+
+  .nav-logo span { color: var(--white); }
+
+  .nav-links {
+    display: flex; align-items: center; gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted); text-decoration: none;
+    font-size: 14px; font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .btn-nav {
+    background: var(--lime);
+    color: var(--dark) !important;
+    padding: 10px 22px !important;
+    border-radius: 8px;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    transition: all 0.2s !important;
+  }
+
+  .btn-nav:hover { opacity: 0.88 !important; transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 140px 24px 100px;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(200,241,53,0.12) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(200,241,53,0.08);
+    border: 1px solid rgba(200,241,53,0.25);
+    border-radius: 100px; padding: 7px 18px;
+    font-size: 12px; font-weight: 600; color: var(--lime);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 28px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .dot-pulse {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--lime);
+    animation: pulse 2s infinite;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(44px, 7vw, 88px);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+    color: var(--white);
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  h1 .accent { color: var(--lime); }
+
+  .hero-sub {
+    font-size: clamp(16px, 2vw, 20px);
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto 44px;
+    line-height: 1.65;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-cta {
+    display: flex; align-items: center; gap: 14px;
+    flex-wrap: wrap; justify-content: center;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--lime); color: var(--dark);
+    padding: 16px 32px; border-radius: 10px;
+    font-weight: 700; font-size: 15px;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-family: 'Instrument Sans', sans-serif;
+    cursor: pointer; border: none;
+  }
+
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-2px); box-shadow: 0 12px 40px rgba(200,241,53,0.25); }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; color: var(--text);
+    padding: 15px 28px; border-radius: 10px;
+    font-weight: 600; font-size: 15px;
+    text-decoration: none; border: 1px solid var(--border);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .btn-secondary:hover { border-color: rgba(200,241,53,0.4); color: var(--white); }
+
+  .hero-stats {
+    display: flex; gap: 48px; justify-content: center;
+    margin-top: 72px;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 32px; font-weight: 800;
+    color: var(--lime); display: block;
+  }
+  .stat-label { font-size: 12px; color: var(--muted); letter-spacing: 0.05em; }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    position: relative; z-index: 1;
+    overflow: hidden; padding: 20px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: rgba(200,241,53,0.03);
+  }
+
+  .marquee-track {
+    display: flex; gap: 48px;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+
+  .marquee-item {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 13px; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    flex-shrink: 0;
+  }
+
+  .marquee-item span { color: var(--lime); font-size: 16px; }
+
+  /* FEATURES */
+  section { position: relative; z-index: 1; }
+
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--lime);
+    margin-bottom: 14px;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 800; color: var(--white);
+    line-height: 1.1; letter-spacing: -0.03em;
+    margin-bottom: 18px;
+  }
+
+  .section-sub {
+    font-size: 17px; color: var(--muted);
+    max-width: 500px; line-height: 1.65;
+  }
+
+  .features {
+    padding: 100px 48px;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  .features-header {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 48px; align-items: end;
+    margin-bottom: 64px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .feature-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    transition: all 0.25s;
+    cursor: default;
+  }
+
+  .feature-card:hover {
+    border-color: rgba(200,241,53,0.35);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .feature-icon {
+    width: 48px; height: 48px;
+    background: rgba(200,241,53,0.1);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 18px;
+  }
+
+  .feature-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px; font-weight: 700;
+    color: var(--white); margin-bottom: 8px;
+  }
+
+  .feature-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  /* HOW IT WORKS */
+  .how {
+    padding: 100px 48px;
+    background: rgba(200,241,53,0.02);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .how-inner { max-width: 1200px; margin: 0 auto; }
+
+  .how-header { text-align: center; margin-bottom: 64px; }
+  .how-header .section-sub { margin: 0 auto; }
+
+  .steps {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+
+  .step {
+    text-align: center; padding: 40px 28px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    position: relative;
+    transition: all 0.25s;
+  }
+
+  .step:hover { border-color: rgba(200,241,53,0.3); }
+
+  .step-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 64px; font-weight: 800;
+    color: rgba(200,241,53,0.12);
+    line-height: 1; margin-bottom: 16px;
+  }
+
+  .step h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--white); margin-bottom: 10px;
+  }
+
+  .step p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+  /* PRICING */
+  .pricing {
+    padding: 100px 48px;
+    max-width: 1200px; margin: 0 auto;
+    text-align: center;
+  }
+
+  .pricing-header { margin-bottom: 56px; }
+  .pricing-header .section-sub { margin: 0 auto; }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px; max-width: 900px; margin: 0 auto;
+  }
+
+  .pricing-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px 28px;
+    text-align: left;
+    position: relative;
+    transition: all 0.25s;
+  }
+
+  .pricing-card:hover { transform: translateY(-4px); }
+
+  .pricing-card.featured {
+    border-color: var(--lime);
+    background: rgba(200,241,53,0.05);
+  }
+
+  .badge-popular {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--lime); color: var(--dark);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 4px 14px; border-radius: 100px;
+  }
+
+  .plan-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+
+  .plan-price {
+    font-family: 'Syne', sans-serif;
+    font-size: 48px; font-weight: 800; color: var(--white);
+    line-height: 1; margin-bottom: 4px;
+  }
+
+  .plan-price span { font-size: 20px; color: var(--muted); font-weight: 400; }
+
+  .plan-desc { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+  .plan-features { list-style: none; margin-bottom: 28px; }
+  .plan-features li {
+    font-size: 14px; color: var(--text);
+    padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .plan-features li::before { content: '✓'; color: var(--lime); font-weight: 700; }
+
+  .btn-plan {
+    display: block; width: 100%;
+    padding: 13px; border-radius: 10px;
+    font-weight: 700; font-size: 14px; text-align: center;
+    cursor: pointer; border: none; text-decoration: none;
+    transition: all 0.2s; font-family: inherit;
+  }
+
+  .btn-plan-outline {
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-plan-outline:hover { border-color: rgba(200,241,53,0.4); color: var(--white); }
+
+  .btn-plan-filled {
+    background: var(--lime); color: var(--dark);
+  }
+  .btn-plan-filled:hover { opacity: 0.88; }
+
+  /* TESTIMONIALS */
+  .testimonials {
+    padding: 100px 48px;
+    background: rgba(200,241,53,0.02);
+    border-top: 1px solid var(--border);
+  }
+
+  .test-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
+  .test-header { margin-bottom: 56px; }
+  .test-header .section-sub { margin: 0 auto; }
+
+  .test-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .test-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px;
+    text-align: left;
+    transition: all 0.25s;
+  }
+
+  .test-card:hover { border-color: rgba(200,241,53,0.25); }
+
+  .stars { color: var(--lime); font-size: 14px; margin-bottom: 14px; }
+
+  .test-quote {
+    font-size: 15px; color: var(--text); line-height: 1.65;
+    font-style: italic; margin-bottom: 20px;
+  }
+
+  .test-author {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    background: rgba(200,241,53,0.1);
+    border: 1px solid var(--border);
+  }
+
+  .author-name { font-weight: 600; font-size: 14px; color: var(--white); }
+  .author-role { font-size: 12px; color: var(--muted); }
+
+  /* CTA SECTION */
+  .cta-section {
+    padding: 100px 48px;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+
+  .cta-glow {
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(200,241,53,0.1) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .cta-inner { max-width: 640px; margin: 0 auto; position: relative; z-index: 1; }
+
+  .cta-inner h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 5vw, 60px); font-weight: 800;
+    color: var(--white); line-height: 1.05;
+    letter-spacing: -0.03em; margin-bottom: 20px;
+  }
+
+  .cta-inner p { font-size: 17px; color: var(--muted); margin-bottom: 36px; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 48px;
+    position: relative; z-index: 1;
+  }
+
+  .footer-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 20px; color: var(--lime);
+  }
+
+  .footer-logo span { color: var(--white); }
+  .footer-copy { font-size: 13px; color: var(--muted); }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--white); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 120px 20px 80px; }
+    .hero-stats { gap: 28px; flex-wrap: wrap; }
+    .features, .how, .pricing, .testimonials, .cta-section { padding: 72px 20px; }
+    .features-header { grid-template-columns: 1fr; }
+    .features-grid, .steps, .pricing-grid, .test-grid { grid-template-columns: 1fr; }
+    .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Biz<span>AI</span></a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#pricing" class="btn-nav">Start Free</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-tag">
+    <span class="dot-pulse"></span>
+    AI Tools for Small Business
+  </div>
+  <h1>Run your business<br>with <span class="accent">AI superpowers</span></h1>
+  <p class="hero-sub">Write emails, handle customers, create proposals, generate social posts — all in seconds. No tech skills needed.</p>
+  <div class="hero-cta">
+    <a href="#pricing" class="btn-primary">🚀 Try Free — No Credit Card</a>
+    <a href="#how" class="btn-secondary">See how it works →</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-num">5hrs+</span>
+      <span class="stat-label">Saved Per Week</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">6</span>
+      <span class="stat-label">AI Tools Included</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">$0</span>
+      <span class="stat-label">To Get Started</span>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item"><span>✉️</span> Email Writer</div>
+    <div class="marquee-item"><span>💬</span> Customer Replies</div>
+    <div class="marquee-item"><span>📄</span> Invoice Descriptions</div>
+    <div class="marquee-item"><span>📱</span> Social Media Posts</div>
+    <div class="marquee-item"><span>📋</span> Business Proposals</div>
+    <div class="marquee-item"><span>👤</span> Business Bio</div>
+    <div class="marquee-item"><span>✉️</span> Email Writer</div>
+    <div class="marquee-item"><span>💬</span> Customer Replies</div>
+    <div class="marquee-item"><span>📄</span> Invoice Descriptions</div>
+    <div class="marquee-item"><span>📱</span> Social Media Posts</div>
+    <div class="marquee-item"><span>📋</span> Business Proposals</div>
+    <div class="marquee-item"><span>👤</span> Business Bio</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="features-header">
+    <div>
+      <div class="section-label">What's Included</div>
+      <h2 class="section-title">Every tool your<br>business needs</h2>
+    </div>
+    <p class="section-sub">6 AI-powered tools that handle the writing work so you can focus on growing your business — not typing it.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">✉️</div>
+      <h3>Email Writer</h3>
+      <p>Professional emails written in seconds. Follow-ups, complaints, offers — just describe it and send.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💬</div>
+      <h3>Customer Reply</h3>
+      <p>Turn angry customers into happy ones. Smart, empathetic replies that resolve issues fast.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📄</div>
+      <h3>Invoice Descriptions</h3>
+      <p>Professional line-item descriptions that justify your prices and look great on any invoice.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Social Media Posts</h3>
+      <p>Engaging posts for Instagram, Facebook & LinkedIn with hashtags — posted in minutes, not hours.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📋</div>
+      <h3>Business Proposals</h3>
+      <p>Win more clients with polished proposals that clearly communicate your value and get signed faster.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👤</div>
+      <h3>Business Bio</h3>
+      <p>A compelling brand story in 3 sizes — short, medium, and full — ready for any platform or pitch.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="how-inner">
+    <div class="how-header">
+      <div class="section-label">Simple Process</div>
+      <h2 class="section-title">Up and running in 60 seconds</h2>
+      <p class="section-sub">No training required. No complex setup. Just pick a tool and start getting results.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Pick Your Tool</h3>
+        <p>Choose from 6 AI tools designed for real small business tasks. Each one is built for a specific job.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Describe What You Need</h3>
+        <p>Type a short description in plain language. No prompts to learn, no templates to fill in.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Copy & Use Instantly</h3>
+        <p>Get a ready-to-use result in under 10 seconds. Copy it, edit it, and send. Done.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="pricing-header">
+    <div class="section-label">Pricing Plans</div>
+    <h2 class="section-title">Start free, scale as you grow</h2>
+    <p class="section-sub">Simple, transparent pricing. No hidden fees. Cancel anytime.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="plan-name">Starter</div>
+      <div class="plan-price">$0<span>/mo</span></div>
+      <div class="plan-desc">Perfect for trying it out</div>
+      <ul class="plan-features">
+        <li>20 generations/month</li>
+        <li>3 AI Tools</li>
+        <li>Email & Chat support</li>
+        <li>Copy & Export</li>
+      </ul>
+      <a href="#" class="btn-plan btn-plan-outline">Get Started Free</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="badge-popular">Most Popular</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">$29<span>/mo</span></div>
+      <div class="plan-desc">For growing small businesses</div>
+      <ul class="plan-features">
+        <li>Unlimited generations</li>
+        <li>All 6 AI Tools</li>
+        <li>Priority support</li>
+        <li>Save & history</li>
+        <li>No BizAI branding</li>
+      </ul>
+      <a href="#" class="btn-plan btn-plan-filled">Start Pro Trial</a>
+    </div>
+    <div class="pricing-card">
+      <div class="plan-name">Business</div>
+      <div class="plan-price">$79<span>/mo</span></div>
+      <div class="plan-desc">For teams and agencies</div>
+      <ul class="plan-features">
+        <li>Everything in Pro</li>
+        <li>5 team seats</li>
+        <li>Custom brand voice</li>
+        <li>API access</li>
+        <li>Dedicated support</li>
+      </ul>
+      <a href="#" class="btn-plan btn-plan-outline">Contact Sales</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="test-inner">
+    <div class="test-header">
+      <div class="section-label">Real Results</div>
+      <h2 class="section-title">Loved by small business owners</h2>
+      <p class="section-sub">See what business owners are saying after their first week with BizAI.</p>
+    </div>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <p class="test-quote">"I used to spend 2 hours a day on emails. Now it's 20 minutes. The customer reply tool is a lifesaver when I'm dealing with difficult clients."</p>
+        <div class="test-author">
+          <div class="avatar">🧁</div>
+          <div>
+            <div class="author-name">Sarah M.</div>
+            <div class="author-role">Bakery Owner, Chicago</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <p class="test-quote">"The proposal tool helped me land a $3,500 client in the first week. I just described what I do and it wrote a better proposal than I ever could."</p>
+        <div class="test-author">
+          <div class="avatar">🔧</div>
+          <div>
+            <div class="author-name">James T.</div>
+            <div class="author-role">Freelance Contractor, Austin</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="stars">★★★★★</div>
+        <p class="test-quote">"My social media engagement went up 60% after using BizAI for posts. I post 3x more now because it takes no time at all."</p>
+        <div class="test-author">
+          <div class="avatar">💅</div>
+          <div>
+            <div class="author-name">Priya K.</div>
+            <div class="author-role">Salon Owner, Miami</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <h2>Start saving time<br><span style="color:var(--lime)">today — for free</span></h2>
+    <p>Join hundreds of small business owners who've stopped wasting time on writing and started focusing on what matters.</p>
+    <a href="#pricing" class="btn-primary" style="font-size:17px; padding:18px 40px;">🚀 Get Started Free</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Biz<span>AI</span></div>
+    <div class="footer-copy">© 2025 BizAI. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
