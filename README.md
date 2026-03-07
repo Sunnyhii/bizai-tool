@@ -2,7 +2,7 @@
 
 > **6 AI-powered tools that save small businesses 5+ hours every week.**
 
-![License](https://img.shields.io/badge/license-Proprietary-red)
+![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-Live-brightgreen)
 ![AI](https://img.shields.io/badge/AI-Google%20Gemini-blue)
 ![Hosting](https://img.shields.io/badge/hosting-Vercel-black)
