@@ -480,6 +480,7 @@
       await signInWithEmailAndPassword(auth, email, password);
       showToast('Welcome back! 👋', 'success');
       setTimeout(showSuccess, 800);
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
     } catch (e) {
       errEl.style.display = 'block';
       errEl.textContent = 'Invalid email or password. Please try again.';
