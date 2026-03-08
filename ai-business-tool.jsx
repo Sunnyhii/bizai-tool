@@ -96,7 +96,7 @@ export default function AIBusinessTool() {
     setCopied(false);
 
     try {
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
+      const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${import.meta.env.VITE_GEMINI_KEY}", {
         method: "POST",
         headers: {   "Content-Type": "application/json",   "x-api-key": import.meta.env.VITE_ANTHROPIC_KEY,   "anthropic-version": "2023-06-01",   "anthropic-dangerous-direct-browser-calls": "true", },
         body: JSON.stringify({
@@ -108,7 +108,7 @@ export default function AIBusinessTool() {
       });
 
       const data = await response.json();
-      const result = data.content?.map(b => b.text || "").join("") || "Something went wrong. Please try again.";
+      const result = data.candidates?.[0]?.content?.parts?.[0]?.text || "Something went wrong. Please try again.";
       setOutput(result);
       setHistory(prev => [{ tool: activeTool.label, input: input.slice(0, 60) + "...", output: result }, ...prev.slice(0, 4)]);
     } catch {
