@@ -613,16 +613,11 @@ async function generate() {
   btn.classList.add('loading'); btn.disabled = true;
   document.getElementById('modal-output').classList.remove('show');
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: currentTool.prompt,
-        messages: [{ role: 'user', content: input }]
-      })
-    });
+    const res = await fetch('/api/generate', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ prompt: currentTool.prompt + '\n\n' + input })
+});
     const data = await res.json();
     const text = data.content?.map(b => b.text||'').join('') || 'Something went wrong. Please try again.';
     document.getElementById('output-text').textContent = text;
