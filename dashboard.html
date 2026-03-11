@@ -619,7 +619,7 @@ async function generate() {
   body: JSON.stringify({ prompt: currentTool.prompt + '\n\n' + input })
 });
     const data = await res.json();
-    const text = data.content?.map(b => b.text||'').join('') || 'Something went wrong. Please try again.';
+    const text = data.result || 'Something went wrong. Please try again.';
     document.getElementById('output-text').textContent = text;
     document.getElementById('modal-output').classList.add('show');
   } catch(e) {
