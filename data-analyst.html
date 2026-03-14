@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BizAI — Data Analyst</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --dark: #0a0a0a; --dark2: #111; --dark3: #181818; --dark4: #222;
+    --lime: #d4f52e; --lime-b: #e8ff3a; --lime-g: rgba(212,245,46,0.1);
+    --gray: #888; --gray2: #444; --white: #f5f5f0;
+    --font: 'Space Grotesk', sans-serif; --mono: 'DM Mono', monospace;
+    --green: #22c55e; --amber: #f59e0b; --blue: #3b82f6;
+  }
+  body { background: var(--dark); color: var(--white); font-family: var(--font); min-height: 100vh; }
+
+  nav { display:flex; align-items:center; justify-content:space-between; padding:0 40px; height:64px; background:rgba(10,10,10,0.95); backdrop-filter:blur(14px); border-bottom:1px solid rgba(255,255,255,0.07); position:sticky; top:0; z-index:100; }
+  .nav-logo { font-size:20px; font-weight:700; color:var(--lime-b); text-decoration:none; }
+  .nav-links { display:flex; gap:28px; }
+  .nav-links a { font-size:13px; color:var(--gray); text-decoration:none; transition:color .2s; }
+  .nav-links a:hover { color:var(--white); }
+  .nav-cta { background:var(--lime-b); color:#000; font-family:var(--font); font-size:13px; font-weight:700; padding:9px 20px; border:none; border-radius:6px; cursor:pointer; text-decoration:none; }
+
+  .tool-header { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--dark2); border-bottom:1px solid rgba(255,255,255,0.07); }
+  .tool-title { font-size:15px; font-weight:600; }
+  .badge { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; background:var(--lime-g); border:1px solid rgba(212,245,46,0.3); color:var(--lime); padding:4px 12px; border-radius:100px; }
+
+  .app { display:grid; grid-template-columns:300px 1fr; min-height:calc(100vh - 121px); }
+
+  /* SIDEBAR */
+  .sidebar { background:var(--dark2); border-right:1px solid rgba(255,255,255,0.07); padding:24px 20px; display:flex; flex-direction:column; gap:16px; overflow-y:auto; }
+  .field-group { display:flex; flex-direction:column; gap:6px; }
+  .field-label { font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gray); }
+  select, textarea { background:var(--dark3); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); font-family:var(--font); font-size:13px; padding:10px 12px; outline:none; transition:border-color .2s; width:100%; }
+  select:focus, textarea:focus { border-color:rgba(212,245,46,0.4); }
+  select option { background:var(--dark3); }
+  textarea { resize:vertical; line-height:1.6; }
+
+  /* UPLOAD ZONE */
+  .upload-zone { border:2px dashed rgba(255,255,255,0.15); border-radius:12px; padding:28px 16px; text-align:center; cursor:pointer; transition:all .2s; background:var(--dark3); position:relative; }
+  .upload-zone:hover, .upload-zone.drag { border-color:rgba(212,245,46,0.5); background:var(--lime-g); }
+  .upload-zone.has-file { border-color:rgba(34,197,94,0.4); background:rgba(34,197,94,0.05); border-style:solid; }
+  .upload-icon { font-size:32px; margin-bottom:10px; }
+  .upload-text { font-size:13px; color:var(--gray); line-height:1.6; }
+  .upload-text strong { color:var(--lime-b); }
+  .upload-file-name { font-size:12px; color:var(--green); font-family:var(--mono); margin-top:6px; }
+  #fileInput { position:absolute; inset:0; opacity:0; cursor:pointer; }
+
+  /* QUESTION PILLS */
+  .question-pills { display:flex; flex-direction:column; gap:6px; }
+  .q-pill { background:var(--dark3); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:9px 12px; font-size:12px; color:var(--gray); cursor:pointer; transition:all .2s; line-height:1.4; }
+  .q-pill:hover { border-color:rgba(212,245,46,0.35); color:var(--lime-b); background:var(--lime-g); }
+
+  .divider { height:1px; background:rgba(255,255,255,0.06); }
+
+  .analyze-btn { background:var(--lime-b); color:#000; font-family:var(--font); font-size:14px; font-weight:700; padding:14px; border:none; border-radius:10px; cursor:pointer; width:100%; transition:all .18s; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .analyze-btn:hover { background:#fff; transform:translateY(-1px); }
+  .analyze-btn:disabled { background:var(--dark4); color:var(--gray); cursor:not-allowed; transform:none; }
+
+  /* MAIN OUTPUT */
+  .main { padding:28px 32px; overflow-y:auto; }
+
+  /* EMPTY STATE */
+  .empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:420px; text-align:center; gap:14px; }
+  .empty-icon { font-size:56px; }
+  .empty-title { font-size:18px; font-weight:600; }
+  .empty-sub { font-size:13px; color:var(--gray); line-height:1.7; max-width:340px; }
+  .sample-btn { background:var(--dark3); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:10px 20px; font-family:var(--font); font-size:13px; color:var(--gray); cursor:pointer; transition:all .2s; margin-top:4px; }
+  .sample-btn:hover { border-color:rgba(212,245,46,0.3); color:var(--lime-b); }
+
+  /* DATA PREVIEW TABLE */
+  .preview-section { margin-bottom:24px; }
+  .section-title { font-size:13px; font-weight:600; color:var(--gray); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px; }
+  .table-wrap { overflow-x:auto; border-radius:10px; border:1px solid rgba(255,255,255,0.08); }
+  table { width:100%; border-collapse:collapse; font-size:12px; font-family:var(--mono); }
+  th { background:var(--dark3); padding:10px 14px; text-align:left; font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--gray); border-bottom:1px solid rgba(255,255,255,0.08); white-space:nowrap; }
+  td { padding:9px 14px; border-bottom:1px solid rgba(255,255,255,0.04); color:var(--white); white-space:nowrap; }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:rgba(255,255,255,0.02); }
+
+  /* STATS CARDS */
+  .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:22px; }
+  .stat-card { background:var(--dark2); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:16px; }
+  .stat-val { font-size:26px; font-weight:700; color:var(--lime-b); font-family:var(--mono); line-height:1; }
+  .stat-label { font-size:11px; color:var(--gray); margin-top:5px; }
+
+  /* INSIGHTS */
+  .insights-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:22px; }
+  .insight-card { background:var(--dark2); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:20px; }
+  .insight-card.full { grid-column:span 2; }
+  .insight-title { font-size:13px; font-weight:600; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .insight-content { font-size:13px; color:var(--gray); line-height:1.75; white-space:pre-wrap; }
+
+  /* CHART BARS */
+  .bar-chart { display:flex; flex-direction:column; gap:8px; }
+  .bar-row { display:flex; align-items:center; gap:10px; }
+  .bar-label { font-size:12px; color:var(--gray); width:120px; flex-shrink:0; font-family:var(--mono); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .bar-track { flex:1; background:var(--dark3); border-radius:4px; height:20px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:4px; background:var(--lime-b); transition:width .6s ease; display:flex; align-items:center; padding-left:8px; }
+  .bar-val { font-size:10px; font-weight:700; color:#000; white-space:nowrap; }
+
+  /* ACTION ITEMS */
+  .action-list { display:flex; flex-direction:column; gap:8px; }
+  .action-item { display:flex; align-items:flex-start; gap:12px; background:var(--dark3); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:12px 14px; }
+  .action-num { width:22px; height:22px; border-radius:50%; background:var(--lime-b); color:#000; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+  .action-text { font-size:13px; color:var(--gray); line-height:1.55; }
+
+  /* LOADING */
+  .loading-wrap { display:flex; flex-direction:column; gap:14px; }
+  .loading-card { background:var(--dark2); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:20px; }
+  .shimmer { background:linear-gradient(90deg,var(--dark3) 25%,var(--dark4) 50%,var(--dark3) 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:4px; }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .spinning { display:inline-block; animation:spin 1s linear infinite; }
+
+  .tip { background:var(--lime-g); border:1px solid rgba(212,245,46,0.2); border-radius:8px; padding:12px 14px; font-size:12px; color:var(--gray); line-height:1.6; margin-bottom:16px; }
+  .tip strong { color:var(--lime); }
+
+  @media(max-width:768px){
+    .app{grid-template-columns:1fr;}
+    nav{padding:0 20px;}
+    .nav-links{display:none;}
+    .stats-grid{grid-template-columns:repeat(2,1fr);}
+    .insights-grid{grid-template-columns:1fr;}
+    .insight-card.full{grid-column:span 1;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">BizAI</a>
+  <div class="nav-links">
+    <a href="index.html#tools">AI Tools</a>
+    <a href="agency.html">Agency</a>
+    <a href="index.html#pricing">Pricing</a>
+    <a href="dashboard.html">Dashboard</a>
+  </div>
+  <a href="auth.html" class="nav-cta">Start Free</a>
+</nav>
+
+<div class="tool-header">
+  <div class="tool-title">📊 Data Analyst</div>
+  <div class="badge">✦ Powered by Claude</div>
+</div>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="field-group">
+      <div class="field-label">Upload CSV File</div>
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="fileInput" accept=".csv,.tsv,.txt" onchange="handleFile(this)">
+        <div class="upload-icon">📂</div>
+        <div class="upload-text">Drop your <strong>CSV file</strong> here<br>or click to browse</div>
+        <div class="upload-file-name" id="fileName"></div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Analysis Type</div>
+      <select id="analysisType">
+        <option value="full">Full Analysis (recommended)</option>
+        <option value="sales">Sales Performance</option>
+        <option value="customers">Customer Insights</option>
+        <option value="trends">Trends & Patterns</option>
+        <option value="summary">Quick Summary</option>
+      </select>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Ask a Question (optional)</div>
+      <textarea id="customQ" rows="2" placeholder="e.g. Which product has the highest revenue?"></textarea>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Quick Questions</div>
+      <div class="question-pills" id="quickQs">
+        <div class="q-pill" onclick="setQ(this)">What are the top performing items?</div>
+        <div class="q-pill" onclick="setQ(this)">What trends do you see over time?</div>
+        <div class="q-pill" onclick="setQ(this)">Where are the biggest opportunities?</div>
+        <div class="q-pill" onclick="setQ(this)">What should I focus on to grow revenue?</div>
+        <div class="q-pill" onclick="setQ(this)">Are there any anomalies or red flags?</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <button class="analyze-btn" id="analyzeBtn" onclick="analyze()">
+      <span id="btnIcon">📊</span> Analyse Data
+    </button>
+
+    <button class="sample-btn" onclick="loadSample()" style="width:100%;margin-top:-8px">
+      Try with sample data →
+    </button>
+
+  </div>
+
+  <!-- MAIN -->
+  <div class="main" id="mainPanel">
+
+    <div id="emptyState" class="empty-state">
+      <div class="empty-icon">📊</div>
+      <div class="empty-title">Upload your CSV and get instant insights</div>
+      <div class="empty-sub">Upload any spreadsheet — sales data, customer list, inventory, financials — and get plain-English insights in under 60 seconds.</div>
+    </div>
+
+    <div id="loadingState" style="display:none">
+      <div class="loading-wrap">
+        <div class="loading-card"><div class="shimmer" style="height:14px;width:30%;margin-bottom:14px"></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"><div class="shimmer" style="height:60px;border-radius:8px"></div><div class="shimmer" style="height:60px;border-radius:8px"></div><div class="shimmer" style="height:60px;border-radius:8px"></div><div class="shimmer" style="height:60px;border-radius:8px"></div></div></div>
+        <div class="loading-card"><div class="shimmer" style="height:14px;width:40%;margin-bottom:10px"></div><div class="shimmer" style="height:12px;width:100%;margin-bottom:6px"></div><div class="shimmer" style="height:12px;width:85%;margin-bottom:6px"></div><div class="shimmer" style="height:12px;width:70%"></div></div>
+        <div class="loading-card"><div class="shimmer" style="height:14px;width:35%;margin-bottom:10px"></div><div class="shimmer" style="height:12px;width:100%;margin-bottom:6px"></div><div class="shimmer" style="height:12px;width:90%"></div></div>
+      </div>
+    </div>
+
+    <div id="outputState" style="display:none">
+      <!-- Data preview -->
+      <div class="preview-section">
+        <div class="section-title">📋 Data Preview</div>
+        <div class="table-wrap"><table id="previewTable"></table></div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid" id="statsGrid"></div>
+
+      <!-- Insights grid -->
+      <div class="insights-grid" id="insightsGrid"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let csvData = null;
+let csvHeaders = [];
+let csvRows = [];
+
+// Drag and drop
+const zone = document.getElementById('uploadZone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+zone.addEventListener('drop', e => {
+  e.preventDefault(); zone.classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file) processFile(file);
+});
+
+function handleFile(input) {
+  if (input.files[0]) processFile(input.files[0]);
+}
+
+function processFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    csvData = e.target.result;
+    parseCSV(csvData);
+    zone.classList.add('has-file');
+    document.getElementById('fileName').textContent = '✓ ' + file.name;
+    zone.querySelector('.upload-icon').textContent = '✅';
+    zone.querySelector('.upload-text').innerHTML = '<strong>' + file.name + '</strong><br>' + csvRows.length + ' rows · ' + csvHeaders.length + ' columns';
+  };
+  reader.readAsText(file);
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n').filter(l => l.trim());
+  csvHeaders = lines[0].split(',').map(h => h.replace(/"/g,'').trim());
+  csvRows = lines.slice(1).map(line => {
+    const vals = line.split(',').map(v => v.replace(/"/g,'').trim());
+    const obj = {};
+    csvHeaders.forEach((h,i) => obj[h] = vals[i] || '');
+    return obj;
+  });
+}
+
+function setQ(pill) {
+  document.getElementById('customQ').value = pill.textContent;
+}
+
+function loadSample() {
+  const sample = `Date,Product,Revenue,Units,Region,Customer
+2024-01-05,AI Content Engine,290,10,UAE,Ahmed Al-Rashid
+2024-01-12,Cold Outreach AI,580,20,Saudi Arabia,Fatima Hassan
+2024-01-18,Data Analyst,145,5,Qatar,Mohammed Al-Farsi
+2024-01-25,AI Content Engine,435,15,UAE,Sarah Johnson
+2024-02-03,Cold Outreach AI,290,10,Kuwait,Omar Abdullah
+2024-02-10,Data Analyst,290,10,UAE,Layla Ahmed
+2024-02-17,AI Content Engine,580,20,Saudi Arabia,Khalid Al-Mutairi
+2024-02-24,Cold Outreach AI,435,15,Qatar,Aisha Rahman
+2024-03-02,Data Analyst,580,20,UAE,James Wilson
+2024-03-09,AI Content Engine,725,25,Saudi Arabia,Nour Al-Hassan
+2024-03-15,Cold Outreach AI,290,10,Kuwait,Ali Mahmoud
+2024-03-22,Data Analyst,435,15,UAE,Reem Al-Khalifa`;
+
+  csvData = sample;
+  parseCSV(sample);
+  zone.classList.add('has-file');
+  document.getElementById('fileName').textContent = '✓ sample-bizai-sales.csv';
+  zone.querySelector('.upload-icon').textContent = '✅';
+  zone.querySelector('.upload-text').innerHTML = '<strong>sample-bizai-sales.csv</strong><br>' + csvRows.length + ' rows · ' + csvHeaders.length + ' columns';
+}
+
+function renderPreview() {
+  const table = document.getElementById('previewTable');
+  const preview = csvRows.slice(0,6);
+  let html = '<tr>' + csvHeaders.map(h => `<th>${h}</th>`).join('') + '</tr>';
+  preview.forEach(row => {
+    html += '<tr>' + csvHeaders.map(h => `<td>${row[h] || ''}</td>`).join('') + '</tr>';
+  });
+  if (csvRows.length > 6) html += `<tr><td colspan="${csvHeaders.length}" style="text-align:center;color:var(--gray);font-size:11px;padding:10px">... and ${csvRows.length - 6} more rows</td></tr>`;
+  table.innerHTML = html;
+}
+
+function renderStats() {
+  const numericCols = csvHeaders.filter(h => {
+    const vals = csvRows.map(r => parseFloat(r[h])).filter(v => !isNaN(v));
+    return vals.length > csvRows.length * 0.5;
+  });
+
+  const stats = [
+    { val: csvRows.length.toLocaleString(), label: 'Total rows' },
+    { val: csvHeaders.length, label: 'Columns' },
+    { val: numericCols.length, label: 'Numeric columns' },
+    { val: new Set(csvRows.map(r => Object.values(r).join(''))).size.toLocaleString(), label: 'Unique records' }
+  ];
+
+  document.getElementById('statsGrid').innerHTML = stats.map(s =>
+    `<div class="stat-card"><div class="stat-val">${s.val}</div><div class="stat-label">${s.label}</div></div>`
+  ).join('');
+}
+
+function renderBarChart(data, title) {
+  const max = Math.max(...data.map(d => d.value));
+  const bars = data.slice(0,7).map(d => {
+    const pct = Math.round((d.value / max) * 100);
+    return `<div class="bar-row">
+      <div class="bar-label" title="${d.label}">${d.label}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"><span class="bar-val">${typeof d.value === 'number' && d.value > 100 ? '$'+d.value.toLocaleString() : d.value}</span></div></div>
+    </div>`;
+  }).join('');
+  return `<div class="insight-card">
+    <div class="insight-title">📈 ${title}</div>
+    <div class="bar-chart">${bars}</div>
+  </div>`;
+}
+
+async function analyze() {
+  if (!csvData) { alert('Please upload a CSV file first, or click "Try with sample data"'); return; }
+
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinning">⟳</span> Analysing...';
+
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('outputState').style.display = 'none';
+  document.getElementById('loadingState').style.display = 'block';
+
+  const customQ = document.getElementById('customQ').value.trim();
+  const analysisType = document.getElementById('analysisType').value;
+  const preview = csvRows.slice(0,20);
+  const csvPreview = [csvHeaders.join(','), ...preview.map(r => csvHeaders.map(h => r[h]).join(','))].join('\n');
+
+  const prompt = `You are an expert business data analyst. Analyse this CSV data and provide actionable insights.
+
+CSV DATA (${csvRows.length} total rows, showing first 20):
+${csvPreview}
+
+Analysis type requested: ${analysisType}
+${customQ ? `Specific question: ${customQ}` : ''}
+
+Respond ONLY with valid JSON in this exact format (no other text, no markdown):
+{
+  "summary": "2-3 sentence plain English overview of what this data shows",
+  "key_insights": [
+    "Insight 1 — specific, actionable, with numbers where possible",
+    "Insight 2",
+    "Insight 3",
+    "Insight 4"
+  ],
+  "top_items": [
+    {"label": "Item name", "value": 123},
+    {"label": "Item name", "value": 98}
+  ],
+  "action_items": [
+    "Specific action 1 the business should take based on this data",
+    "Specific action 2",
+    "Specific action 3"
+  ],
+  "answer": "${customQ ? 'Direct answer to: ' + customQ : 'What is the single most important thing this data tells us?'}"
+}`;
+
+  try {
+    const resp = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1500,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await resp.json();
+    let text = data.content?.[0]?.text || '{}';
+    text = text.replace(/```json|```/g,'').trim();
+    const result = JSON.parse(text);
+
+    renderPreview();
+    renderStats();
+    renderInsights(result);
+
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('outputState').style.display = 'block';
+
+  } catch(e) {
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'flex';
+    alert('Error: ' + e.message);
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '📊 Analyse Data';
+}
+
+function renderInsights(result) {
+  let html = '';
+
+  // Summary card
+  html += `<div class="insight-card full">
+    <div class="insight-title">🧠 AI Summary</div>
+    <div class="insight-content">${result.summary || 'No summary available.'}</div>
+  </div>`;
+
+  // Key insights
+  if (result.key_insights?.length) {
+    html += `<div class="insight-card">
+      <div class="insight-title">💡 Key Insights</div>
+      <div class="insight-content">${result.key_insights.map((ins,i) => `<div style="margin-bottom:10px;padding-left:14px;border-left:2px solid var(--lime);padding-bottom:2px">${ins}</div>`).join('')}</div>
+    </div>`;
+  }
+
+  // Bar chart of top items
+  if (result.top_items?.length) {
+    html += renderBarChart(result.top_items, 'Top Items');
+  }
+
+  // Answer to custom question
+  if (result.answer) {
+    html += `<div class="insight-card full">
+      <div class="insight-title">🎯 ${document.getElementById('customQ').value.trim() || 'Key Takeaway'}</div>
+      <div class="insight-content">${result.answer}</div>
+    </div>`;
+  }
+
+  // Action items
+  if (result.action_items?.length) {
+    html += `<div class="insight-card full">
+      <div class="insight-title">🚀 Action Items</div>
+      <div class="action-list">${result.action_items.map((a,i) =>
+        `<div class="action-item"><div class="action-num">${i+1}</div><div class="action-text">${a}</div></div>`
+      ).join('')}</div>
+    </div>`;
+  }
+
+  document.getElementById('insightsGrid').innerHTML = html;
+}
+</script>
+</body>
+</html>
