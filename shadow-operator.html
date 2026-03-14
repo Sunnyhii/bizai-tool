@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BizAI — AI Shadow Operator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --dark: #0a0a0a; --dark2: #111; --dark3: #181818; --dark4: #222;
+    --lime: #d4f52e; --lime-b: #e8ff3a; --lime-g: rgba(212,245,46,0.1);
+    --gray: #888; --gray2: #444; --white: #f5f5f0;
+    --font: 'Space Grotesk', sans-serif; --mono: 'DM Mono', monospace;
+    --green: #22c55e; --amber: #f59e0b; --red: #ef4444;
+  }
+  body { background: var(--dark); color: var(--white); font-family: var(--font); min-height: 100vh; }
+
+  /* NAV */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 64px; background: rgba(10,10,10,0.95);
+    backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.07);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { font-size: 20px; font-weight: 700; color: var(--lime-b); text-decoration: none; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a { font-size: 13px; color: var(--gray); text-decoration: none; transition: color .2s; }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta { background: var(--lime-b); color: #000; font-family: var(--font); font-size: 13px; font-weight: 700; padding: 9px 20px; border: none; border-radius: 6px; cursor: pointer; text-decoration: none; transition: all .2s; }
+  .nav-cta:hover { background: #fff; }
+
+  /* HEADER */
+  .tool-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 28px; background: var(--dark2);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .tool-title { font-size: 15px; font-weight: 600; }
+  .status-pill {
+    display: flex; align-items: center; gap: 7px;
+    background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3);
+    border-radius: 100px; padding: 5px 14px; font-size: 12px; color: var(--green); font-weight: 500;
+  }
+  .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 1.8s ease-in-out infinite; display: inline-block; }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.5)} 50%{box-shadow:0 0 0 6px rgba(34,197,94,0)} }
+
+  /* LAYOUT */
+  .app { display: grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 121px); }
+
+  /* SIDEBAR */
+  .sidebar { background: var(--dark2); border-right: 1px solid rgba(255,255,255,0.07); padding: 20px 16px; display: flex; flex-direction: column; gap: 4px; }
+  .sidebar-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); padding: 10px 10px 4px; }
+  .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; cursor: pointer; transition: background .2s; font-size: 14px; color: var(--gray); border: 1px solid transparent; }
+  .nav-item:hover { background: var(--dark3); color: var(--white); }
+  .nav-item.active { background: var(--lime-g); color: var(--lime-b); border-color: rgba(212,245,46,0.2); }
+  .nav-item .icon { font-size: 16px; width: 22px; text-align: center; }
+  .nav-badge { margin-left: auto; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 100px; }
+  .nb-lime { background: var(--lime-b); color: #000; }
+  .nb-green { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .nb-gray { background: var(--dark4); color: var(--gray); }
+
+  /* MAIN */
+  .main { padding: 28px 32px; overflow-y: auto; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* STATS ROW */
+  .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 24px; }
+  .stat-card { background: var(--dark2); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 18px; }
+  .stat-val { font-size: 30px; font-weight: 700; color: var(--lime-b); font-family: var(--mono); line-height: 1; }
+  .stat-label { font-size: 11px; color: var(--gray); margin-top: 6px; }
+
+  /* FEED */
+  .feed-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .feed-title { font-size: 15px; font-weight: 600; }
+  .feed-live { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--green); }
+  .feed { display: flex; flex-direction: column; }
+  .feed-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); animation: slideIn .35s ease; }
+  @keyframes slideIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+  .feed-dot-col { display: flex; flex-direction: column; align-items: center; padding-top: 4px; }
+  .feed-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .feed-line { width: 1px; flex: 1; background: rgba(255,255,255,0.06); margin-top: 6px; min-height: 20px; }
+  .feed-content { flex: 1; }
+  .feed-agent { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 3px; }
+  .feed-text { font-size: 13px; color: var(--white); line-height: 1.5; margin-bottom: 4px; }
+  .feed-result { font-size: 12px; color: var(--gray); font-family: var(--mono); background: var(--dark3); border-radius: 6px; padding: 8px 10px; margin-top: 6px; line-height: 1.6; border: 1px solid rgba(255,255,255,0.06); }
+  .feed-time { font-size: 11px; color: var(--gray2); margin-top: 4px; }
+
+  /* AGENTS GRID */
+  .agents-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-bottom: 24px; }
+  .agent-card { background: var(--dark2); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 22px; position: relative; overflow: hidden; transition: border-color .25s, transform .2s; }
+  .agent-card:hover { border-color: rgba(212,245,46,0.3); transform: translateY(-2px); }
+  .agent-card.running { border-color: rgba(34,197,94,0.35); }
+  .agent-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at top left, var(--lime-g), transparent 70%); opacity: 0; transition: opacity .3s; pointer-events: none; }
+  .agent-card:hover::before, .agent-card.running::before { opacity: 1; }
+  .agent-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+  .agent-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--dark3); border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .agent-status { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 500; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .dot.green { background: var(--green); animation: pulse 1.8s infinite; }
+  .dot.gray { background: var(--gray2); }
+  .dot.amber { background: var(--amber); }
+  .agent-name { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .agent-desc { font-size: 13px; color: var(--gray); line-height: 1.6; margin-bottom: 16px; }
+  .agent-meta { display: flex; gap: 16px; margin-bottom: 16px; }
+  .meta-item { font-size: 11px; color: var(--gray); font-family: var(--mono); }
+  .meta-item strong { color: var(--lime); }
+  .agent-toggle { width: 100%; padding: 10px; border-radius: 8px; font-family: var(--font); font-size: 13px; font-weight: 600; border: none; cursor: pointer; transition: all .2s; }
+  .agent-toggle.start { background: var(--lime-g); color: var(--lime-b); border: 1px solid rgba(212,245,46,0.3); }
+  .agent-toggle.start:hover { background: var(--lime-b); color: #000; }
+  .agent-toggle.stop { background: rgba(239,68,68,0.1); color: #ff7070; border: 1px solid rgba(239,68,68,0.3); }
+  .agent-toggle.stop:hover { background: rgba(239,68,68,0.2); }
+
+  /* CONFIG PANEL */
+  .config-panel { background: var(--dark2); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; margin-bottom: 20px; }
+  .config-title { font-size: 16px; font-weight: 600; margin-bottom: 18px; }
+  .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); }
+  select, input[type=text], textarea { background: var(--dark3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: var(--white); font-family: var(--font); font-size: 13px; padding: 10px 12px; outline: none; transition: border-color .2s; width: 100%; }
+  select:focus, input:focus, textarea:focus { border-color: rgba(212,245,46,0.4); }
+  select option { background: var(--dark3); }
+  textarea { resize: vertical; line-height: 1.6; }
+  .create-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; border-radius: 10px; background: var(--lime-b); color: #000; font-family: var(--font); font-size: 14px; font-weight: 700; border: none; cursor: pointer; transition: all .18s; margin-top: 16px; }
+  .create-btn:hover { background: #fff; transform: translateY(-1px); }
+  .create-btn:disabled { background: var(--dark4); color: var(--gray); cursor: not-allowed; transform: none; }
+
+  /* SCHEDULE */
+  .schedule-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 8px; margin: 14px 0; }
+  .sch-day { background: var(--dark3); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 12px 8px; text-align: center; }
+  .sch-day.active { background: var(--lime-g); border-color: rgba(212,245,46,0.3); }
+  .sch-label { font-size: 10px; color: var(--gray); margin-bottom: 8px; font-weight: 600; }
+  .sch-tasks { display: flex; flex-direction: column; gap: 4px; }
+  .sch-task { font-size: 9px; padding: 3px 5px; border-radius: 4px; background: var(--dark4); color: var(--gray2); }
+  .sch-task.lime { background: rgba(212,245,46,0.15); color: var(--lime); }
+
+  /* TASK LIST */
+  .task-list { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
+  .task-item { display: flex; align-items: center; gap: 14px; background: var(--dark2); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 14px 16px; }
+  .task-icon { width: 38px; height: 38px; border-radius: 8px; background: var(--dark3); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .task-info { flex: 1; }
+  .task-name { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+  .task-desc { font-size: 12px; color: var(--gray); }
+  .task-status { font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 100px; white-space: nowrap; }
+  .ts-running { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+  .ts-idle { background: var(--dark3); color: var(--gray); border: 1px solid rgba(255,255,255,0.08); }
+  .ts-done { background: rgba(212,245,46,0.1); color: var(--lime); border: 1px solid rgba(212,245,46,0.25); }
+
+  .tip { background: var(--lime-g); border: 1px solid rgba(212,245,46,0.2); border-radius: 8px; padding: 12px 14px; font-size: 12px; color: var(--gray); line-height: 1.6; margin: 14px 0; }
+  .tip strong { color: var(--lime); }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinning { display: inline-block; animation: spin 1s linear infinite; }
+
+  @media (max-width: 768px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .agents-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(2,1fr); }
+    .config-grid { grid-template-columns: 1fr; }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">BizAI</a>
+  <div class="nav-links">
+    <a href="index.html#tools">AI Tools</a>
+    <a href="agency.html">Agency</a>
+    <a href="index.html#pricing">Pricing</a>
+    <a href="dashboard.html">Dashboard</a>
+  </div>
+  <a href="auth.html" class="nav-cta">Start Free</a>
+</nav>
+
+<div class="tool-header">
+  <div class="tool-title">🤖 AI Shadow Operator</div>
+  <div class="status-pill"><span class="pulse"></span> <span id="statusText">2 Agents Running</span></div>
+</div>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="sidebar-label">Navigation</div>
+    <div class="nav-item active" onclick="showSection('overview',this)"><span class="icon">⚡</span> Overview <span class="nav-badge nb-green">Live</span></div>
+    <div class="nav-item" onclick="showSection('agents',this)"><span class="icon">🤖</span> My Agents <span class="nav-badge nb-lime">4</span></div>
+    <div class="nav-item" onclick="showSection('activity',this)"><span class="icon">📋</span> Activity Feed <span class="nav-badge nb-gray">12</span></div>
+    <div class="nav-item" onclick="showSection('schedule',this)"><span class="icon">📅</span> Schedule</div>
+    <div class="nav-item" onclick="showSection('create',this)"><span class="icon">✦</span> Create Agent</div>
+    <div class="sidebar-label" style="margin-top:12px">Running Now</div>
+    <div class="nav-item"><span class="icon">✍️</span> Writing IG caption... <span class="nav-badge nb-green">Now</span></div>
+    <div class="nav-item"><span class="icon">📨</span> Drafting follow-up... <span class="nav-badge nb-green">Now</span></div>
+    <div class="nav-item"><span class="icon">🔍</span> Research queued <span class="nav-badge nb-gray">Next</span></div>
+  </div>
+
+  <div class="main">
+
+    <!-- OVERVIEW -->
+    <div class="section active" id="sec-overview">
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val">47</div><div class="stat-label">Tasks completed today</div></div>
+        <div class="stat-card"><div class="stat-val">3.2h</div><div class="stat-label">Hours saved today</div></div>
+        <div class="stat-card"><div class="stat-val" id="runningCount">2</div><div class="stat-label">Agents running now</div></div>
+        <div class="stat-card"><div class="stat-val">98%</div><div class="stat-label">Success rate</div></div>
+      </div>
+      <div class="feed-header">
+        <div class="feed-title">Live Activity</div>
+        <div class="feed-live"><span class="pulse" style="width:6px;height:6px;background:var(--green);border-radius:50%;display:inline-block"></span> Updating live</div>
+      </div>
+      <div class="feed" id="liveFeed">
+        <div class="feed-item">
+          <div class="feed-dot-col"><div class="feed-dot" style="background:var(--lime)"></div><div class="feed-line"></div></div>
+          <div class="feed-content">
+            <div class="feed-agent" style="color:var(--lime)">Content Agent</div>
+            <div class="feed-text">Generated Instagram caption for Dubai restaurant client</div>
+            <div class="feed-result">🍽️ "Dubai's hidden gem just got a glow-up ✨ Stop by tonight for our new menu — your taste buds will thank you. 📍 Downtown Dubai | Reserve now in bio #DubaiFood #DubaiRestaurants"</div>
+            <div class="feed-time">Just now</div>
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-dot-col"><div class="feed-dot" style="background:var(--green)"></div><div class="feed-line"></div></div>
+          <div class="feed-content">
+            <div class="feed-agent" style="color:var(--green)">Outreach Agent</div>
+            <div class="feed-text">Drafted follow-up email for cold lead — no reply in 3 days</div>
+            <div class="feed-result">✉️ Subject: "Quick follow-up — free AI tools for your business"<br>Hey [Name], just bumping this up in case it got buried...</div>
+            <div class="feed-time">2 min ago</div>
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-dot-col"><div class="feed-dot" style="background:var(--lime)"></div><div class="feed-line"></div></div>
+          <div class="feed-content">
+            <div class="feed-agent" style="color:var(--lime)">Content Agent</div>
+            <div class="feed-text">Created 3 LinkedIn post variations for SaaS client</div>
+            <div class="feed-time">18 min ago</div>
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-dot-col"><div class="feed-dot" style="background:var(--amber)"></div><div class="feed-line"></div></div>
+          <div class="feed-content">
+            <div class="feed-agent" style="color:var(--amber)">Research Agent</div>
+            <div class="feed-text">Summarised 5 competitor posts for real estate client in Dubai</div>
+            <div class="feed-time">1 hr ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGENTS -->
+    <div class="section" id="sec-agents">
+      <div class="agents-grid">
+        <div class="agent-card running" id="card-content">
+          <div class="agent-top">
+            <div class="agent-icon">✍️</div>
+            <div class="agent-status"><span class="dot green"></span><span id="status-content" style="color:var(--green)">Running</span></div>
+          </div>
+          <div class="agent-name">Content Agent</div>
+          <div class="agent-desc">Automatically writes Instagram captions, emails, and ad copy on a schedule you set. Works while you sleep.</div>
+          <div class="agent-meta">
+            <div class="meta-item">Tasks: <strong>284</strong></div>
+            <div class="meta-item">Next run: <strong>9:00 AM</strong></div>
+          </div>
+          <button class="agent-toggle stop" onclick="toggleAgent(this,'card-content','status-content')">⏹ Stop Agent</button>
+        </div>
+        <div class="agent-card running" id="card-outreach">
+          <div class="agent-top">
+            <div class="agent-icon">📨</div>
+            <div class="agent-status"><span class="dot green"></span><span id="status-outreach" style="color:var(--green)">Running</span></div>
+          </div>
+          <div class="agent-name">Outreach Agent</div>
+          <div class="agent-desc">Monitors your lead list and drafts personalised follow-up messages when contacts go cold for 3+ days.</div>
+          <div class="agent-meta">
+            <div class="meta-item">Tasks: <strong>91</strong></div>
+            <div class="meta-item">Next run: <strong>In 2h</strong></div>
+          </div>
+          <button class="agent-toggle stop" onclick="toggleAgent(this,'card-outreach','status-outreach')">⏹ Stop Agent</button>
+        </div>
+        <div class="agent-card" id="card-research">
+          <div class="agent-top">
+            <div class="agent-icon">🔍</div>
+            <div class="agent-status"><span class="dot gray"></span><span id="status-research" style="color:var(--gray)">Idle</span></div>
+          </div>
+          <div class="agent-name">Research Agent</div>
+          <div class="agent-desc">Monitors competitors and industry news. Delivers a daily briefing with key insights you can act on immediately.</div>
+          <div class="agent-meta">
+            <div class="meta-item">Tasks: <strong>47</strong></div>
+            <div class="meta-item">Next run: <strong>Not set</strong></div>
+          </div>
+          <button class="agent-toggle start" onclick="toggleAgent(this,'card-research','status-research')">▶ Start Agent</button>
+        </div>
+        <div class="agent-card" id="card-report">
+          <div class="agent-top">
+            <div class="agent-icon">📊</div>
+            <div class="agent-status"><span class="dot gray"></span><span id="status-report" style="color:var(--gray)">Idle</span></div>
+          </div>
+          <div class="agent-name">Report Agent</div>
+          <div class="agent-desc">Generates weekly performance summaries and sends them to your email every Monday morning automatically.</div>
+          <div class="agent-meta">
+            <div class="meta-item">Tasks: <strong>12</strong></div>
+            <div class="meta-item">Next run: <strong>Monday</strong></div>
+          </div>
+          <button class="agent-toggle start" onclick="toggleAgent(this,'card-report','status-report')">▶ Start Agent</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIVITY -->
+    <div class="section" id="sec-activity">
+      <div class="feed-header">
+        <div class="feed-title">Full Activity Log</div>
+        <div style="font-size:12px;color:var(--gray)">Last 24 hours</div>
+      </div>
+      <div class="feed">
+        <div class="feed-item"><div class="feed-dot-col"><div class="feed-dot" style="background:var(--lime)"></div><div class="feed-line"></div></div><div class="feed-content"><div class="feed-agent" style="color:var(--lime)">Content Agent</div><div class="feed-text">Generated 3 Instagram captions for food client</div><div class="feed-time">Just now</div></div></div>
+        <div class="feed-item"><div class="feed-dot-col"><div class="feed-dot" style="background:var(--green)"></div><div class="feed-line"></div></div><div class="feed-content"><div class="feed-agent" style="color:var(--green)">Outreach Agent</div><div class="feed-text">Drafted 2 follow-up DMs for cold Instagram leads</div><div class="feed-time">5 min ago</div></div></div>
+        <div class="feed-item"><div class="feed-dot-col"><div class="feed-dot" style="background:var(--lime)"></div><div class="feed-line"></div></div><div class="feed-content"><div class="feed-agent" style="color:var(--lime)">Content Agent</div><div class="feed-text">Wrote weekly email newsletter for e-commerce client</div><div class="feed-time">22 min ago</div></div></div>
+        <div class="feed-item"><div class="feed-dot-col"><div class="feed-dot" style="background:var(--amber)"></div><div class="feed-line"></div></div><div class="feed-content"><div class="feed-agent" style="color:var(--amber)">Research Agent</div><div class="feed-text">Analysed 8 competitor IG posts — found 3 content gaps</div><div class="feed-time">1 hr ago</div></div></div>
+        <div class="feed-item"><div class="feed-dot-col"><div class="feed-dot" style="background:var(--lime)"></div><div class="feed-line"></div></div><div class="feed-content"><div class="feed-agent" style="color:var(--lime)">Content Agent</div><div class="feed-text">Created ad copy variations for real estate client — Dubai Hills</div><div class="feed-time">2 hrs ago</div></div></div>
+        <div class="feed-item"><div class="feed-dot-col"><div class="feed-dot" style="background:var(--green)"></div><div class="feed-line"></div></div><div class="feed-content"><div class="feed-agent" style="color:var(--green)">Outreach Agent</div><div class="feed-text">Sent personalised follow-up to 5 LinkedIn leads</div><div class="feed-time">3 hrs ago</div></div></div>
+      </div>
+    </div>
+
+    <!-- SCHEDULE -->
+    <div class="section" id="sec-schedule">
+      <div style="font-size:15px;font-weight:600;margin-bottom:16px">This Week's Agent Schedule</div>
+      <div class="schedule-grid">
+        <div class="sch-day active"><div class="sch-label">MON</div><div class="sch-tasks"><div class="sch-task lime">Content</div><div class="sch-task lime">Outreach</div></div></div>
+        <div class="sch-day active"><div class="sch-label">TUE</div><div class="sch-tasks"><div class="sch-task lime">Content</div><div class="sch-task">Research</div></div></div>
+        <div class="sch-day active"><div class="sch-label">WED</div><div class="sch-tasks"><div class="sch-task lime">Content</div><div class="sch-task lime">Outreach</div></div></div>
+        <div class="sch-day active"><div class="sch-label">THU</div><div class="sch-tasks"><div class="sch-task lime">Content</div><div class="sch-task">Research</div></div></div>
+        <div class="sch-day active"><div class="sch-label">FRI</div><div class="sch-tasks"><div class="sch-task lime">Content</div><div class="sch-task lime">Outreach</div><div class="sch-task">Report</div></div></div>
+        <div class="sch-day"><div class="sch-label">SAT</div><div class="sch-tasks"><div class="sch-task">Rest</div></div></div>
+        <div class="sch-day"><div class="sch-label">SUN</div><div class="sch-tasks"><div class="sch-task">Rest</div></div></div>
+      </div>
+      <div class="task-list">
+        <div class="task-item"><div class="task-icon">✍️</div><div class="task-info"><div class="task-name">Content Agent — 9:00 AM daily</div><div class="task-desc">Generates 3 posts + 1 email per client</div></div><span class="task-status ts-running">Running</span></div>
+        <div class="task-item"><div class="task-icon">📨</div><div class="task-info"><div class="task-name">Outreach Agent — Every 6 hours</div><div class="task-desc">Checks leads, drafts follow-ups</div></div><span class="task-status ts-running">Running</span></div>
+        <div class="task-item"><div class="task-icon">🔍</div><div class="task-info"><div class="task-name">Research Agent — Tue & Thu, 7:00 AM</div><div class="task-desc">Competitor analysis + trend report</div></div><span class="task-status ts-idle">Idle</span></div>
+        <div class="task-item"><div class="task-icon">📊</div><div class="task-info"><div class="task-name">Report Agent — Every Friday, 6:00 PM</div><div class="task-desc">Weekly performance summary email</div></div><span class="task-status ts-done">Scheduled</span></div>
+      </div>
+    </div>
+
+    <!-- CREATE -->
+    <div class="section" id="sec-create">
+      <div class="config-panel">
+        <div class="config-title">🤖 Create New Shadow Agent</div>
+        <div class="config-grid">
+          <div class="field"><label>Agent Name</label><input type="text" placeholder="e.g. My Content Bot" id="agentName"></div>
+          <div class="field"><label>Agent Type</label><select id="agentType"><option>Content Writer</option><option>Outreach Assistant</option><option>Research Monitor</option><option>Report Generator</option><option>Custom</option></select></div>
+          <div class="field"><label>Run Schedule</label><select id="agentSchedule"><option>Every hour</option><option>Every 6 hours</option><option>Daily at 9 AM</option><option>Daily at 8 PM</option><option>Weekly — Monday</option></select></div>
+          <div class="field"><label>Tone</label><select id="agentTone"><option>Professional</option><option>Casual & friendly</option><option>Bold & direct</option><option>Inspirational</option></select></div>
+        </div>
+        <div class="field" style="margin-top:14px"><label>What should this agent do?</label><textarea id="agentTask" rows="3" placeholder="e.g. Every morning, write 3 Instagram captions for a Dubai restaurant. Use emojis, include hashtags, keep it under 150 words."></textarea></div>
+        <div class="field" style="margin-top:10px"><label>Business Context</label><textarea id="agentContext" rows="2" placeholder="e.g. Luxury real estate agency in Dubai Marina. Target audience: expats aged 30-50."></textarea></div>
+        <button class="create-btn" id="createBtn" onclick="createAgent()">✦ Create & Activate Agent</button>
+      </div>
+      <div class="tip"><strong>✦ How it works:</strong> Once created, your agent runs on its schedule using AI. Results appear in your Activity Feed. You review and approve before anything is sent.</div>
+      <div id="previewBox" style="display:none">
+        <div class="config-panel">
+          <div class="config-title">✅ Agent Created — First Output Preview</div>
+          <div id="previewContent" style="font-size:13px;color:var(--gray);line-height:1.75;white-space:pre-wrap"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const ANTHROPIC_API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your key or use a backend
+
+function showSection(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  el.classList.add('active');
+}
+
+function toggleAgent(btn, cardId, statusId) {
+  const card = document.getElementById(cardId);
+  const statusEl = document.getElementById(statusId);
+  const isRunning = card.classList.contains('running');
+  const dot = card.querySelector('.dot');
+  if (isRunning) {
+    card.classList.remove('running');
+    btn.className = 'agent-toggle start';
+    btn.textContent = '▶ Start Agent';
+    dot.className = 'dot gray';
+    statusEl.style.color = 'var(--gray)';
+    statusEl.textContent = 'Idle';
+  } else {
+    card.classList.add('running');
+    btn.className = 'agent-toggle stop';
+    btn.textContent = '⏹ Stop Agent';
+    dot.className = 'dot green';
+    statusEl.style.color = 'var(--green)';
+    statusEl.textContent = 'Running';
+  }
+  const running = document.querySelectorAll('.agent-card.running').length;
+  document.getElementById('runningCount').textContent = running;
+  document.getElementById('statusText').textContent = running + ' Agent' + (running !== 1 ? 's' : '') + ' Running';
+}
+
+async function createAgent() {
+  const name = document.getElementById('agentName').value.trim() || 'My Agent';
+  const type = document.getElementById('agentType').value;
+  const task = document.getElementById('agentTask').value.trim() || 'Write Instagram captions for a Dubai business';
+  const context = document.getElementById('agentContext').value.trim() || 'A modern business in the UAE';
+  const tone = document.getElementById('agentTone').value;
+
+  const btn = document.getElementById('createBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinning">⟳</span> Creating agent & running first task...';
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: `You are a ${type} AI agent.\nBusiness: ${context}\nTone: ${tone}\nTask: ${task}\n\nRun this task now and produce a complete, ready-to-use output. No preamble.` }]
+      })
+    });
+    const data = await resp.json();
+    const output = data.content?.[0]?.text || 'Agent created successfully.';
+    document.getElementById('previewContent').textContent = output;
+    document.getElementById('previewBox').style.display = 'block';
+
+    const feed = document.getElementById('liveFeed');
+    const item = document.createElement('div');
+    item.className = 'feed-item';
+    item.innerHTML = `<div class="feed-dot-col"><div class="feed-dot" style="background:var(--lime)"></div><div class="feed-line"></div></div><div class="feed-content"><div class="feed-agent" style="color:var(--lime)">${name}</div><div class="feed-text">First task completed — ${type}</div><div class="feed-result">${output.slice(0,200)}...</div><div class="feed-time">Just now</div></div>`;
+    feed.prepend(item);
+  } catch(e) {
+    document.getElementById('previewContent').textContent = 'Error: ' + e.message + '\n\nMake sure you have added your API key.';
+    document.getElementById('previewBox').style.display = 'block';
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '✦ Create & Activate Agent';
+}
+</script>
+</body>
+</html>
