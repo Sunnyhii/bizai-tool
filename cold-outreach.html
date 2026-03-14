@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BizAI — Cold Outreach AI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --dark: #0a0a0a; --dark2: #111; --dark3: #181818; --dark4: #222;
+    --lime: #d4f52e; --lime-b: #e8ff3a; --lime-g: rgba(212,245,46,0.1);
+    --gray: #888; --gray2: #444; --white: #f5f5f0;
+    --font: 'Space Grotesk', sans-serif; --mono: 'DM Mono', monospace;
+    --green: #22c55e; --amber: #f59e0b;
+  }
+  body { background: var(--dark); color: var(--white); font-family: var(--font); min-height: 100vh; }
+
+  nav { display:flex; align-items:center; justify-content:space-between; padding:0 40px; height:64px; background:rgba(10,10,10,0.95); backdrop-filter:blur(14px); border-bottom:1px solid rgba(255,255,255,0.07); position:sticky; top:0; z-index:100; }
+  .nav-logo { font-size:20px; font-weight:700; color:var(--lime-b); text-decoration:none; }
+  .nav-links { display:flex; gap:28px; }
+  .nav-links a { font-size:13px; color:var(--gray); text-decoration:none; transition:color .2s; }
+  .nav-links a:hover { color:var(--white); }
+  .nav-cta { background:var(--lime-b); color:#000; font-family:var(--font); font-size:13px; font-weight:700; padding:9px 20px; border:none; border-radius:6px; cursor:pointer; text-decoration:none; transition:all .2s; }
+  .nav-cta:hover { background:#fff; }
+
+  .tool-header { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--dark2); border-bottom:1px solid rgba(255,255,255,0.07); }
+  .tool-title { font-size:15px; font-weight:600; }
+  .badge { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; background:var(--lime-g); border:1px solid rgba(212,245,46,0.3); color:var(--lime); padding:4px 12px; border-radius:100px; }
+
+  .app { display:grid; grid-template-columns:320px 1fr; min-height:calc(100vh - 121px); }
+
+  /* SIDEBAR */
+  .sidebar { background:var(--dark2); border-right:1px solid rgba(255,255,255,0.07); padding:24px 20px; display:flex; flex-direction:column; gap:18px; overflow-y:auto; }
+  .field-group { display:flex; flex-direction:column; gap:6px; }
+  .field-label { font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gray); }
+  select, input[type=text], textarea { background:var(--dark3); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--white); font-family:var(--font); font-size:13px; padding:10px 12px; outline:none; transition:border-color .2s; width:100%; }
+  select:focus, input:focus, textarea:focus { border-color:rgba(212,245,46,0.4); }
+  select option { background:var(--dark3); }
+  textarea { resize:vertical; line-height:1.6; }
+
+  .channel-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .channel-btn { background:var(--dark3); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:10px 8px; cursor:pointer; font-family:var(--font); font-size:12px; font-weight:500; color:var(--gray); text-align:center; transition:all .2s; display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .channel-btn .icon { font-size:18px; }
+  .channel-btn.active { background:var(--lime-g); border-color:rgba(212,245,46,0.4); color:var(--lime-b); }
+  .channel-btn:hover:not(.active) { border-color:rgba(255,255,255,0.2); color:var(--white); }
+
+  .tone-row { display:flex; flex-wrap:wrap; gap:6px; }
+  .tone-pill { padding:5px 12px; border-radius:100px; font-size:12px; font-weight:500; border:1px solid rgba(255,255,255,0.1); background:transparent; color:var(--gray); cursor:pointer; font-family:var(--font); transition:all .2s; }
+  .tone-pill.active { background:var(--lime-g); border-color:rgba(212,245,46,0.4); color:var(--lime-b); }
+  .tone-pill:hover:not(.active) { border-color:rgba(255,255,255,0.25); color:var(--white); }
+
+  .steps-toggle { display:flex; background:var(--dark3); border-radius:8px; padding:4px; gap:2px; }
+  .step-opt { flex:1; padding:7px; text-align:center; font-size:12px; font-weight:500; color:var(--gray); cursor:pointer; border-radius:6px; transition:all .2s; }
+  .step-opt.active { background:var(--lime-b); color:#000; }
+
+  .gen-btn { background:var(--lime-b); color:#000; font-family:var(--font); font-size:14px; font-weight:700; padding:14px; border:none; border-radius:10px; cursor:pointer; width:100%; transition:all .18s; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .gen-btn:hover { background:#fff; transform:translateY(-1px); }
+  .gen-btn:disabled { background:var(--dark4); color:var(--gray); cursor:not-allowed; transform:none; }
+
+  .divider { height:1px; background:rgba(255,255,255,0.06); }
+
+  /* OUTPUT */
+  .output-panel { padding:28px 32px; overflow-y:auto; }
+  .output-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+  .output-title { font-size:15px; font-weight:600; }
+  .output-actions { display:flex; gap:8px; }
+  .action-btn { background:var(--dark3); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:7px 14px; font-family:var(--font); font-size:12px; font-weight:500; color:var(--gray); cursor:pointer; transition:all .2s; }
+  .action-btn:hover { border-color:rgba(255,255,255,0.25); color:var(--white); }
+  .action-btn.ok { border-color:rgba(212,245,46,0.4); color:var(--lime); }
+
+  /* SEQUENCE STEPS */
+  .sequence { display:flex; flex-direction:column; gap:14px; }
+  .seq-step { background:var(--dark2); border:1px solid rgba(255,255,255,0.08); border-radius:12px; overflow:hidden; transition:border-color .2s; }
+  .seq-step:hover { border-color:rgba(212,245,46,0.2); }
+  .seq-step-header { display:flex; align-items:center; gap:14px; padding:16px 18px; cursor:pointer; }
+  .seq-num { width:32px; height:32px; border-radius:50%; background:var(--lime-g); border:1px solid rgba(212,245,46,0.3); color:var(--lime); font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .seq-step-info { flex:1; }
+  .seq-step-title { font-size:14px; font-weight:600; margin-bottom:2px; }
+  .seq-step-meta { font-size:11px; color:var(--gray); }
+  .seq-step-tag { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:4px 10px; border-radius:100px; }
+  .tag-day1 { background:rgba(212,245,46,0.1); color:var(--lime); border:1px solid rgba(212,245,46,0.25); }
+  .tag-day3 { background:rgba(245,158,11,0.1); color:var(--amber); border:1px solid rgba(245,158,11,0.25); }
+  .tag-day7 { background:rgba(99,102,241,0.1); color:#a5a0ff; border:1px solid rgba(99,102,241,0.25); }
+  .tag-day14 { background:rgba(239,68,68,0.1); color:#ff9090; border:1px solid rgba(239,68,68,0.25); }
+  .seq-body { padding:0 18px 18px; border-top:1px solid rgba(255,255,255,0.06); }
+  .seq-content { font-size:13px; color:var(--white); line-height:1.8; white-space:pre-wrap; padding-top:14px; }
+  .seq-subject { font-size:12px; color:var(--lime); font-family:var(--mono); margin-bottom:8px; }
+  .seq-copy-btn { margin-top:12px; background:var(--dark3); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:6px 14px; font-family:var(--font); font-size:11px; font-weight:500; color:var(--gray); cursor:pointer; transition:all .2s; }
+  .seq-copy-btn:hover { color:var(--white); border-color:rgba(255,255,255,0.25); }
+  .seq-copy-btn.ok { color:var(--lime); border-color:rgba(212,245,46,0.4); }
+  .chevron { color:var(--gray); font-size:12px; transition:transform .25s; }
+  .seq-step.open .chevron { transform:rotate(180deg); }
+  .seq-body { display:none; }
+  .seq-step.open .seq-body { display:block; }
+
+  /* EMPTY STATE */
+  .empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:400px; text-align:center; gap:12px; }
+  .empty-icon { font-size:48px; }
+  .empty-title { font-size:16px; font-weight:600; color:var(--white); }
+  .empty-sub { font-size:13px; color:var(--gray); line-height:1.6; max-width:320px; }
+
+  /* STATS */
+  .stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
+  .stat-card { background:var(--dark2); border:1px solid rgba(255,255,255,0.07); border-radius:10px; padding:14px 16px; }
+  .stat-val { font-size:24px; font-weight:700; color:var(--lime-b); font-family:var(--mono); line-height:1; }
+  .stat-label { font-size:11px; color:var(--gray); margin-top:4px; }
+
+  /* TIPS */
+  .tip { background:var(--lime-g); border:1px solid rgba(212,245,46,0.2); border-radius:8px; padding:12px 14px; font-size:12px; color:var(--gray); line-height:1.6; margin-bottom:16px; }
+  .tip strong { color:var(--lime); }
+
+  /* LOADING */
+  .loading-seq { display:flex; flex-direction:column; gap:12px; }
+  .loading-card { background:var(--dark2); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:18px; }
+  .shimmer { background:linear-gradient(90deg,var(--dark3) 25%,var(--dark4) 50%,var(--dark3) 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:4px; }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .spinning { display:inline-block; animation:spin 1s linear infinite; }
+
+  @media (max-width:768px) {
+    .app { grid-template-columns:1fr; }
+    nav { padding:0 20px; }
+    .nav-links { display:none; }
+    .output-panel { padding:20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">BizAI</a>
+  <div class="nav-links">
+    <a href="index.html#tools">AI Tools</a>
+    <a href="agency.html">Agency</a>
+    <a href="index.html#pricing">Pricing</a>
+    <a href="dashboard.html">Dashboard</a>
+  </div>
+  <a href="auth.html" class="nav-cta">Start Free</a>
+</nav>
+
+<div class="tool-header">
+  <div class="tool-title">📨 Cold Outreach AI</div>
+  <div class="badge">✦ Powered by Claude</div>
+</div>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="field-group">
+      <div class="field-label">Channel</div>
+      <div class="channel-grid">
+        <button class="channel-btn active" onclick="setChannel(this,'email')" data-ch="email"><span class="icon">📧</span>Email</button>
+        <button class="channel-btn" onclick="setChannel(this,'instagram')" data-ch="instagram"><span class="icon">📸</span>Instagram</button>
+        <button class="channel-btn" onclick="setChannel(this,'linkedin')" data-ch="linkedin"><span class="icon">💼</span>LinkedIn</button>
+        <button class="channel-btn" onclick="setChannel(this,'whatsapp')" data-ch="whatsapp"><span class="icon">💬</span>WhatsApp</button>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="field-group">
+      <div class="field-label">Your Business</div>
+      <input type="text" id="yourBiz" placeholder="e.g. BizAI — AI tools for businesses">
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Prospect Name</div>
+      <input type="text" id="prospectName" placeholder="e.g. Ahmed or Restaurant Owner">
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Prospect Business</div>
+      <input type="text" id="prospectBiz" placeholder="e.g. Dubai restaurant, 5k IG followers">
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Pain Point / Hook</div>
+      <textarea id="painPoint" rows="2" placeholder="e.g. They post inconsistently, need more content"></textarea>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Your Offer</div>
+      <textarea id="offer" rows="2" placeholder="e.g. Free 7-day trial of AI content tools, no credit card"></textarea>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Tone</div>
+      <div class="tone-row">
+        <button class="tone-pill active" onclick="setTone(this)">Friendly</button>
+        <button class="tone-pill" onclick="setTone(this)">Professional</button>
+        <button class="tone-pill" onclick="setTone(this)">Bold</button>
+        <button class="tone-pill" onclick="setTone(this)">Casual</button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-label">Sequence Length</div>
+      <div class="steps-toggle">
+        <div class="step-opt active" onclick="setSteps(this,1)">1 msg</div>
+        <div class="step-opt" onclick="setSteps(this,3)">3 msgs</div>
+        <div class="step-opt" onclick="setSteps(this,5)">5 msgs</div>
+      </div>
+    </div>
+
+    <button class="gen-btn" id="genBtn" onclick="generate()">
+      <span id="btnIcon">✦</span> Generate Sequence
+    </button>
+
+  </div>
+
+  <!-- OUTPUT -->
+  <div class="output-panel">
+
+    <div id="emptyState" class="empty-state">
+      <div class="empty-icon">📨</div>
+      <div class="empty-title">Generate your outreach sequence</div>
+      <div class="empty-sub">Fill in the details on the left and hit Generate. You'll get a full multi-step sequence ready to copy and send.</div>
+    </div>
+
+    <div id="outputArea" style="display:none">
+      <div class="output-header">
+        <div class="output-title">Your Outreach Sequence</div>
+        <div class="output-actions">
+          <button class="action-btn" onclick="copyAll()">Copy All</button>
+          <button class="action-btn" onclick="generate()">↻ Regenerate</button>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val" id="statSteps">3</div><div class="stat-label">Steps in sequence</div></div>
+        <div class="stat-card"><div class="stat-val" id="statChannel">Email</div><div class="stat-label">Channel</div></div>
+        <div class="stat-card"><div class="stat-val" id="statRate">~34%</div><div class="stat-label">Avg open rate</div></div>
+      </div>
+
+      <div class="tip"><strong>✦ Pro tip:</strong> Send step 1, wait for the exact number of days shown, then send the follow-up. Never send more than 2 follow-ups — quality over quantity.</div>
+
+      <div class="sequence" id="sequenceContainer"></div>
+    </div>
+
+    <div id="loadingState" style="display:none">
+      <div class="output-header">
+        <div class="output-title">Generating your sequence...</div>
+      </div>
+      <div class="loading-seq">
+        <div class="loading-card"><div class="shimmer" style="height:16px;width:40%;margin-bottom:10px"></div><div class="shimmer" style="height:12px;width:100%;margin-bottom:6px"></div><div class="shimmer" style="height:12px;width:85%"></div></div>
+        <div class="loading-card"><div class="shimmer" style="height:16px;width:40%;margin-bottom:10px"></div><div class="shimmer" style="height:12px;width:100%;margin-bottom:6px"></div><div class="shimmer" style="height:12px;width:70%"></div></div>
+        <div class="loading-card"><div class="shimmer" style="height:16px;width:40%;margin-bottom:10px"></div><div class="shimmer" style="height:12px;width:100%;margin-bottom:6px"></div><div class="shimmer" style="height:12px;width:90%"></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let currentChannel = 'email';
+let currentTone = 'Friendly';
+let currentSteps = 3;
+let generatedMessages = [];
+
+function setChannel(btn, ch) {
+  document.querySelectorAll('.channel-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentChannel = ch;
+  document.getElementById('statChannel').textContent = ch.charAt(0).toUpperCase() + ch.slice(1);
+  const rates = { email:'~34%', instagram:'~18%', linkedin:'~28%', whatsapp:'~60%' };
+  document.getElementById('statRate').textContent = rates[ch];
+}
+
+function setTone(btn) {
+  document.querySelectorAll('.tone-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentTone = btn.textContent;
+}
+
+function setSteps(btn, n) {
+  document.querySelectorAll('.step-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentSteps = n;
+  document.getElementById('statSteps').textContent = n;
+}
+
+function buildPrompt() {
+  const yourBiz = document.getElementById('yourBiz').value.trim() || 'BizAI - AI tools for businesses';
+  const prospectName = document.getElementById('prospectName').value.trim() || 'the prospect';
+  const prospectBiz = document.getElementById('prospectBiz').value.trim() || 'their business';
+  const painPoint = document.getElementById('painPoint').value.trim() || 'they need more content';
+  const offer = document.getElementById('offer').value.trim() || 'free trial of our AI tools';
+
+  const channelGuide = {
+    email: 'formal email with subject line, greeting, body, and sign-off',
+    instagram: 'short casual Instagram DM (max 3-4 sentences, friendly, no links in first message)',
+    linkedin: 'professional LinkedIn message (concise, business-focused, 3-5 sentences)',
+    whatsapp: 'very short WhatsApp message (2-3 sentences max, conversational)'
+  };
+
+  const dayGaps = currentSteps === 1 ? [0] : currentSteps === 3 ? [0,3,7] : [0,2,5,9,14];
+
+  return `You are an expert cold outreach copywriter specializing in the Middle East market (UAE, Saudi, Qatar).
+
+Write a ${currentSteps}-step outreach sequence for the following:
+
+SENDER: ${yourBiz}
+PROSPECT: ${prospectName} — ${prospectBiz}
+PAIN POINT: ${painPoint}
+OFFER: ${offer}
+CHANNEL: ${currentChannel} (${channelGuide[currentChannel]})
+TONE: ${currentTone}
+SEND DAYS: ${dayGaps.map((d,i) => `Step ${i+1}: Day ${d}`).join(', ')}
+
+Rules:
+- Never be pushy or salesy in step 1 — lead with curiosity or value
+- Each follow-up should be shorter than the previous
+- Reference the previous message naturally in follow-ups
+- End every message with one clear, low-friction CTA
+- ${currentChannel === 'email' ? 'Include a subject line for each email' : 'No subject lines needed'}
+- Make it feel human, not like a template
+
+Format your response as JSON like this (respond ONLY with valid JSON, no other text):
+{
+  "steps": [
+    {
+      "step": 1,
+      "day": 0,
+      "label": "First Touch",
+      ${currentChannel === 'email' ? '"subject": "subject line here",' : ''}
+      "message": "full message here"
+    }
+  ]
+}`;
+}
+
+async function generate() {
+  const btn = document.getElementById('genBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinning">⟳</span> Generating...';
+
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('outputArea').style.display = 'none';
+  document.getElementById('loadingState').style.display = 'block';
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2000,
+        messages: [{ role: 'user', content: buildPrompt() }]
+      })
+    });
+
+    const data = await resp.json();
+    let text = data.content?.[0]?.text || '{}';
+    text = text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(text);
+    generatedMessages = parsed.steps || [];
+    renderSequence(generatedMessages);
+
+  } catch(e) {
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'flex';
+    alert('Error generating sequence: ' + e.message + '\n\nMake sure your API key is set.');
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '✦ Generate Sequence';
+}
+
+const dayTags = ['tag-day1','tag-day3','tag-day7','tag-day14','tag-day14'];
+const dayLabels = ['Day 0 — Send now','Day 2-3 — Follow up','Day 5-7 — Second follow-up','Day 9-10 — Third follow-up','Day 14 — Final follow-up'];
+
+function renderSequence(steps) {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('outputArea').style.display = 'block';
+  document.getElementById('statSteps').textContent = steps.length;
+
+  const container = document.getElementById('sequenceContainer');
+  container.innerHTML = '';
+
+  steps.forEach((step, i) => {
+    const div = document.createElement('div');
+    div.className = 'seq-step' + (i === 0 ? ' open' : '');
+    div.innerHTML = `
+      <div class="seq-step-header" onclick="toggleStep(this)">
+        <div class="seq-num">${step.step}</div>
+        <div class="seq-step-info">
+          <div class="seq-step-title">${step.label || 'Step ' + step.step}</div>
+          <div class="seq-step-meta">${dayLabels[i] || 'Day ' + (step.day || 0)}</div>
+        </div>
+        <span class="seq-step-tag ${dayTags[i]}">${i === 0 ? 'Initial' : 'Follow-up'}</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="seq-body">
+        ${step.subject ? `<div class="seq-subject">Subject: ${step.subject}</div>` : ''}
+        <div class="seq-content" id="msg-${i}">${step.message}</div>
+        <button class="seq-copy-btn" onclick="copyStep(this, ${i})">Copy message</button>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function toggleStep(header) {
+  header.parentElement.classList.toggle('open');
+}
+
+function copyStep(btn, i) {
+  const msg = document.getElementById('msg-' + i);
+  navigator.clipboard.writeText(msg.textContent).then(() => {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = 'Copy message'; btn.classList.remove('ok'); }, 2000);
+  });
+}
+
+function copyAll() {
+  const allText = generatedMessages.map((s,i) =>
+    `=== STEP ${s.step} — ${s.label} ===\n${s.subject ? 'Subject: ' + s.subject + '\n\n' : ''}${s.message}\n`
+  ).join('\n');
+  navigator.clipboard.writeText(allText).then(() => {
+    const btn = event.target;
+    btn.textContent = '✓ All Copied!';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = 'Copy All'; btn.classList.remove('ok'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
