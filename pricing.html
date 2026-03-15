@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BizAI — Pricing</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YHBCPELWN5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-YHBCPELWN5');
+</script>
+<!-- Stripe -->
+<script src="https://js.stripe.com/v3/"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg: #0a0a0a; --surface: #111111; --surface2: #1a1a1a;
+  --border: #222222; --accent: #c6f135; --text: #f0f0f0;
+  --muted: #888; --green: #22c55e;
+}
+body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; }
+
+/* NAV */
+nav { display:flex; align-items:center; justify-content:space-between; padding:20px 60px; border-bottom:1px solid var(--border); }
+.nav-logo { font-family:'Syne',sans-serif; font-weight:800; font-size:22px; color:var(--accent); text-decoration:none; }
+.nav-links { display:flex; gap:28px; align-items:center; }
+.nav-links a { color:var(--muted); text-decoration:none; font-size:14px; font-weight:500; transition:color 0.2s; }
+.nav-links a:hover { color:var(--text); }
+.nav-btn { background:var(--accent); color:#000; padding:9px 20px; border-radius:8px; font-weight:700; font-size:13px; text-decoration:none; }
+.nav-btn:hover { background:#b0d82e; color:#000 !important; }
+
+/* HERO */
+.hero { text-align:center; padding:80px 20px 60px; }
+.hero-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(198,241,53,0.1); border:1px solid rgba(198,241,53,0.3); border-radius:20px; padding:6px 16px; font-size:12px; font-weight:600; color:var(--accent); margin-bottom:24px; }
+.hero h1 { font-family:'Syne',sans-serif; font-weight:800; font-size:52px; line-height:1.1; margin-bottom:16px; }
+.hero h1 span { color:var(--accent); }
+.hero p { font-size:18px; color:var(--muted); max-width:500px; margin:0 auto 40px; line-height:1.6; }
+.toggle-wrap { display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:60px; }
+.toggle-lbl { font-size:14px; font-weight:600; color:var(--muted); }
+.toggle-lbl.active { color:var(--text); }
+.toggle { width:44px; height:24px; background:var(--accent); border-radius:20px; position:relative; cursor:pointer; border:none; }
+.toggle::after { content:''; position:absolute; top:3px; left:3px; width:18px; height:18px; background:#000; border-radius:50%; transition:transform 0.2s; }
+.toggle.yearly::after { transform:translateX(20px); }
+.save-badge { background:rgba(198,241,53,0.1); color:var(--accent); font-size:11px; font-weight:700; padding:3px 8px; border-radius:20px; }
+
+/* PRICING CARDS */
+.cards { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; max-width:1000px; margin:0 auto; padding:0 20px 80px; }
+.plan-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px; position:relative; transition:border-color 0.2s; }
+.plan-card:hover { border-color:#444; }
+.plan-card.popular { border-color:var(--accent); }
+.popular-badge { position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:var(--accent); color:#000; font-size:11px; font-weight:800; padding:4px 14px; border-radius:20px; white-space:nowrap; }
+.plan-name { font-family:'Syne',sans-serif; font-weight:800; font-size:18px; margin-bottom:8px; }
+.plan-desc { font-size:13px; color:var(--muted); margin-bottom:24px; line-height:1.5; }
+.plan-price { display:flex; align-items:baseline; gap:4px; margin-bottom:6px; }
+.plan-price .amount { font-family:'Syne',sans-serif; font-weight:900; font-size:42px; color:var(--text); }
+.plan-price .period { font-size:14px; color:var(--muted); }
+.plan-save { font-size:12px; color:var(--accent); font-weight:600; margin-bottom:24px; min-height:18px; }
+.plan-features { list-style:none; margin-bottom:28px; }
+.plan-features li { display:flex; align-items:center; gap:9px; font-size:13px; padding:7px 0; border-bottom:1px solid var(--border); color:var(--text); }
+.plan-features li:last-child { border-bottom:none; }
+.plan-features li::before { content:'✓'; color:var(--accent); font-weight:800; font-size:13px; flex-shrink:0; }
+.plan-features li.no::before { content:'✕'; color:#555; }
+.plan-features li.no { color:var(--muted); }
+.plan-btn { width:100%; padding:13px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; border:none; transition:all 0.2s; font-family:'DM Sans',sans-serif; }
+.plan-btn-outline { background:transparent; color:var(--text); border:1px solid var(--border); }
+.plan-btn-outline:hover { border-color:var(--accent); color:var(--accent); }
+.plan-btn-accent { background:var(--accent); color:#000; }
+.plan-btn-accent:hover { background:#b0d82e; }
+.plan-btn:disabled { opacity:0.6; cursor:not-allowed; }
+
+/* MODAL */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center; }
+.modal-overlay.show { display:flex; }
+.modal { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px; width:440px; max-width:90vw; }
+.modal-title { font-family:'Syne',sans-serif; font-weight:800; font-size:20px; margin-bottom:6px; }
+.modal-sub { font-size:13px; color:var(--muted); margin-bottom:24px; }
+.modal-plan { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; }
+.modal-plan-name { font-size:14px; font-weight:700; }
+.modal-plan-price { font-size:18px; font-weight:800; color:var(--accent); }
+.form-group { margin-bottom:14px; }
+.form-label { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px; display:block; }
+.form-input { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text); font-size:13px; font-family:'DM Sans',sans-serif; outline:none; transition:border 0.2s; }
+.form-input:focus { border-color:var(--accent); }
+#card-element { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:12px; }
+#card-element.focused { border-color:var(--accent); }
+#card-errors { color:#ef4444; font-size:12px; margin-top:6px; min-height:18px; }
+.modal-btns { display:flex; gap:10px; margin-top:20px; }
+.modal-btn { flex:1; padding:12px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; border:none; font-family:'DM Sans',sans-serif; }
+.modal-btn-cancel { background:var(--surface2); color:var(--muted); }
+.modal-btn-pay { background:var(--accent); color:#000; }
+.modal-btn-pay:hover { background:#b0d82e; }
+.modal-btn-pay:disabled { opacity:0.6; cursor:not-allowed; }
+.success-msg { text-align:center; padding:20px 0; }
+.success-icon { font-size:48px; margin-bottom:16px; }
+.success-title { font-family:'Syne',sans-serif; font-weight:800; font-size:22px; margin-bottom:8px; color:var(--green); }
+.success-sub { font-size:14px; color:var(--muted); line-height:1.6; }
+
+/* FAQ */
+.faq { max-width:700px; margin:0 auto; padding:0 20px 80px; }
+.faq h2 { font-family:'Syne',sans-serif; font-weight:800; font-size:32px; text-align:center; margin-bottom:40px; }
+.faq-item { border-bottom:1px solid var(--border); padding:20px 0; cursor:pointer; }
+.faq-q { display:flex; align-items:center; justify-content:space-between; font-size:15px; font-weight:600; }
+.faq-arrow { color:var(--accent); font-size:18px; transition:transform 0.2s; }
+.faq-item.open .faq-arrow { transform:rotate(45deg); }
+.faq-a { font-size:14px; color:var(--muted); line-height:1.7; margin-top:12px; display:none; }
+.faq-item.open .faq-a { display:block; }
+
+/* CHATBOT */
+.chat-btn { position:fixed; bottom:28px; right:28px; width:54px; height:54px; background:var(--accent); border-radius:50%; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:22px; box-shadow:0 4px 20px rgba(198,241,53,0.4); z-index:999; transition:transform 0.2s; }
+.chat-btn:hover { transform:scale(1.1); }
+.chat-window { position:fixed; bottom:96px; right:28px; width:360px; height:480px; background:var(--surface); border:1px solid var(--border); border-radius:16px; display:none; flex-direction:column; z-index:999; box-shadow:0 8px 40px rgba(0,0,0,0.6); overflow:hidden; }
+.chat-window.open { display:flex; }
+.chat-header { padding:16px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+.chat-av { width:32px; height:32px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; color:#000; }
+.chat-info { flex:1; }
+.chat-name { font-size:13px; font-weight:700; }
+.chat-status { font-size:11px; color:var(--green); }
+.chat-close { background:none; border:none; color:var(--muted); cursor:pointer; font-size:18px; }
+.chat-messages { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px; }
+.msg { max-width:80%; padding:10px 13px; border-radius:10px; font-size:13px; line-height:1.5; }
+.msg-bot { background:var(--surface2); color:var(--text); align-self:flex-start; border-radius:10px 10px 10px 2px; }
+.msg-user { background:var(--accent); color:#000; align-self:flex-end; border-radius:10px 10px 2px 10px; font-weight:600; }
+.msg-typing { display:flex; gap:4px; align-items:center; padding:12px 14px; }
+.dot { width:6px; height:6px; background:var(--muted); border-radius:50%; animation:bounce 1.2s infinite; }
+.dot:nth-child(2) { animation-delay:0.2s; }
+.dot:nth-child(3) { animation-delay:0.4s; }
+@keyframes bounce { 0%,80%,100%{transform:scale(0.6);opacity:0.5} 40%{transform:scale(1);opacity:1} }
+.chat-input-wrap { padding:12px; border-top:1px solid var(--border); display:flex; gap:8px; }
+.chat-input { flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:9px 12px; color:var(--text); font-size:13px; font-family:'DM Sans',sans-serif; outline:none; }
+.chat-input:focus { border-color:var(--accent); }
+.chat-send { background:var(--accent); color:#000; border:none; width:34px; height:34px; border-radius:8px; cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.chat-send:hover { background:#b0d82e; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">BizAI</a>
+  <div class="nav-links">
+    <a href="index.html#tools">AI Tools</a>
+    <a href="agency.html">Agency</a>
+    <a href="index.html#pricing">Pricing</a>
+    <a href="index.html#contact">Contact</a>
+    <a href="dashboard.html" class="nav-btn">Dashboard</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">💳 Simple, transparent pricing</div>
+  <h1>Invest in AI.<br>Save <span>10x</span> in return.</h1>
+  <p>Start free, scale as you grow. No hidden fees, no contracts, cancel anytime.</p>
+  <div class="toggle-wrap">
+    <span class="toggle-lbl active" id="lbl-monthly">Monthly</span>
+    <button class="toggle" id="billing-toggle" onclick="toggleBilling()"></button>
+    <span class="toggle-lbl" id="lbl-yearly">Yearly</span>
+    <span class="save-badge">Save 20%</span>
+  </div>
+</div>
+
+<div class="cards">
+  <!-- STARTER -->
+  <div class="plan-card">
+    <div class="plan-name">Starter</div>
+    <div class="plan-desc">Perfect for solopreneurs and small businesses just getting started with AI.</div>
+    <div class="plan-price"><span class="amount" id="price-starter">$29</span><span class="period">/mo</span></div>
+    <div class="plan-save" id="save-starter"></div>
+    <ul class="plan-features">
+      <li>6 AI Tools (unlimited use)</li>
+      <li>3 Zapier automations</li>
+      <li>Email support</li>
+      <li>Dashboard access</li>
+      <li class="no">Custom automations</li>
+      <li class="no">Priority support</li>
+      <li class="no">Agency services</li>
+    </ul>
+    <button class="plan-btn plan-btn-outline" onclick="openCheckout('Starter', 'starter')">Get Started →</button>
+  </div>
+
+  <!-- GROWTH -->
+  <div class="plan-card popular">
+    <div class="popular-badge">⚡ Most Popular</div>
+    <div class="plan-name">Growth</div>
+    <div class="plan-desc">For growing businesses that need more power and automation.</div>
+    <div class="plan-price"><span class="amount" id="price-growth">$79</span><span class="period">/mo</span></div>
+    <div class="plan-save" id="save-growth"></div>
+    <ul class="plan-features">
+      <li>All 6 AI Tools (unlimited)</li>
+      <li>15 Zapier automations</li>
+      <li>Priority email support</li>
+      <li>Dashboard + Analytics</li>
+      <li>2 custom automations/mo</li>
+      <li>Priority support</li>
+      <li class="no">Agency services</li>
+    </ul>
+    <button class="plan-btn plan-btn-accent" onclick="openCheckout('Growth', 'growth')">Get Started →</button>
+  </div>
+
+  <!-- AGENCY -->
+  <div class="plan-card">
+    <div class="plan-name">Agency</div>
+    <div class="plan-desc">Full-service AI automation for established businesses ready to scale.</div>
+    <div class="plan-price"><span class="amount" id="price-agency">$199</span><span class="period">/mo</span></div>
+    <div class="plan-save" id="save-agency"></div>
+    <ul class="plan-features">
+      <li>Everything in Growth</li>
+      <li>Unlimited automations</li>
+      <li>Dedicated account manager</li>
+      <li>Custom AI tool builds</li>
+      <li>Unlimited custom automations</li>
+      <li>24/7 priority support</li>
+      <li>Full agency services</li>
+    </ul>
+    <button class="plan-btn plan-btn-outline" onclick="openCheckout('Agency', 'agency')">Get Started →</button>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="faq">
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Can I cancel anytime? <span class="faq-arrow">+</span></div>
+    <div class="faq-a">Yes! You can cancel your subscription at any time with no questions asked. You'll keep access until the end of your billing period.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Is there a free trial? <span class="faq-arrow">+</span></div>
+    <div class="faq-a">Yes, all plans come with a 7-day free trial. No credit card required to start.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">What payment methods do you accept? <span class="faq-arrow">+</span></div>
+    <div class="faq-a">We accept all major credit and debit cards (Visa, Mastercard, Amex) through our secure Stripe payment processor.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Can I upgrade or downgrade my plan? <span class="faq-arrow">+</span></div>
+    <div class="faq-a">Absolutely! You can upgrade or downgrade your plan at any time. Changes take effect immediately and are prorated.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">What are custom automations? <span class="faq-arrow">+</span></div>
+    <div class="faq-a">Custom automations are workflows our team builds specifically for your business — beyond the standard Zapier templates. We analyze your workflow and build bespoke automations tailored to your needs.</div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkout-modal">
+  <div class="modal">
+    <div id="checkout-form">
+      <div class="modal-title">Complete your order</div>
+      <div class="modal-sub">Secure payment powered by Stripe 🔒</div>
+      <div class="modal-plan">
+        <div>
+          <div class="modal-plan-name" id="modal-plan-name">Growth Plan</div>
+          <div style="font-size:12px;color:#888;margin-top:2px">Billed monthly • Cancel anytime</div>
+        </div>
+        <div class="modal-plan-price" id="modal-plan-price">$79/mo</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input class="form-input" id="checkout-name" placeholder="Sandeep Mintu" type="text"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input class="form-input" id="checkout-email" placeholder="you@company.com" type="email"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Card Details</label>
+        <div id="card-element"></div>
+        <div id="card-errors"></div>
+      </div>
+      <div class="modal-btns">
+        <button class="modal-btn modal-btn-cancel" onclick="closeCheckout()">Cancel</button>
+        <button class="modal-btn modal-btn-pay" id="pay-btn" onclick="processPayment()">Pay Now →</button>
+      </div>
+    </div>
+    <div class="success-msg" id="checkout-success" style="display:none">
+      <div class="success-icon">🎉</div>
+      <div class="success-title">Payment Successful!</div>
+      <div class="success-sub">Welcome to BizAI! Check your email for login details. Your dashboard is ready.</div>
+      <button class="plan-btn plan-btn-accent" style="margin-top:20px" onclick="window.location.href='dashboard.html'">Go to Dashboard →</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHATBOT -->
+<button class="chat-btn" onclick="toggleChat()" id="chat-btn">💬</button>
+<div class="chat-window" id="chat-window">
+  <div class="chat-header">
+    <div class="chat-av">B</div>
+    <div class="chat-info">
+      <div class="chat-name">BizAI Assistant</div>
+      <div class="chat-status">● Online — replies instantly</div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-messages" id="chat-messages">
+    <div class="msg msg-bot">👋 Hi! I'm the BizAI assistant. Ask me anything about our pricing, features, or how AI can help your business!</div>
+  </div>
+  <div class="chat-input-wrap">
+    <input class="chat-input" id="chat-input" placeholder="Ask anything..." onkeydown="if(event.key==='Enter')sendChat()"/>
+    <button class="chat-send" onclick="sendChat()">→</button>
+  </div>
+</div>
+
+<script>
+// ── STRIPE SETUP ──
+const stripe = Stripe('pk_test_51T8HtU2NVhcKJQBuRivWWDjG3WsVHhiv2yGC9E3tPaBNrGD6Y4K6eEZ7Qv3xvOBlqGcyMGyYup5NprvQmp0uKMFr00wE346bsy');
+const elements = stripe.elements();
+const cardElement = elements.create('card', {
+  style: {
+    base: { color:'#f0f0f0', fontFamily:'DM Sans, sans-serif', fontSize:'14px', '::placeholder':{ color:'#555' } },
+    invalid: { color:'#ef4444' }
+  }
+});
+cardElement.mount('#card-element');
+cardElement.on('focus', ()=>document.getElementById('card-element').classList.add('focused'));
+cardElement.on('blur', ()=>document.getElementById('card-element').classList.remove('focused'));
+cardElement.on('change', e=>{ document.getElementById('card-errors').textContent = e.error ? e.error.message : ''; });
+
+// ── BILLING TOGGLE ──
+let isYearly = false;
+const prices = { starter:{monthly:29,yearly:23}, growth:{monthly:79,yearly:63}, agency:{monthly:199,yearly:159} };
+
+function toggleBilling() {
+  isYearly = !isYearly;
+  const btn = document.getElementById('billing-toggle');
+  btn.classList.toggle('yearly', isYearly);
+  document.getElementById('lbl-monthly').classList.toggle('active', !isYearly);
+  document.getElementById('lbl-yearly').classList.toggle('active', isYearly);
+  ['starter','growth','agency'].forEach(p => {
+    const price = isYearly ? prices[p].yearly : prices[p].monthly;
+    document.getElementById('price-'+p).textContent = '$'+price;
+    document.getElementById('save-'+p).textContent = isYearly ? 'Save $'+((prices[p].monthly-prices[p].yearly)*12)+'/year' : '';
+  });
+}
+
+// ── CHECKOUT ──
+const planPrices = { starter:'$29/mo', growth:'$79/mo', agency:'$199/mo' };
+let currentPlan = '';
+
+function openCheckout(name, key) {
+  currentPlan = name;
+  document.getElementById('modal-plan-name').textContent = name + ' Plan';
+  const price = isYearly ? prices[key].yearly : prices[key].monthly;
+  document.getElementById('modal-plan-price').textContent = '$'+price+(isYearly?'/mo (billed yearly)':'/mo');
+  document.getElementById('checkout-modal').classList.add('show');
+  document.getElementById('checkout-form').style.display = 'block';
+  document.getElementById('checkout-success').style.display = 'none';
+  // Track in GA
+  gtag('event', 'begin_checkout', { plan: name });
+}
+
+function closeCheckout() {
+  document.getElementById('checkout-modal').classList.remove('show');
+}
+
+async function processPayment() {
+  const name = document.getElementById('checkout-name').value.trim();
+  const email = document.getElementById('checkout-email').value.trim();
+  if (!name || !email) { document.getElementById('card-errors').textContent = 'Please fill in your name and email.'; return; }
+
+  const btn = document.getElementById('pay-btn');
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+
+  const { paymentMethod, error } = await stripe.createPaymentMethod({
+    type: 'card',
+    card: cardElement,
+    billing_details: { name, email }
+  });
+
+  if (error) {
+    document.getElementById('card-errors').textContent = error.message;
+    btn.disabled = false;
+    btn.textContent = 'Pay Now →';
+    return;
+  }
+
+  // Track purchase in GA
+  gtag('event', 'purchase', { plan: currentPlan, payment_method: paymentMethod.id });
+
+  // Show success (in production, send paymentMethod.id to your backend)
+  document.getElementById('checkout-form').style.display = 'none';
+  document.getElementById('checkout-success').style.display = 'block';
+
+  // Notify via email
+  window.open('mailto:mintu73127@gmail.com?subject=New BizAI Signup!&body=Name: '+name+'%0AEmail: '+email+'%0APlan: '+currentPlan, '_blank');
+}
+
+// ── FAQ ──
+function toggleFaq(el) { el.classList.toggle('open'); }
+
+// ── CHATBOT ──
+function toggleChat() {
+  const w = document.getElementById('chat-window');
+  const b = document.getElementById('chat-btn');
+  w.classList.toggle('open');
+  b.textContent = w.classList.contains('open') ? '✕' : '💬';
+  // Track in GA
+  if (w.classList.contains('open')) gtag('event', 'chat_opened');
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  const msgs = document.getElementById('chat-messages');
+
+  // Add user message
+  const userMsg = document.createElement('div');
+  userMsg.className = 'msg msg-user';
+  userMsg.textContent = msg;
+  msgs.appendChild(userMsg);
+
+  // Add typing indicator
+  const typing = document.createElement('div');
+  typing.className = 'msg msg-bot msg-typing';
+  typing.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+  msgs.appendChild(typing);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: `You are BizAI's friendly sales assistant. BizAI is an AI business automation tool with 3 plans: Starter ($29/mo), Growth ($79/mo), Agency ($199/mo). You help visitors understand features, pricing, and how AI can help their business. Keep replies short (2-3 sentences max), friendly and helpful. Never make up features that don't exist.
+
+User question: ${msg}`
+      })
+    });
+    const data = await res.json();
+    typing.remove();
+    const botMsg = document.createElement('div');
+    botMsg.className = 'msg msg-bot';
+    botMsg.textContent = data.result || data.content?.[0]?.text || 'Happy to help! Please reach out to mintu73127@gmail.com for more details.';
+    msgs.appendChild(botMsg);
+  } catch(e) {
+    typing.remove();
+    const botMsg = document.createElement('div');
+    botMsg.className = 'msg msg-bot';
+    botMsg.textContent = 'Sorry, I\'m having trouble connecting. Email us at mintu73127@gmail.com!';
+    msgs.appendChild(botMsg);
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Track chat in GA
+  gtag('event', 'chat_message_sent');
+}
+
+// Close modal on overlay click
+document.getElementById('checkout-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeCheckout();
+});
+</script>
+</body>
+</html>
