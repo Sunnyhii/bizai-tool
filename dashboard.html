@@ -6,26 +6,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BizAI — Dashboard</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-:root {
-  --bg: #0a0c0a;
-  --sidebar-bg: #0d110d;
-  --card: #111811;
-  --card-hover: #141e14;
-  --border: #1e2e1e;
-  --accent: #d4f53c;
-  --text: #eef5ee;
-  --muted: #6b8f6b;
-  --muted2: #3a5a3a;
-  --review: #f5a623;
-  --complete: #2ed573;
-  --danger: #ff4757;
-}
-body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; font-size: 13px; }
-::-webkit-scrollbar { width: 3px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+html { background: #0a0c0a !important; color-scheme: dark; }
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+  –bg: #0a0c0a;
+  –sidebar-bg: #0d110d;
+  –card: #111811;
+  –card-hover: #141e14;
+  –border: #1e2e1e;
+  –accent: #d4f53c;
+  –text: #eef5ee;
+  –muted: #6b8f6b;
+  –muted2: #3a5a3a;
+  –review: #f5a623;
+  –complete: #2ed573;
+  –danger: #ff4757;
+  }
+  body { font-family: ‘Segoe UI’, system-ui, -apple-system, sans-serif; background: #0a0c0a !important; color: #eef5ee !important; display: flex; height: 100vh; overflow: hidden; font-size: 13px; color-scheme: dark; }
+  ::-webkit-scrollbar { width: 3px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(–border); border-radius: 2px; }
 
 /* SIDEBAR */
-.sidebar { width: 230px; background: var(–sidebar-bg); border-right: 1px solid var(–border); display: flex; flex-direction: column; flex-shrink: 0; }
+.sidebar { width: 230px; background: #0d110d !important; border-right: 1px solid #1e2e1e !important; display: flex; flex-direction: column; flex-shrink: 0; }
 .sidebar-logo { padding: 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(–border); }
 .logo-box { width: 28px; height: 28px; background: var(–accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; color: #000; flex-shrink: 0; }
 .logo-name { font-size: 15px; font-weight: 800; color: var(–text); }
@@ -59,7 +61,7 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
 
 /* STATS */
 .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 13px; margin-bottom: 20px; }
-.stat-box { background: var(–card); border: 1px solid var(–border); border-radius: 10px; padding: 15px 16px; display: flex; align-items: center; gap: 13px; }
+.stat-box { background: #111811 !important; border: 1px solid #1e2e1e !important; border-radius: 10px; padding: 15px 16px; display: flex; align-items: center; gap: 13px; }
 .stat-icon { width: 32px; height: 32px; background: rgba(212,245,60,0.1); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
 .stat-label { font-size: 10px; font-weight: 700; color: var(–muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
 .stat-val { font-size: 23px; font-weight: 900; line-height: 1; }
@@ -67,7 +69,7 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
 
 /* TWO COL */
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
-.card { background: var(–card); border: 1px solid var(–border); border-radius: 10px; padding: 17px; }
+.card { background: #111811 !important; border: 1px solid #1e2e1e !important; border-radius: 10px; padding: 17px; }
 .card-hrow { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 13px; }
 .card-title { font-size: 13px; font-weight: 700; }
 .card-sub { font-size: 11px; color: var(–muted); margin-top: 2px; }
