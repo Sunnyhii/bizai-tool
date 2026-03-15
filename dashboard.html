@@ -987,7 +987,7 @@ async function runTool(btn, toolType) {
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': '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', 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
@@ -1051,7 +1051,7 @@ async function submitRequest() {
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': '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', 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
@@ -1071,13 +1071,13 @@ Tell them we received it and will reply within 24 hours.`
     // Open email client for owner notification
     const subject = encodeURIComponent(`[BizAI Request] ${type} — ${priority}`);
     const body = encodeURIComponent(`New Request from: ${name} (${email})\nType: ${type}\nPriority: ${priority}\n\nDescription:\n${desc}\n\n---\nAuto-generated confirmation for client:\n${confirmText}`);
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:mintu73127@gmail.com?subject=${subject}&body=${body}`;
 
   } catch(e) {
     // Fallback mailto even if API fails
     const subject = encodeURIComponent(`[BizAI Request] ${type} from ${name}`);
     const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nType: ${type}\nPriority: ${priority}\n\nDescription:\n${desc}`);
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:mintu73127@gmail.com?subject=${subject}&body=${body}`;
   }
 
   // Show success
