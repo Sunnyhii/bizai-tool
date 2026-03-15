@@ -6,61 +6,61 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BizAI — Dashboard</title>
 <style>
-html, body { margin:0; padding:0; background:#060a06; color:#e8f5e8; font-family:'Segoe UI',system-ui,sans-serif; font-size:13px; color-scheme:dark; }
+html, body { margin:0; padding:0; background:#050905; color:#f0fff0; font-family:'Segoe UI',system-ui,sans-serif; font-size:13px; color-scheme:dark; }
 * { box-sizing:border-box; }
 body { display:flex; height:100vh; overflow:hidden; }
 ::-webkit-scrollbar { width:3px; }
-::-webkit-scrollbar-thumb { background:#1a3a1a; border-radius:2px; }
+::-webkit-scrollbar-thumb { background:#2a4a2a; border-radius:2px; }
 
 /* ── SIDEBAR ── */
 .sidebar {
 width:230px; flex-shrink:0;
-background:#081208;
-border-right:1px solid #1a3a1a;
+background:#0a140a;
+border-right:1px solid #2a4a2a;
 display:flex; flex-direction:column;
 }
 .logo-wrap {
 padding:16px 14px;
-border-bottom:1px solid #1a3a1a;
+border-bottom:1px solid #2a4a2a;
 display:flex; align-items:center; gap:10px;
 }
 .logo-box {
 width:30px; height:30px; border-radius:7px;
-background:#d4f53c;
+background:#f5e642;
 display:flex; align-items:center; justify-content:center;
 font-weight:900; font-size:13px; color:#000; flex-shrink:0;
 }
-.logo-text { font-size:15px; font-weight:800; color:#e8f5e8; }
+.logo-text { font-size:15px; font-weight:800; color:#f0fff0; }
 .user-wrap {
 padding:11px 14px;
-border-bottom:1px solid #1a3a1a;
+border-bottom:1px solid #2a4a2a;
 display:flex; align-items:center; gap:9px;
 }
 .user-av {
 width:27px; height:27px; border-radius:50%;
-background:#0f200f; border:1px solid #1a3a1a;
+background:#0f200f; border:1px solid #2a4a2a;
 display:flex; align-items:center; justify-content:center;
 font-size:12px; flex-shrink:0;
 }
-.user-name { font-size:12px; font-weight:700; color:#e8f5e8; }
-.user-plan { font-size:10px; color:#d4f53c; font-weight:600; }
+.user-name { font-size:12px; font-weight:700; color:#f0fff0; }
+.user-plan { font-size:10px; color:#a8ff78; font-weight:600; }
 .nav-lbl {
 padding:10px 14px 3px;
 font-size:10px; font-weight:700;
-color:#2a5a2a; text-transform:uppercase; letter-spacing:1px;
+color:#507050; text-transform:uppercase; letter-spacing:1px;
 }
 .nav-item {
 display:flex; align-items:center; gap:9px;
 padding:8px 12px; margin:1px 7px; border-radius:7px;
-cursor:pointer; color:#5a9a5a;
+cursor:pointer; color:#90b890;
 font-size:12.5px; font-weight:500;
 transition:all 0.12s;
 }
-.nav-item:hover { background:#0f200f; color:#e8f5e8; }
-.nav-item.active { background:#d4f53c; color:#000; font-weight:700; }
+.nav-item:hover { background:#0f200f; color:#f0fff0; }
+.nav-item.active { background:#f5e642; color:#000; font-weight:700; }
 .nav-ic { font-size:13px; width:16px; text-align:center; flex-shrink:0; }
 .nav-dot {
-margin-left:auto; background:#d4f53c; color:#000;
+margin-left:auto; background:#f5e642; color:#000;
 font-size:10px; font-weight:800;
 width:17px; height:17px; border-radius:50%;
 display:flex; align-items:center; justify-content:center; flex-shrink:0;
@@ -69,19 +69,19 @@ display:flex; align-items:center; justify-content:center; flex-shrink:0;
 .nav-plus {
 display:flex; align-items:center; gap:8px;
 padding:7px 12px; margin:1px 7px; border-radius:7px;
-cursor:pointer; color:#5a9a5a; font-size:12px;
+cursor:pointer; color:#90b890; font-size:12px;
 transition:color 0.12s;
 }
-.nav-plus:hover { color:#d4f53c; }
+.nav-plus:hover { color:#a8ff78; }
 
 /* ── MAIN ── */
 .main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
 .topbar {
-padding:15px 26px; border-bottom:1px solid #1a3a1a;
+padding:15px 26px; border-bottom:1px solid #2a4a2a;
 display:flex; align-items:flex-start; justify-content:space-between; flex-shrink:0;
 }
-.topbar h1 { font-size:20px; font-weight:800; color:#e8f5e8; letter-spacing:-0.3px; }
-.topbar p { font-size:12px; color:#5a9a5a; margin-top:2px; }
+.topbar h1 { font-size:20px; font-weight:800; color:#f0fff0; letter-spacing:-0.3px; }
+.topbar p { font-size:12px; color:#90b890; margin-top:2px; }
 .tb-btns { display:flex; gap:9px; align-items:center; }
 .btn {
 padding:7px 13px; border-radius:7px;
@@ -89,32 +89,32 @@ font-size:12px; font-weight:700; cursor:pointer;
 border:none; display:flex; align-items:center; gap:5px;
 transition:all 0.12s;
 }
-.btn-ol { background:transparent; color:#e8f5e8; border:1px solid #1a3a1a; }
-.btn-ol:hover { border-color:#d4f53c; color:#d4f53c; }
-.btn-ac { background:#d4f53c; color:#000; }
-.btn-ac:hover { background:#c5e020; }
+.btn-ol { background:transparent; color:#f0fff0; border:1px solid #2a4a2a; }
+.btn-ol:hover { border-color:#a8ff78; color:#a8ff78; }
+.btn-ac { background:#f5e642; color:#000; }
+.btn-ac:hover { background:#ddd030; }
 .content { flex:1; overflow-y:auto; padding:22px 26px; }
 .page { display:none; }
 .page.active { display:block; }
 
 /* ── CARDS & BOXES ── */
 .card {
-background:#0c1c0c;
-border:1px solid #1a3a1a;
+background:#0f1f0f;
+border:1px solid #2a4a2a;
 border-radius:10px; padding:17px;
 }
 .card-hrow {
 display:flex; align-items:flex-start;
 justify-content:space-between; margin-bottom:13px;
 }
-.card-title { font-size:13px; font-weight:700; color:#e8f5e8; }
-.card-sub { font-size:11px; color:#5a9a5a; margin-top:2px; }
-.card-link { font-size:11px; color:#d4f53c; cursor:pointer; font-weight:600; white-space:nowrap; }
+.card-title { font-size:13px; font-weight:700; color:#f0fff0; }
+.card-sub { font-size:11px; color:#90b890; margin-top:2px; }
+.card-link { font-size:11px; color:#a8ff78; cursor:pointer; font-weight:600; white-space:nowrap; }
 
 /* ── STATS ── */
 .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:13px; margin-bottom:20px; }
 .stat-box {
-background:#0c1c0c; border:1px solid #1a3a1a;
+background:#0f1f0f; border:1px solid #2a4a2a;
 border-radius:10px; padding:15px 16px;
 display:flex; align-items:center; gap:13px;
 }
@@ -124,9 +124,9 @@ background:rgba(212,245,60,0.08);
 display:flex; align-items:center; justify-content:center;
 font-size:15px; flex-shrink:0;
 }
-.stat-lbl { font-size:10px; font-weight:700; color:#5a9a5a; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:3px; }
-.stat-val { font-size:23px; font-weight:900; color:#e8f5e8; line-height:1; }
-.stat-sub { font-size:10px; color:#d4f53c; margin-top:3px; font-weight:600; }
+.stat-lbl { font-size:10px; font-weight:700; color:#90b890; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:3px; }
+.stat-val { font-size:23px; font-weight:900; color:#f0fff0; line-height:1; }
+.stat-sub { font-size:10px; color:#a8ff78; margin-top:3px; font-weight:600; }
 
 /* ── TWO COL ── */
 .two-col { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px; }
@@ -134,81 +134,81 @@ font-size:15px; flex-shrink:0;
 /* ── AUTO ROWS ── */
 .auto-row {
 display:flex; align-items:center; gap:11px;
-padding:9px 0; border-bottom:1px solid #1a3a1a;
+padding:9px 0; border-bottom:1px solid #2a4a2a;
 }
 .auto-row:last-child { border-bottom:none; padding-bottom:0; }
 .auto-ic {
 width:27px; height:27px; border-radius:6px;
-background:#122012; border:1px solid #1a3a1a;
+background:#162416; border:1px solid #2a4a2a;
 display:flex; align-items:center; justify-content:center;
 font-size:12px; flex-shrink:0;
 }
-.auto-name { font-size:12px; font-weight:600; color:#e8f5e8; }
-.auto-desc { font-size:11px; color:#5a9a5a; }
+.auto-name { font-size:12px; font-weight:600; color:#f0fff0; }
+.auto-desc { font-size:11px; color:#90b890; }
 .auto-num { margin-left:auto; text-align:right; white-space:nowrap; }
-.auto-num-val { font-size:12px; font-weight:700; color:#d4f53c; }
-.auto-num-lbl { font-size:10px; color:#5a9a5a; }
+.auto-num-val { font-size:12px; font-weight:700; color:#a8ff78; }
+.auto-num-lbl { font-size:10px; color:#90b890; }
 
 /* ── ACTIVITY ── */
 .act-row {
 display:flex; align-items:flex-start; gap:9px;
-padding:7px 0; border-bottom:1px solid #1a3a1a;
+padding:7px 0; border-bottom:1px solid #2a4a2a;
 }
 .act-row:last-child { border-bottom:none; }
-.act-dot { width:6px; height:6px; border-radius:50%; background:#d4f53c; margin-top:5px; flex-shrink:0; }
+.act-dot { width:6px; height:6px; border-radius:50%; background:#a8ff78; margin-top:5px; flex-shrink:0; }
 .act-dot.warn { background:#f5a623; }
-.act-text { flex:1; font-size:12px; color:#c8e8c8; line-height:1.4; }
-.act-time { font-size:11px; color:#5a9a5a; white-space:nowrap; }
+.act-text { flex:1; font-size:12px; color:#f0fff0; line-height:1.4; }
+.act-time { font-size:11px; color:#90b890; white-space:nowrap; }
 
 /* ── QUICK TOOLS ── */
 .qt-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:11px; }
 .qt-card {
-background:#0c1c0c; border:1px solid #1a3a1a;
+background:#0f1f0f; border:1px solid #2a4a2a;
 border-radius:9px; padding:15px; cursor:pointer;
 transition:all 0.12s;
 }
-.qt-card:hover { border-color:#d4f53c; background:#102010; }
+.qt-card:hover { border-color:#a8ff78; background:#162416; }
 .qt-ic { font-size:18px; margin-bottom:7px; }
-.qt-name { font-size:13px; font-weight:700; color:#e8f5e8; margin-bottom:3px; }
-.qt-desc { font-size:11px; color:#5a9a5a; margin-bottom:7px; line-height:1.4; }
-.qt-stat { font-size:11px; color:#d4f53c; font-weight:700; }
+.qt-name { font-size:13px; font-weight:700; color:#f0fff0; margin-bottom:3px; }
+.qt-desc { font-size:11px; color:#90b890; margin-bottom:7px; line-height:1.4; }
+.qt-stat { font-size:11px; color:#a8ff78; font-weight:700; }
 
 /* ── AI TOOLS ── */
 .tools-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:13px; }
 .tc {
-background:#0c1c0c; border:1px solid #1a3a1a;
+background:#0f1f0f; border:1px solid #2a4a2a;
 border-radius:10px; padding:18px; transition:border-color 0.12s;
 }
-.tc:hover { border-color:#d4f53c; }
+.tc:hover { border-color:#a8ff78; }
 .tc-ic {
 width:34px; height:34px; border-radius:7px;
 background:rgba(212,245,60,0.08);
 display:flex; align-items:center; justify-content:center;
 font-size:17px; margin-bottom:11px;
 }
-.tc-name { font-size:14px; font-weight:800; color:#e8f5e8; margin-bottom:5px; }
-.tc-desc { font-size:12px; color:#5a9a5a; line-height:1.5; margin-bottom:10px; }
-.tc-stat { font-size:11px; color:#d4f53c; font-weight:700; margin-bottom:10px; }
+.tc-name { font-size:14px; font-weight:800; color:#f0fff0; margin-bottom:5px; }
+.tc-desc { font-size:12px; color:#90b890; line-height:1.5; margin-bottom:10px; }
+.tc-stat { font-size:11px; color:#a8ff78; font-weight:700; margin-bottom:10px; }
 .tc-input {
-width:100%; background:#060a06; border:1px solid #1a3a1a;
-border-radius:6px; padding:8px 10px; color:#e8f5e8;
+width:100%; background:#050905; border:1px solid #2a4a2a;
+border-radius:6px; padding:8px 10px; color:#f0fff0;
 font-size:12px; resize:vertical; min-height:55px;
 margin-bottom:7px; font-family:inherit;
 }
-.tc-input:focus { outline:none; border-color:#d4f53c; }
+.tc-input:focus { outline:none; border-color:#a8ff78; }
 .tc-out {
-background:#060a06; border:1px solid #1a3a1a;
+background:#050905; border:1px solid #2a4a2a;
 border-radius:6px; padding:9px; font-size:12px;
-color:#c8e8c8; min-height:55px; line-height:1.6;
+color:#f0fff0; min-height:55px; line-height:1.6;
 display:none; margin-top:7px; white-space:pre-wrap;
 }
 .btn-gen {
-width:100%; background:#d4f53c; color:#000;
+width:100%; background:#f5e642; color:#000;
 border:none; padding:8px; border-radius:6px;
 font-size:12px; font-weight:800; cursor:pointer;
 }
-.btn-gen:hover { background:#c5e020; }
-.btn-gen:disabled { background:#1a3a1a; color:#5a9a5a; cursor:not-allowed; }
+.btn-gen:hover { background:#ddd030; }
+.btn-gen:disabled { background:#2a4a2a; color:#90b890; cursor:not-allowed; }
 
 /* ── AUTOMATIONS ── */
 .zap-bar {
@@ -224,19 +224,19 @@ border-radius:5px; font-size:11px; font-weight:700; text-decoration:none;
 .as { margin-bottom:22px; }
 .as-head {
 display:flex; align-items:center; gap:9px;
-padding-bottom:9px; border-bottom:1px solid #1a3a1a; margin-bottom:11px;
+padding-bottom:9px; border-bottom:1px solid #2a4a2a; margin-bottom:11px;
 }
-.as-title { font-size:13px; font-weight:800; color:#e8f5e8; }
-.as-desc { font-size:11px; color:#5a9a5a; }
+.as-title { font-size:13px; font-weight:800; color:#f0fff0; }
+.as-desc { font-size:11px; color:#90b890; }
 .zg { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
 .zt {
-background:#0c1c0c; border:1px solid #1a3a1a;
+background:#0f1f0f; border:1px solid #2a4a2a;
 border-radius:8px; padding:13px; text-decoration:none;
-color:#e8f5e8; display:block; transition:all 0.12s;
+color:#f0fff0; display:block; transition:all 0.12s;
 }
-.zt:hover { border-color:#d4f53c; transform:translateY(-1px); }
-.zt-name { font-size:12px; font-weight:700; color:#e8f5e8; margin-bottom:3px; }
-.zt-desc { font-size:11px; color:#5a9a5a; line-height:1.4; margin-bottom:9px; }
+.zt:hover { border-color:#a8ff78; transform:translateY(-1px); }
+.zt-name { font-size:12px; font-weight:700; color:#f0fff0; margin-bottom:3px; }
+.zt-desc { font-size:11px; color:#90b890; line-height:1.4; margin-bottom:9px; }
 .zt-foot { display:flex; align-items:center; justify-content:space-between; }
 .zt-apps { display:flex; align-items:center; gap:3px; }
 .ad {
@@ -244,67 +244,67 @@ width:15px; height:15px; border-radius:3px;
 font-size:9px; display:flex; align-items:center;
 justify-content:center; font-weight:700; color:#fff;
 }
-.arr { color:#5a9a5a; margin:0 2px; font-size:9px; }
-.zt-open { font-size:10px; color:#d4f53c; font-weight:700; }
+.arr { color:#90b890; margin:0 2px; font-size:9px; }
+.zt-open { font-size:10px; color:#a8ff78; font-weight:700; }
 
 /* ── REQUESTS ── */
 .req-top {
 display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
 }
-.req-top h2 { font-size:15px; font-weight:700; color:#e8f5e8; }
-.req-top p { font-size:12px; color:#5a9a5a; }
+.req-top h2 { font-size:15px; font-weight:700; color:#f0fff0; }
+.req-top p { font-size:12px; color:#90b890; }
 .req-table {
-background:#0c1c0c; border:1px solid #1a3a1a;
+background:#0f1f0f; border:1px solid #2a4a2a;
 border-radius:10px; overflow:hidden;
 }
 .req-head {
 display:grid; grid-template-columns:2fr 1fr 1.1fr 1.5fr 0.7fr;
-padding:10px 16px; background:#102010; border-bottom:1px solid #1a3a1a;
+padding:10px 16px; background:#162416; border-bottom:1px solid #2a4a2a;
 }
-.req-head span { font-size:10px; font-weight:700; color:#2a5a2a; text-transform:uppercase; letter-spacing:0.5px; }
+.req-head span { font-size:10px; font-weight:700; color:#507050; text-transform:uppercase; letter-spacing:0.5px; }
 .req-row {
 display:grid; grid-template-columns:2fr 1fr 1.1fr 1.5fr 0.7fr;
-padding:13px 16px; border-bottom:1px solid #1a3a1a;
+padding:13px 16px; border-bottom:1px solid #2a4a2a;
 align-items:center; transition:background 0.12s;
 }
 .req-row:last-child { border-bottom:none; }
-.req-row:hover { background:#102010; }
-.req-proj { font-size:13px; font-weight:700; color:#e8f5e8; }
-.req-type { font-size:12px; color:#5a9a5a; }
+.req-row:hover { background:#162416; }
+.req-proj { font-size:13px; font-weight:700; color:#f0fff0; }
+.req-type { font-size:12px; color:#90b890; }
 .sbadge {
 display:inline-flex; align-items:center; gap:4px;
 padding:3px 9px; border-radius:20px; font-size:11px; font-weight:700;
 }
-.s-build { background:rgba(212,245,60,0.12); color:#d4f53c; }
+.s-build { background:rgba(212,245,60,0.12); color:#a8ff78; }
 .s-review { background:rgba(245,166,35,0.12); color:#f5a623; }
 .s-done { background:rgba(46,213,115,0.12); color:#2ed573; }
-.s-pend { background:rgba(90,154,90,0.12); color:#5a9a5a; }
-.prog { height:5px; background:#1a3a1a; border-radius:3px; overflow:hidden; }
-.prog-fill { height:100%; background:#d4f53c; border-radius:3px; }
-.req-eta { font-size:12px; color:#5a9a5a; }
+.s-pend { background:rgba(90,154,90,0.12); color:#90b890; }
+.prog { height:5px; background:#2a4a2a; border-radius:3px; overflow:hidden; }
+.prog-fill { height:100%; background:#a8ff78; border-radius:3px; }
+.req-eta { font-size:12px; color:#90b890; }
 
 /* ── ANALYTICS ── */
 .an-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:13px; margin-bottom:20px; }
 .bar-card {
-background:#0c1c0c; border:1px solid #1a3a1a;
+background:#0f1f0f; border:1px solid #2a4a2a;
 border-radius:10px; padding:18px;
 }
-.bar-title { font-size:13px; font-weight:700; color:#e8f5e8; margin-bottom:15px; }
+.bar-title { font-size:13px; font-weight:700; color:#f0fff0; margin-bottom:15px; }
 .bar-row { display:flex; align-items:center; gap:11px; margin-bottom:11px; }
 .bar-row:last-child { margin-bottom:0; }
-.bar-lbl { font-size:12px; color:#c8e8c8; width:125px; flex-shrink:0; }
-.bar-track { flex:1; height:6px; background:#1a3a1a; border-radius:3px; overflow:hidden; }
-.bar-fill { height:100%; background:#d4f53c; border-radius:3px; }
-.bar-val { font-size:12px; color:#5a9a5a; width:52px; text-align:right; }
+.bar-lbl { font-size:12px; color:#f0fff0; width:125px; flex-shrink:0; }
+.bar-track { flex:1; height:6px; background:#2a4a2a; border-radius:3px; overflow:hidden; }
+.bar-fill { height:100%; background:#a8ff78; border-radius:3px; }
+.bar-val { font-size:12px; color:#90b890; width:52px; text-align:right; }
 
 /* ── FORM ── */
-.fl { font-size:11px; font-weight:700; color:#5a9a5a; margin-bottom:5px; display:block; text-transform:uppercase; letter-spacing:0.3px; }
+.fl { font-size:11px; font-weight:700; color:#90b890; margin-bottom:5px; display:block; text-transform:uppercase; letter-spacing:0.3px; }
 .fi, .fs, .fta {
-width:100%; background:#060a06; border:1px solid #1a3a1a;
-border-radius:7px; padding:8px 10px; color:#e8f5e8;
+width:100%; background:#050905; border:1px solid #2a4a2a;
+border-radius:7px; padding:8px 10px; color:#f0fff0;
 font-size:12px; font-family:inherit; transition:border-color 0.12s;
 }
-.fi:focus, .fs:focus, .fta:focus { outline:none; border-color:#d4f53c; }
+.fi:focus, .fs:focus, .fta:focus { outline:none; border-color:#a8ff78; }
 .fta { resize:vertical; min-height:68px; }
 </style>
 
@@ -381,7 +381,7 @@ font-size:12px; font-family:inherit; transition:border-color 0.12s;
     </div>
   </div>
   <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">
-    <div><div style="font-size:13px;font-weight:700;color:#e8f5e8">Quick AI Tools</div><div style="font-size:11px;color:#5a9a5a;margin-top:2px">Generate content instantly</div></div>
+    <div><div style="font-size:13px;font-weight:700;color:#f0fff0">Quick AI Tools</div><div style="font-size:11px;color:#90b890;margin-top:2px">Generate content instantly</div></div>
     <a class="card-link" onclick="go('tools',document.querySelectorAll('.nav-item')[1])">See all tools →</a>
   </div>
   <div class="qt-grid">
@@ -393,7 +393,7 @@ font-size:12px; font-family:inherit; transition:border-color 0.12s;
 
 <!-- AI TOOLS -->
 <div class="page" id="page-tools">
-  <div style="margin-bottom:16px"><div style="font-size:15px;font-weight:700;color:#e8f5e8;margin-bottom:3px">All AI Tools</div><div style="font-size:12px;color:#5a9a5a">Click any tool to use it instantly</div></div>
+  <div style="margin-bottom:16px"><div style="font-size:15px;font-weight:700;color:#f0fff0;margin-bottom:3px">All AI Tools</div><div style="font-size:12px;color:#90b890">Click any tool to use it instantly</div></div>
   <div class="tools-grid">
     <div class="tc"><div class="tc-ic">✉️</div><div class="tc-name">Email Writer</div><div class="tc-desc">Professional emails written in seconds for any situation.</div><div class="tc-stat">284 used this month</div><textarea class="tc-input" placeholder="Describe the email you need..."></textarea><button class="btn-gen" onclick="run(this,'Write a professional email. Make it clear, concise and actionable.')">Generate ✨</button><div class="tc-out"></div></div>
     <div class="tc"><div class="tc-ic">💬</div><div class="tc-name">Customer Reply</div><div class="tc-desc">Turn difficult customers into happy ones instantly.</div><div class="tc-stat">147 used this month</div><textarea class="tc-input" placeholder="Paste the customer message here..."></textarea><button class="btn-gen" onclick="run(this,'Write a professional empathetic customer service reply. Acknowledge the issue and offer a clear solution.')">Generate ✨</button><div class="tc-out"></div></div>
@@ -444,7 +444,7 @@ font-size:12px; font-family:inherit; transition:border-color 0.12s;
     <div class="zg">
       <a class="zt" href="https://zapier.com/webintent/create-zap?apps=google-forms,hubspot,slack" target="_blank"><div class="zt-name">New lead → CRM + Email + Slack</div><div class="zt-desc">Full lead intake workflow from one form submission</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#7248b9">Fo</div><span class="arr">→</span><div class="ad" style="background:#ff7a59">Hs</div><span class="arr">+</span><div class="ad" style="background:#611f69">Sl</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
       <a class="zt" href="https://zapier.com/webintent/create-zap?apps=gmail,google-sheets,notion" target="_blank"><div class="zt-name">New client onboarding workflow</div><div class="zt-desc">Welcome email + task creation + sheet logging</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#ea4335">G</div><span class="arr">→</span><div class="ad" style="background:#1e7e34">Sh</div><span class="arr">+</span><div class="ad" style="background:#333">N</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
-      <a class="zt" href="https://zapier.com/explore" target="_blank"><div class="zt-name">Browse all 7000+ Zapier templates</div><div class="zt-desc">Connect any app — Gmail, Sheets, Slack, Stripe & more</div><div class="zt-foot"><div style="font-size:11px;color:#5a9a5a">7000+ templates</div><span class="zt-open">Browse all ↗️</span></div></a>
+      <a class="zt" href="https://zapier.com/explore" target="_blank"><div class="zt-name">Browse all 7000+ Zapier templates</div><div class="zt-desc">Connect any app — Gmail, Sheets, Slack, Stripe & more</div><div class="zt-foot"><div style="font-size:11px;color:#90b890">7000+ templates</div><span class="zt-open">Browse all ↗️</span></div></a>
     </div>
   </div>
 </div>
@@ -462,7 +462,7 @@ font-size:12px; font-family:inherit; transition:border-color 0.12s;
   </div>
   <div id="req-form" style="display:none;margin-top:18px">
     <div class="card" style="max-width:540px">
-      <div style="font-size:14px;font-weight:700;color:#e8f5e8;margin-bottom:14px">Submit New Request</div>
+      <div style="font-size:14px;font-weight:700;color:#f0fff0;margin-bottom:14px">Submit New Request</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px">
         <div><label class="fl">Your Name</label><input class="fi" id="rn" placeholder="Sandeep Mintu"></div>
         <div><label class="fl">Email</label><input class="fi" id="re" placeholder="mintu73127@gmail.com"></div>
@@ -474,7 +474,7 @@ font-size:12px; font-family:inherit; transition:border-color 0.12s;
         <button class="btn btn-ac" style="flex:1" onclick="submitR()">Submit Request →</button>
         <button class="btn btn-ol" onclick="document.getElementById('req-form').style.display='none'">Cancel</button>
       </div>
-      <div id="req-ok" style="display:none;margin-top:10px;background:rgba(212,245,60,0.08);border:1px solid #d4f53c;border-radius:7px;padding:10px;text-align:center;font-size:12px;color:#d4f53c;font-weight:700">✅ Request submitted! We'll email you within 24 hours.</div>
+      <div id="req-ok" style="display:none;margin-top:10px;background:rgba(212,245,60,0.08);border:1px solid #a8ff78;border-radius:7px;padding:10px;text-align:center;font-size:12px;color:#a8ff78;font-weight:700">✅ Request submitted! We'll email you within 24 hours.</div>
     </div>
   </div>
 </div>
