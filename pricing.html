@@ -177,7 +177,7 @@ nav { display:flex; align-items:center; justify-content:space-between; padding:2
       <li class="no">Priority support</li>
       <li class="no">Agency services</li>
     </ul>
-    <button class="plan-btn plan-btn-outline" onclick="openCheckout('Starter', 'starter')">Get Started →</button>
+    <button class="plan-btn plan-btn-outline" onclick="window.open('https://calendly.com/mintu73127/30min','_blank');gtag('event','book_call',{plan:'Starter'})">Book Free Call →</button>
   </div>
 
   <!-- GROWTH -->
@@ -196,7 +196,7 @@ nav { display:flex; align-items:center; justify-content:space-between; padding:2
       <li>Priority support</li>
       <li class="no">Agency services</li>
     </ul>
-    <button class="plan-btn plan-btn-accent" onclick="openCheckout('Growth', 'growth')">Get Started →</button>
+    <button class="plan-btn plan-btn-accent" onclick="window.open('https://calendly.com/mintu73127/30min','_blank');gtag('event','book_call',{plan:'Growth'})">Book Free Call →</button>
   </div>
 
   <!-- AGENCY -->
@@ -214,7 +214,7 @@ nav { display:flex; align-items:center; justify-content:space-between; padding:2
       <li>24/7 priority support</li>
       <li>Full agency services</li>
     </ul>
-    <button class="plan-btn plan-btn-outline" onclick="openCheckout('Agency', 'agency')">Get Started →</button>
+    <button class="plan-btn plan-btn-outline" onclick="window.open('https://calendly.com/mintu73127/30min','_blank');gtag('event','book_call',{plan:'Agency'})">Book Free Call →</button>
   </div>
 </div>
 
@@ -427,7 +427,7 @@ async function sendChat() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        prompt: `You are BizAI's friendly sales assistant. BizAI is an AI business automation tool with 3 plans: Starter ($29/mo), Growth ($79/mo), Agency ($199/mo). You help visitors understand features, pricing, and how AI can help their business. Keep replies short (2-3 sentences max), friendly and helpful. Never make up features that don't exist.
+        prompt: `You are BizAI's friendly sales assistant. BizAI is an AI business automation tool with 3 plans: Starter ($29/mo), Growth ($79/mo), Agency ($199/mo). You help visitors understand features, pricing, and how AI can help their business. Keep replies short (2-3 sentences max), friendly and helpful. Never make up features that don't exist. If anyone wants to get started or book a call, share this link: https://calendly.com/mintu73127/30min
 
 User question: ${msg}`
       })
