@@ -2,364 +2,330 @@
 
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BizAI — Pricing</title>
   <script src="https://js.stripe.com/v3/"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 ```
 :root {
-  --bg: #0a0a0f;
-  --surface: #111118;
-  --border: #1e1e2e;
-  --accent: #f0e040;
-  --accent2: #ff6b35;
-  --text: #f0ede8;
-  --muted: #6b6b80;
-  --card-bg: #13131c;
+  --bg: #0a0a0a;
+  --neon: #c8f500;
+  --text: #ffffff;
+  --muted: #888;
+  --card: #111;
+  --border: #222;
 }
-
-html { scroll-behavior: smooth; }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
   min-height: 100vh;
-  overflow-x: hidden;
 }
 
-/* Background grid */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(240,224,64,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(240,224,64,0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Glow blob */
-body::after {
-  content: '';
-  position: fixed;
-  top: -200px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 700px;
-  height: 500px;
-  background: radial-gradient(ellipse, rgba(240,224,64,0.07) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
+/* NAV */
 nav {
-  position: relative;
-  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 48px;
-  border-bottom: 1px solid var(--border);
+  padding: 20px 48px;
+  border-bottom: 1px solid #1a1a1a;
+  position: sticky;
+  top: 0;
+  background: rgba(10,10,10,0.96);
+  backdrop-filter: blur(12px);
+  z-index: 100;
 }
 
 .logo {
   font-family: 'Syne', sans-serif;
   font-weight: 800;
   font-size: 22px;
-  letter-spacing: -0.5px;
-  color: var(--accent);
+  color: var(--neon);
 }
 
 .nav-links {
   display: flex;
+  align-items: center;
   gap: 32px;
   list-style: none;
 }
 
 .nav-links a {
-  color: var(--muted);
+  color: #aaa;
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
   transition: color 0.2s;
 }
 
-.nav-links a:hover { color: var(--text); }
+.nav-links a:hover, .nav-links a.active { color: #fff; }
 
-/* Hero */
+.btn-nav {
+  background: var(--neon);
+  color: #000;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 22px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.btn-nav:hover { opacity: 0.85; color: #000; }
+
+/* HERO */
 .hero {
-  position: relative;
-  z-index: 1;
   text-align: center;
   padding: 80px 24px 48px;
 }
 
-.badge {
-  display: inline-block;
-  background: rgba(240,224,64,0.1);
-  border: 1px solid rgba(240,224,64,0.25);
-  color: var(--accent);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 6px 16px;
-  border-radius: 100px;
-  margin-bottom: 24px;
-}
-
-h1 {
+.section-label {
   font-family: 'Syne', sans-serif;
-  font-size: clamp(40px, 6vw, 72px);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--neon);
+  margin-bottom: 16px;
+}
+
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(44px, 6vw, 72px);
   font-weight: 800;
-  line-height: 1.05;
   letter-spacing: -2px;
-  margin-bottom: 20px;
+  line-height: 1.05;
+  margin-bottom: 16px;
 }
 
-h1 span {
-  color: var(--accent);
-}
-
-.subtitle {
+.hero p {
   color: var(--muted);
-  font-size: 18px;
-  font-weight: 300;
-  max-width: 500px;
-  margin: 0 auto 48px;
+  font-size: 16px;
+  max-width: 440px;
+  margin: 0 auto 40px;
   line-height: 1.6;
 }
 
-/* Toggle */
+/* TOGGLE */
 .toggle-wrap {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 60px;
+  margin-bottom: 48px;
 }
 
-.toggle-label {
-  font-size: 14px;
-  color: var(--muted);
-  font-weight: 500;
+.toggle {
+  display: flex;
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 10px;
+  padding: 4px;
+  gap: 4px;
 }
 
-/* Pricing grid */
-.pricing-grid {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-  max-width: 1100px;
+.toggle-btn {
+  padding: 9px 24px;
+  border-radius: 7px;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: #888;
+  transition: all 0.2s;
+}
+
+.toggle-btn.active {
+  background: var(--neon);
+  color: #000;
+}
+
+/* PRICING GRID */
+.pricing-wrap {
+  max-width: 1050px;
   margin: 0 auto;
   padding: 0 24px 80px;
 }
 
-.card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 36px;
-  position: relative;
-  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-  animation: fadeUp 0.6s ease both;
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
 }
 
-.card:nth-child(1) { animation-delay: 0.1s; }
-.card:nth-child(2) { animation-delay: 0.2s; }
-.card:nth-child(3) { animation-delay: 0.3s; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 28px;
+  position: relative;
+  transition: border-color 0.3s, transform 0.3s;
+  animation: fadeUp 0.5s ease both;
+}
+
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.15s; }
+.card:nth-child(3) { animation-delay: 0.25s; }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(30px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(240,224,64,0.2);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-}
+.card:hover { transform: translateY(-4px); }
 
 .card.featured {
-  border-color: rgba(240,224,64,0.35);
-  background: linear-gradient(145deg, #16161f, #111118);
-  box-shadow: 0 0 0 1px rgba(240,224,64,0.1), 0 20px 60px rgba(0,0,0,0.5);
+  border-color: var(--neon);
+  box-shadow: 0 0 30px rgba(200,245,0,0.08);
 }
 
-.featured-tag {
+.most-popular {
   position: absolute;
   top: -13px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--accent);
+  background: var(--neon);
   color: #000;
-  font-size: 11px;
+  font-family: 'Syne', sans-serif;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  padding: 5px 14px;
+  padding: 4px 14px;
   border-radius: 100px;
   white-space: nowrap;
 }
 
-.free-trial-badge {
-  display: inline-block;
-  background: rgba(255, 107, 53, 0.15);
-  border: 1px solid rgba(255, 107, 53, 0.35);
-  color: var(--accent2);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 5px 12px;
-  border-radius: 100px;
-  margin-bottom: 16px;
-}
-
-.trial-note {
-  font-size: 12px;
-  color: var(--accent2);
-  margin-bottom: 12px;
-  font-weight: 500;
-}
-
-.plan-name {
+.plan-label {
   font-family: 'Syne', sans-serif;
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
-.price-wrap {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin-bottom: 8px;
-}
-
-.currency {
-  font-size: 20px;
-  font-weight: 500;
-  color: var(--muted);
-  margin-top: 6px;
-}
-
-.amount {
+.plan-price {
   font-family: 'Syne', sans-serif;
   font-size: 52px;
   font-weight: 800;
   letter-spacing: -2px;
   line-height: 1;
+  margin-bottom: 4px;
 }
 
-.period {
-  font-size: 14px;
+.plan-price sup {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0;
+  vertical-align: super;
+  margin-right: 2px;
+}
+
+.plan-price span {
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0;
   color: var(--muted);
 }
 
-.plan-desc {
+.free-badge {
+  display: inline-block;
+  background: rgba(200,245,0,0.1);
+  border: 1px solid rgba(200,245,0,0.25);
+  color: var(--neon);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 6px;
+  margin: 8px 0 4px;
+}
+
+.plan-tagline {
   color: var(--muted);
-  font-size: 14px;
-  line-height: 1.6;
-  margin-bottom: 28px;
-  padding-bottom: 28px;
+  font-size: 13px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
   border-bottom: 1px solid var(--border);
+  line-height: 1.5;
 }
 
 .features {
   list-style: none;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .features li {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 14px;
-  color: #c0bdb8;
+  font-size: 13.5px;
+  color: #ccc;
   line-height: 1.4;
 }
 
-.features li::before {
-  content: '✦';
-  color: var(--accent);
-  font-size: 10px;
-  margin-top: 3px;
+.check {
+  color: var(--neon);
+  font-size: 13px;
+  margin-top: 1px;
   flex-shrink: 0;
 }
 
+/* BUTTONS */
 .btn {
   width: 100%;
-  padding: 15px 24px;
-  border-radius: 12px;
+  padding: 13px;
+  border-radius: 9px;
   font-family: 'Syne', sans-serif;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.5px;
   cursor: pointer;
   border: none;
-  transition: all 0.2s ease;
-  position: relative;
-  overflow: hidden;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
 }
 
-.btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(255,255,255,0.1);
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.btn:hover::after { opacity: 1; }
-
-.btn-primary {
-  background: var(--accent);
+.btn-neon {
+  background: var(--neon);
   color: #000;
 }
 
-.btn-primary:hover {
-  background: #f5e84a;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(240,224,64,0.3);
+.btn-neon:hover {
+  background: #d4ff10;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(200,245,0,0.2);
 }
 
-.btn-secondary {
+.btn-ghost {
   background: transparent;
-  color: var(--text);
-  border: 1px solid var(--border);
+  color: #fff;
+  border: 1px solid #333;
 }
 
-.btn-secondary:hover {
-  border-color: rgba(240,224,64,0.3);
-  transform: translateY(-1px);
+.btn-ghost:hover {
+  border-color: var(--neon);
+  color: var(--neon);
+  transform: translateY(-2px);
 }
 
 .btn:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
   transform: none !important;
 }
 
-/* Loading spinner */
 .spinner {
   display: inline-block;
-  width: 14px;
-  height: 14px;
+  width: 12px; height: 12px;
   border: 2px solid rgba(0,0,0,0.3);
   border-top-color: #000;
   border-radius: 50%;
@@ -368,15 +334,100 @@ h1 span {
   vertical-align: middle;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* HIDDEN PANELS */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* CTA STRIP */
+.cta-strip {
+  background: var(--neon);
+  text-align: center;
+  padding: 56px 24px;
 }
 
-/* Error toast */
+.cta-strip h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 800;
+  color: #000;
+  letter-spacing: -2px;
+  margin-bottom: 8px;
+}
+
+.cta-strip p {
+  color: rgba(0,0,0,0.6);
+  font-size: 16px;
+  margin-bottom: 28px;
+}
+
+.btn-dark {
+  display: inline-block;
+  background: #000;
+  color: var(--neon);
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 14px 32px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.btn-dark:hover { opacity: 0.85; }
+
+/* FOOTER */
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 48px;
+  border-top: 1px solid #1a1a1a;
+  color: var(--muted);
+  font-size: 13px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--neon);
+}
+
+.footer-links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+}
+
+.footer-links a { color: var(--muted); text-decoration: none; }
+.footer-links a:hover { color: #fff; }
+
+/* CHAT BUBBLE */
+.chat-bubble {
+  position: fixed;
+  bottom: 28px; right: 28px;
+  width: 48px; height: 48px;
+  background: var(--neon);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(200,245,0,0.3);
+  z-index: 50;
+  transition: transform 0.2s;
+}
+.chat-bubble:hover { transform: scale(1.1); }
+
+/* TOAST */
 .toast {
   position: fixed;
-  bottom: 32px;
-  left: 50%;
+  bottom: 32px; left: 50%;
   transform: translateX(-50%) translateY(80px);
   background: #ff4444;
   color: #fff;
@@ -384,32 +435,17 @@ h1 span {
   border-radius: 10px;
   font-size: 14px;
   font-weight: 500;
-  z-index: 100;
-  transition: transform 0.3s ease;
+  z-index: 999;
+  transition: transform 0.3s;
   white-space: nowrap;
 }
+.toast.show { transform: translateX(-50%) translateY(0); }
 
-.toast.show {
-  transform: translateX(-50%) translateY(0);
-}
-
-/* Footer */
-footer {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-  padding: 32px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 13px;
-}
-
-footer a { color: var(--muted); }
-
-@media (max-width: 768px) {
+@media (max-width: 900px) {
+  .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
   nav { padding: 16px 20px; }
   .nav-links { display: none; }
-  .pricing-grid { grid-template-columns: 1fr; padding: 0 16px 60px; }
+  footer { flex-direction: column; text-align: center; padding: 24px 20px; }
 }
 ```
 
@@ -417,108 +453,203 @@ footer a { color: var(--muted); }
 </head>
 <body>
 
+<!-- NAV -->
+
 <nav>
   <div class="logo">BizAI</div>
   <ul class="nav-links">
-    <li><a href="#">Home</a></li>
-    <li><a href="#">Features</a></li>
-    <li><a href="#">Pricing</a></li>
+    <li><a href="#">AI Tools</a></li>
+    <li><a href="#">Agency</a></li>
+    <li><a href="#" class="active">Pricing</a></li>
     <li><a href="#">Contact</a></li>
+    <li><a href="#">Dashboard</a></li>
+    <li><a href="#" class="btn-nav">Start Free</a></li>
   </ul>
 </nav>
 
+<!-- HERO -->
+
 <section class="hero">
-  <div class="badge">Simple Pricing</div>
-  <h1>Invest in your<br/><span>AI-powered growth</span></h1>
-  <p class="subtitle">Choose the plan that fits your business. No hidden fees, no surprises.</p>
+  <div class="section-label">Pricing</div>
+  <h1>Pick your path to AI</h1>
+  <p>Self-serve tools or done-for-you agency — transparent pricing for both.</p>
+
+  <!-- TOGGLE -->
+
+  <div class="toggle-wrap">
+    <div class="toggle">
+      <button class="toggle-btn active" onclick="showPanel('tools', this)">⚡ AI Tools</button>
+      <button class="toggle-btn" onclick="showPanel('agency', this)">🚀 Agency</button>
+    </div>
+  </div>
 </section>
 
-<div class="pricing-grid">
+<!-- PRICING PANELS -->
+
+<div class="pricing-wrap">
+
+  <!-- AI TOOLS PANEL -->
+
+  <div class="panel active" id="panel-tools">
+    <div class="pricing-grid">
+
+```
+  <!-- Starter / Free -->
+  <div class="card">
+    <div class="plan-label">Starter</div>
+    <div class="plan-price"><sup>$</sup>0<span>/mo</span></div>
+    <p class="plan-tagline">Perfect for trying it out</p>
+    <ul class="features">
+      <li><span class="check">✓</span> 20 generations/month</li>
+      <li><span class="check">✓</span> 3 AI Tools</li>
+      <li><span class="check">✓</span> Email & Chat support</li>
+      <li><span class="check">✓</span> Copy & Export</li>
+    </ul>
+    <button class="btn btn-ghost">Get Started Free</button>
+  </div>
 
   <!-- Pro -->
-
-  <div class="card">
-    <div class="free-trial-badge">🎁 First Month FREE</div>
-    <div class="plan-name">Pro</div>
-    <div class="price-wrap">
-      <span class="currency">₹</span>
-      <span class="amount">1,399</span>
-      <span class="period">/mo</span>
-    </div>
-    <p class="trial-note">Free for your first month, then ₹1,399/mo</p>
-    <p class="plan-desc">Perfect for individuals and small teams getting started with AI tools.</p>
-    <ul class="features">
-      <li>Full access to BizAI tools</li>
-      <li>Up to 5 team members</li>
-      <li>Priority email support</li>
-      <li>Monthly analytics reports</li>
-    </ul>
-    <button class="btn btn-secondary" onclick="handleCheckout('price_1T8I1N2NVhcKJQBuSkEXwldZ', this)">
-      Start Free Month
-    </button>
-  </div>
-
-  <!-- Business (Featured) -->
-
   <div class="card featured">
-    <div class="featured-tag">Most Popular</div>
-    <div class="plan-name">Business</div>
-    <div class="price-wrap">
-      <span class="currency">₹</span>
-      <span class="amount">5,999</span>
-      <span class="period">/mo</span>
-    </div>
-    <p class="plan-desc">Built for growing businesses that need more power and collaboration.</p>
+    <div class="most-popular">Most Popular</div>
+    <div class="plan-label">Pro</div>
+    <div class="plan-price"><sup>₹</sup>1,399<span>/mo</span></div>
+    <div class="free-badge">🎁 First month FREE</div>
+    <p class="plan-tagline">For growing small businesses</p>
     <ul class="features">
-      <li>Everything in Pro</li>
-      <li>Up to 25 team members</li>
-      <li>Dedicated account manager</li>
-      <li>Advanced AI automation</li>
-      <li>Custom integrations</li>
+      <li><span class="check">✓</span> Unlimited generations</li>
+      <li><span class="check">✓</span> All 6 AI Tools</li>
+      <li><span class="check">✓</span> Priority support</li>
+      <li><span class="check">✓</span> Save & history</li>
+      <li><span class="check">✓</span> No BizAI branding</li>
     </ul>
-    <button class="btn btn-primary" onclick="handleCheckout('price_1T8I5q2NVhcKJQBuToMHhYBp', this)">
-      Get Started
+    <button class="btn btn-neon" onclick="handleCheckout('price_1T8I1N2NVhcKJQBuSkEXwldZ', this)">
+      Start Pro Trial →
     </button>
   </div>
 
-  <!-- Agency Sprint -->
-
+  <!-- Business -->
   <div class="card">
-    <div class="plan-name">Agency Sprint</div>
-    <div class="price-wrap">
-      <span class="currency">$</span>
-      <span class="amount">5,000</span>
-      <span class="period">one-time</span>
-    </div>
-    <p class="plan-desc">A full-service sprint for agencies ready to scale fast with AI.</p>
+    <div class="plan-label">Business</div>
+    <div class="plan-price"><sup>₹</sup>5,999<span>/mo</span></div>
+    <p class="plan-tagline">For teams and agencies</p>
     <ul class="features">
-      <li>Done-for-you AI setup</li>
-      <li>4-week intensive sprint</li>
-      <li>1-on-1 strategy sessions</li>
-      <li>Custom AI workflows built</li>
-      <li>Lifetime access to resources</li>
+      <li><span class="check">✓</span> Everything in Pro</li>
+      <li><span class="check">✓</span> 5 team seats</li>
+      <li><span class="check">✓</span> Custom brand voice</li>
+      <li><span class="check">✓</span> API access</li>
+      <li><span class="check">✓</span> Dedicated support</li>
     </ul>
-    <button class="btn btn-secondary" onclick="handleCheckout('price_1TB8iT2NVhcKJQBuX3oxFq54', this)">
-      Book Your Sprint
+    <button class="btn btn-ghost" onclick="handleCheckout('price_1T8I5q2NVhcKJQBuToMHhYBp', this)">
+      Contact Sales
     </button>
   </div>
 
 </div>
+```
+
+  </div>
+
+  <!-- AGENCY PANEL -->
+
+  <div class="panel" id="panel-agency">
+    <div class="pricing-grid">
+
+```
+  <!-- Starter -->
+  <div class="card">
+    <div class="plan-label">Starter</div>
+    <div class="plan-price"><sup>$</sup>497<span> one-time</span></div>
+    <p class="plan-tagline">Your first automation</p>
+    <ul class="features">
+      <li><span class="check">✓</span> 1 AI tool or workflow</li>
+      <li><span class="check">✓</span> Discovery call included</li>
+      <li><span class="check">✓</span> 7-day delivery</li>
+      <li><span class="check">✓</span> 1 round of revisions</li>
+      <li><span class="check">✓</span> 30-day support</li>
+    </ul>
+    <button class="btn btn-ghost">Get Started</button>
+  </div>
+
+  <!-- Agency Sprint / Growth -->
+  <div class="card featured">
+    <div class="most-popular">Most Popular</div>
+    <div class="plan-label">Agency Sprint</div>
+    <div class="plan-price"><sup>$</sup>5,000<span> one-time</span></div>
+    <p class="plan-tagline">Full automation system — done in 4 weeks</p>
+    <ul class="features">
+      <li><span class="check">✓</span> Up to 3 AI automations</li>
+      <li><span class="check">✓</span> Custom chatbot included</li>
+      <li><span class="check">✓</span> Full workflow audit</li>
+      <li><span class="check">✓</span> 14-day delivery</li>
+      <li><span class="check">✓</span> Unlimited revisions</li>
+      <li><span class="check">✓</span> 60-day priority support</li>
+    </ul>
+    <button class="btn btn-neon" onclick="handleCheckout('price_1TB8iT2NVhcKJQBuX3oxFq54', this)">
+      Book Free AI Audit →
+    </button>
+  </div>
+
+  <!-- Enterprise -->
+  <div class="card">
+    <div class="plan-label">Enterprise</div>
+    <div class="plan-price" style="font-size:42px">Custom<span> quote</span></div>
+    <p class="plan-tagline">Full AI transformation</p>
+    <ul class="features">
+      <li><span class="check">✓</span> Unlimited automations</li>
+      <li><span class="check">✓</span> Dedicated build team</li>
+      <li><span class="check">✓</span> Custom AI apps</li>
+      <li><span class="check">✓</span> Team training sessions</li>
+      <li><span class="check">✓</span> Ongoing retainer available</li>
+    </ul>
+    <button class="btn btn-ghost">Contact Us</button>
+  </div>
+
+</div>
+```
+
+  </div>
+
+</div>
+
+<!-- CTA STRIP -->
+
+<div class="cta-strip">
+  <h2>Start saving time<br/>today — for free</h2>
+  <p>Join hundreds of small business owners who've stopped wasting time.</p>
+  <a href="#" class="btn-dark">⚡ Get Started Free</a>
+</div>
+
+<!-- FOOTER -->
 
 <footer>
-  <p>Payments secured by <a href="https://stripe.com" target="_blank">Stripe</a> &nbsp;·&nbsp; ©️ 2026 BizAI. All rights reserved.</p>
+  <div class="footer-logo">BizAI</div>
+  <span>©️ 2026 BizAI. All rights reserved.</span>
+  <ul class="footer-links">
+    <li><a href="#">Tools</a></li>
+    <li><a href="#">Agency</a></li>
+    <li><a href="#">Dashboard</a></li>
+    <li><a href="#">Privacy</a></li>
+    <li><a href="#">Terms</a></li>
+  </ul>
 </footer>
 
+<div class="chat-bubble">💬</div>
 <div class="toast" id="toast"></div>
 
 <script>
   const stripe = Stripe('pk_test_51T8HtU2NVhcKJQBuRivWWDjG3WsVHhiv2yGC9E3tPaBNrGD6Y4K6eEZ7Qv3xvOBlqGcyMGyYup5NprvQmp0uKMFr00wE346bsy');
 
+  function showPanel(name, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
   async function handleCheckout(priceId, btn) {
     const original = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span>Redirecting...';
-
     try {
       const { error } = await stripe.redirectToCheckout({
         lineItems: [{ price: priceId, quantity: 1 }],
@@ -526,7 +657,6 @@ footer a { color: var(--muted); }
         successUrl: window.location.origin + '/success.html',
         cancelUrl: window.location.href,
       });
-
       if (error) {
         showToast(error.message);
         btn.disabled = false;
