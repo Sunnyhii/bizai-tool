@@ -985,17 +985,13 @@ async function runTool(btn, toolType) {
   };
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/generate', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': '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', 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompts[toolType] }]
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: prompts[toolType] })
     });
     const data = await res.json();
-    const text = data.content?.map(i => i.text || '').join('') || 'Could not generate. Please try again.';
+    const text = data.result || 'Could not generate. Please try again.';
     resultEl.textContent = text;
 
     // Update usage counter
@@ -1049,24 +1045,17 @@ async function submitRequest() {
 
   // Send email notification via mailto fallback + Anthropic API for confirmation message
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/generate', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': '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', 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: `A new BizAI request was submitted. Generate a friendly, professional confirmation reply email (under 100 words) to send to ${name} (${email}). 
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: `A new BizAI request was submitted. Generate a friendly, professional confirmation reply email (under 100 words) to send to ${name} (${email}). 
 Request type: ${type}
 Description: ${desc}
 Priority: ${priority}
-Tell them we received it and will reply within 24 hours.`
-        }]
-      })
+Tell them we received it and will reply within 24 hours.` })
     });
     const data = await res.json();
-    const confirmText = data.content?.map(i => i.text || '').join('') || '';
+    const confirmText = data.result || '';
 
     // Open email client for owner notification
     const subject = encodeURIComponent(`[BizAI Request] ${type} — ${priority}`);
