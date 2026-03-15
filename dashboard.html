@@ -6,207 +6,349 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BizAI — Dashboard</title>
 <style>
-html { background: #050905 !important; color-scheme: dark; }
+html, body { margin:0; padding:0; background:#060a06; color:#e8f5e8; font-family:'Segoe UI',system-ui,sans-serif; font-size:13px; color-scheme:dark; }
+* { box-sizing:border-box; }
+body { display:flex; height:100vh; overflow:hidden; }
+::-webkit-scrollbar { width:3px; }
+::-webkit-scrollbar-thumb { background:#1a3a1a; border-radius:2px; }
 
-- { margin: 0; padding: 0; box-sizing: border-box; }
-  :root {
-  –bg: #050905;
-  –sidebar-bg: #0a140a;
-  –card: #0f1f0f;
-  –card-hover: #162416;
-  –border: #2a4a2a;
-  –accent: #d4f53c;
-  –text: #f0fff0;
-  –muted: #90b890;
-  –muted2: #507050;
-  –review: #f5a623;
-  –complete: #2ed573;
-  –danger: #ff4757;
-  }
-  body { font-family: ‘Segoe UI’, system-ui, -apple-system, sans-serif; background: #050905 !important; color: #eef5ee !important; display: flex; height: 100vh; overflow: hidden; font-size: 13px; color-scheme: dark; }
-  ::-webkit-scrollbar { width: 3px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: #2a4a2a; border-radius: 2px; }
+/* ── SIDEBAR ── */
+.sidebar {
+width:230px; flex-shrink:0;
+background:#081208;
+border-right:1px solid #1a3a1a;
+display:flex; flex-direction:column;
+}
+.logo-wrap {
+padding:16px 14px;
+border-bottom:1px solid #1a3a1a;
+display:flex; align-items:center; gap:10px;
+}
+.logo-box {
+width:30px; height:30px; border-radius:7px;
+background:#d4f53c;
+display:flex; align-items:center; justify-content:center;
+font-weight:900; font-size:13px; color:#000; flex-shrink:0;
+}
+.logo-text { font-size:15px; font-weight:800; color:#e8f5e8; }
+.user-wrap {
+padding:11px 14px;
+border-bottom:1px solid #1a3a1a;
+display:flex; align-items:center; gap:9px;
+}
+.user-av {
+width:27px; height:27px; border-radius:50%;
+background:#0f200f; border:1px solid #1a3a1a;
+display:flex; align-items:center; justify-content:center;
+font-size:12px; flex-shrink:0;
+}
+.user-name { font-size:12px; font-weight:700; color:#e8f5e8; }
+.user-plan { font-size:10px; color:#d4f53c; font-weight:600; }
+.nav-lbl {
+padding:10px 14px 3px;
+font-size:10px; font-weight:700;
+color:#2a5a2a; text-transform:uppercase; letter-spacing:1px;
+}
+.nav-item {
+display:flex; align-items:center; gap:9px;
+padding:8px 12px; margin:1px 7px; border-radius:7px;
+cursor:pointer; color:#5a9a5a;
+font-size:12.5px; font-weight:500;
+transition:all 0.12s;
+}
+.nav-item:hover { background:#0f200f; color:#e8f5e8; }
+.nav-item.active { background:#d4f53c; color:#000; font-weight:700; }
+.nav-ic { font-size:13px; width:16px; text-align:center; flex-shrink:0; }
+.nav-dot {
+margin-left:auto; background:#d4f53c; color:#000;
+font-size:10px; font-weight:800;
+width:17px; height:17px; border-radius:50%;
+display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.nav-item.active .nav-dot { background:rgba(0,0,0,0.2); }
+.nav-plus {
+display:flex; align-items:center; gap:8px;
+padding:7px 12px; margin:1px 7px; border-radius:7px;
+cursor:pointer; color:#5a9a5a; font-size:12px;
+transition:color 0.12s;
+}
+.nav-plus:hover { color:#d4f53c; }
 
-/* SIDEBAR */
-.sidebar { width: 230px; background: #0a140a !important; border-right: 1px solid #3a6a3a !important; display: flex; flex-direction: column; flex-shrink: 0; }
-.sidebar-logo { padding: 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #2a4a2a; }
-.logo-box { width: 28px; height: 28px; background: #d4f53c; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; color: #000; flex-shrink: 0; }
-.logo-name { font-size: 15px; font-weight: 800; color: #f0fff0; }
-.sidebar-user { padding: 12px 14px; display: flex; align-items: center; gap: 9px; border-bottom: 1px solid #2a4a2a; }
-.user-icon { width: 26px; height: 26px; background: #0f1f0f; border: 1px solid #2a4a2a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
-.user-name { font-size: 12px; font-weight: 700; }
-.user-plan { font-size: 10px; color: #d4f53c; font-weight: 600; }
-.nav-section { padding: 10px 14px 3px; font-size: 10px; font-weight: 700; color: #507050; text-transform: uppercase; letter-spacing: 1px; }
-.nav-item { display: flex; align-items: center; gap: 9px; padding: 8px 12px; margin: 1px 7px; border-radius: 7px; cursor: pointer; color: #90b890; transition: all 0.12s; font-size: 12.5px; font-weight: 500; }
-.nav-item:hover { background: #0f1f0f; color: #f0fff0; }
-.nav-item.active { background: #d4f53c; color: #000; font-weight: 700; }
-.nav-item .ni { font-size: 13px; width: 16px; text-align: center; flex-shrink: 0; }
-.nav-badge { margin-left: auto; background: #d4f53c; color: #000; font-size: 10px; font-weight: 800; width: 17px; height: 17px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.nav-item.active .nav-badge { background: rgba(0,0,0,0.2); }
-.nav-extra { display: flex; align-items: center; gap: 8px; padding: 7px 12px; margin: 1px 7px; border-radius: 7px; cursor: pointer; color: #90b890; font-size: 12px; transition: all 0.12s; }
-.nav-extra:hover { color: #d4f53c; }
+/* ── MAIN ── */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.topbar {
+padding:15px 26px; border-bottom:1px solid #1a3a1a;
+display:flex; align-items:flex-start; justify-content:space-between; flex-shrink:0;
+}
+.topbar h1 { font-size:20px; font-weight:800; color:#e8f5e8; letter-spacing:-0.3px; }
+.topbar p { font-size:12px; color:#5a9a5a; margin-top:2px; }
+.tb-btns { display:flex; gap:9px; align-items:center; }
+.btn {
+padding:7px 13px; border-radius:7px;
+font-size:12px; font-weight:700; cursor:pointer;
+border:none; display:flex; align-items:center; gap:5px;
+transition:all 0.12s;
+}
+.btn-ol { background:transparent; color:#e8f5e8; border:1px solid #1a3a1a; }
+.btn-ol:hover { border-color:#d4f53c; color:#d4f53c; }
+.btn-ac { background:#d4f53c; color:#000; }
+.btn-ac:hover { background:#c5e020; }
+.content { flex:1; overflow-y:auto; padding:22px 26px; }
+.page { display:none; }
+.page.active { display:block; }
 
-/* MAIN */
-.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-.topbar { padding: 15px 26px; border-bottom: 1px solid #2a4a2a; display: flex; align-items: flex-start; justify-content: space-between; flex-shrink: 0; }
-.topbar h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }
-.topbar p { font-size: 12px; color: #90b890; margin-top: 2px; }
-.topbar-btns { display: flex; gap: 9px; align-items: center; }
-.btn { padding: 7px 13px; border-radius: 7px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; transition: all 0.12s; display: flex; align-items: center; gap: 5px; }
-.btn-outline { background: transparent; color: #f0fff0; border: 1px solid #2a4a2a; }
-.btn-outline:hover { border-color: #d4f53c; color: #d4f53c; }
-.btn-accent { background: #d4f53c; color: #000; }
-.btn-accent:hover { background: #c5e830; }
-.content { flex: 1; overflow-y: auto; padding: 22px 26px; }
-.page { display: none; } .page.active { display: block; }
+/* ── CARDS & BOXES ── */
+.card {
+background:#0c1c0c;
+border:1px solid #1a3a1a;
+border-radius:10px; padding:17px;
+}
+.card-hrow {
+display:flex; align-items:flex-start;
+justify-content:space-between; margin-bottom:13px;
+}
+.card-title { font-size:13px; font-weight:700; color:#e8f5e8; }
+.card-sub { font-size:11px; color:#5a9a5a; margin-top:2px; }
+.card-link { font-size:11px; color:#d4f53c; cursor:pointer; font-weight:600; white-space:nowrap; }
 
-/* STATS */
-.stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 13px; margin-bottom: 20px; }
-.stat-box { background: #0f1f0f !important; border: 1px solid #3a6a3a !important; border-radius: 10px; padding: 15px 16px; display: flex; align-items: center; gap: 13px; }
-.stat-icon { width: 32px; height: 32px; background: rgba(212,245,60,0.1); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
-.stat-label { font-size: 10px; font-weight: 700; color: #90b890; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
-.stat-val { font-size: 23px; font-weight: 900; line-height: 1; }
-.stat-sub { font-size: 10px; color: #d4f53c; margin-top: 3px; font-weight: 600; }
+/* ── STATS ── */
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:13px; margin-bottom:20px; }
+.stat-box {
+background:#0c1c0c; border:1px solid #1a3a1a;
+border-radius:10px; padding:15px 16px;
+display:flex; align-items:center; gap:13px;
+}
+.stat-ic {
+width:32px; height:32px; border-radius:7px;
+background:rgba(212,245,60,0.08);
+display:flex; align-items:center; justify-content:center;
+font-size:15px; flex-shrink:0;
+}
+.stat-lbl { font-size:10px; font-weight:700; color:#5a9a5a; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:3px; }
+.stat-val { font-size:23px; font-weight:900; color:#e8f5e8; line-height:1; }
+.stat-sub { font-size:10px; color:#d4f53c; margin-top:3px; font-weight:600; }
 
-/* TWO COL */
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
-.card { background: #0f1f0f !important; border: 1px solid #3a6a3a !important; border-radius: 10px; padding: 17px; }
-.card-hrow { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 13px; }
-.card-title { font-size: 13px; font-weight: 700; }
-.card-sub { font-size: 11px; color: #90b890; margin-top: 2px; }
-.card-link { font-size: 11px; color: #d4f53c; cursor: pointer; font-weight: 600; white-space: nowrap; }
-.auto-row { display: flex; align-items: center; gap: 11px; padding: 9px 0; border-bottom: 1px solid #2a4a2a; }
-.auto-row:last-child { border-bottom: none; padding-bottom: 0; }
-.auto-ic { width: 27px; height: 27px; background: #162416; border: 1px solid #2a4a2a; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
-.auto-name { font-size: 12px; font-weight: 600; }
-.auto-desc { font-size: 11px; color: #90b890; }
-.auto-num { margin-left: auto; text-align: right; white-space: nowrap; }
-.auto-num-val { font-size: 12px; font-weight: 700; color: #d4f53c; }
-.auto-num-lbl { font-size: 10px; color: #90b890; }
-.act-row { display: flex; align-items: flex-start; gap: 9px; padding: 7px 0; border-bottom: 1px solid #2a4a2a; }
-.act-row:last-child { border-bottom: none; }
-.act-dot { width: 6px; height: 6px; border-radius: 50%; background: #d4f53c; margin-top: 5px; flex-shrink: 0; }
-.act-dot.warn { background: #f5a623; }
-.act-text { flex: 1; font-size: 12px; line-height: 1.4; }
-.act-time { font-size: 11px; color: #90b890; white-space: nowrap; }
+/* ── TWO COL ── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px; }
 
-/* QUICK TOOLS */
-.qt-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 11px; }
-.qt-card { background: #0f1f0f; border: 1px solid #2a4a2a; border-radius: 9px; padding: 15px; cursor: pointer; transition: all 0.12s; }
-.qt-card:hover { border-color: #d4f53c; }
-.qt-ic { font-size: 18px; margin-bottom: 7px; }
-.qt-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
-.qt-desc { font-size: 11px; color: #90b890; margin-bottom: 7px; line-height: 1.4; }
-.qt-stat { font-size: 11px; color: #d4f53c; font-weight: 700; }
+/* ── AUTO ROWS ── */
+.auto-row {
+display:flex; align-items:center; gap:11px;
+padding:9px 0; border-bottom:1px solid #1a3a1a;
+}
+.auto-row:last-child { border-bottom:none; padding-bottom:0; }
+.auto-ic {
+width:27px; height:27px; border-radius:6px;
+background:#122012; border:1px solid #1a3a1a;
+display:flex; align-items:center; justify-content:center;
+font-size:12px; flex-shrink:0;
+}
+.auto-name { font-size:12px; font-weight:600; color:#e8f5e8; }
+.auto-desc { font-size:11px; color:#5a9a5a; }
+.auto-num { margin-left:auto; text-align:right; white-space:nowrap; }
+.auto-num-val { font-size:12px; font-weight:700; color:#d4f53c; }
+.auto-num-lbl { font-size:10px; color:#5a9a5a; }
 
-/* AI TOOLS */
-.tools-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 13px; }
-.tc { background: #0f1f0f; border: 1px solid #2a4a2a; border-radius: 10px; padding: 18px; transition: border-color 0.12s; }
-.tc:hover { border-color: #d4f53c; }
-.tc-icon { width: 34px; height: 34px; background: rgba(212,245,60,0.1); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 17px; margin-bottom: 11px; }
-.tc-name { font-size: 14px; font-weight: 800; margin-bottom: 5px; }
-.tc-desc { font-size: 12px; color: #90b890; line-height: 1.5; margin-bottom: 10px; }
-.tc-stat { font-size: 11px; color: #d4f53c; font-weight: 700; margin-bottom: 10px; }
-.tc-input { width: 100%; background: #050905; border: 1px solid #2a4a2a; border-radius: 6px; padding: 8px 10px; color: #f0fff0; font-size: 12px; resize: vertical; min-height: 55px; margin-bottom: 7px; font-family: inherit; }
-.tc-input:focus { outline: none; border-color: #d4f53c; }
-.tc-out { background: #050905; border: 1px solid #2a4a2a; border-radius: 6px; padding: 9px; font-size: 12px; min-height: 55px; line-height: 1.6; display: none; margin-top: 7px; white-space: pre-wrap; }
-.btn-gen { width: 100%; background: #d4f53c; color: #000; border: none; padding: 8px; border-radius: 6px; font-size: 12px; font-weight: 800; cursor: pointer; }
-.btn-gen:hover { background: #c5e830; }
-.btn-gen:disabled { background: #2a4a2a; color: #90b890; cursor: not-allowed; }
+/* ── ACTIVITY ── */
+.act-row {
+display:flex; align-items:flex-start; gap:9px;
+padding:7px 0; border-bottom:1px solid #1a3a1a;
+}
+.act-row:last-child { border-bottom:none; }
+.act-dot { width:6px; height:6px; border-radius:50%; background:#d4f53c; margin-top:5px; flex-shrink:0; }
+.act-dot.warn { background:#f5a623; }
+.act-text { flex:1; font-size:12px; color:#c8e8c8; line-height:1.4; }
+.act-time { font-size:11px; color:#5a9a5a; white-space:nowrap; }
 
-/* AUTOMATIONS */
-.zap-notice { background: rgba(255,74,0,0.08); border: 1px solid rgba(255,74,0,0.2); border-radius: 8px; padding: 10px 15px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; }
-.zap-notice span { font-size: 12px; color: #ff7a40; }
-.zap-cta { background: #ff4a00; color: #fff; padding: 5px 11px; border-radius: 5px; font-size: 11px; font-weight: 700; text-decoration: none; }
-.as { margin-bottom: 22px; }
-.as-head { display: flex; align-items: center; gap: 9px; padding-bottom: 9px; border-bottom: 1px solid #2a4a2a; margin-bottom: 11px; }
-.as-title { font-size: 13px; font-weight: 800; }
-.as-desc { font-size: 11px; color: #90b890; }
-.zg { display: grid; grid-template-columns: repeat(3,1fr); gap: 9px; }
-.zt { background: #0f1f0f; border: 1px solid #2a4a2a; border-radius: 8px; padding: 13px; text-decoration: none; color: #f0fff0; display: block; transition: all 0.12s; }
-.zt:hover { border-color: #d4f53c; transform: translateY(-1px); }
-.zt-name { font-size: 12px; font-weight: 700; margin-bottom: 3px; }
-.zt-desc { font-size: 11px; color: #90b890; line-height: 1.4; margin-bottom: 9px; }
-.zt-foot { display: flex; align-items: center; justify-content: space-between; }
-.zt-apps { display: flex; align-items: center; gap: 3px; }
-.ad { width: 15px; height: 15px; border-radius: 3px; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; }
-.zt-open { font-size: 10px; color: #d4f53c; font-weight: 700; }
+/* ── QUICK TOOLS ── */
+.qt-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:11px; }
+.qt-card {
+background:#0c1c0c; border:1px solid #1a3a1a;
+border-radius:9px; padding:15px; cursor:pointer;
+transition:all 0.12s;
+}
+.qt-card:hover { border-color:#d4f53c; background:#102010; }
+.qt-ic { font-size:18px; margin-bottom:7px; }
+.qt-name { font-size:13px; font-weight:700; color:#e8f5e8; margin-bottom:3px; }
+.qt-desc { font-size:11px; color:#5a9a5a; margin-bottom:7px; line-height:1.4; }
+.qt-stat { font-size:11px; color:#d4f53c; font-weight:700; }
 
-/* REQUESTS */
-.req-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-.req-top h2 { font-size: 15px; font-weight: 700; }
-.req-top p { font-size: 12px; color: #90b890; }
-.req-table { background: #0f1f0f; border: 1px solid #2a4a2a; border-radius: 10px; overflow: hidden; }
-.req-head { display: grid; grid-template-columns: 2fr 1fr 1.1fr 1.5fr 0.7fr; padding: 10px 16px; background: #162416; border-bottom: 1px solid #2a4a2a; }
-.req-head span { font-size: 10px; font-weight: 700; color: #507050; text-transform: uppercase; letter-spacing: 0.5px; }
-.req-row { display: grid; grid-template-columns: 2fr 1fr 1.1fr 1.5fr 0.7fr; padding: 13px 16px; border-bottom: 1px solid #2a4a2a; align-items: center; transition: background 0.12s; }
-.req-row:last-child { border-bottom: none; }
-.req-row:hover { background: #162416; }
-.req-proj { font-size: 13px; font-weight: 700; }
-.req-type { font-size: 12px; color: #90b890; }
-.sbadge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-.s-build { background: rgba(212,245,60,0.13); color: #d4f53c; }
-.s-review { background: rgba(245,166,35,0.13); color: #f5a623; }
-.s-done { background: rgba(46,213,115,0.13); color: #2ed573; }
-.s-pend { background: rgba(107,143,107,0.13); color: #90b890; }
-.prog { height: 5px; background: #2a4a2a; border-radius: 3px; overflow: hidden; }
-.prog-fill { height: 100%; background: #d4f53c; border-radius: 3px; }
-.req-eta { font-size: 12px; color: #90b890; }
+/* ── AI TOOLS ── */
+.tools-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:13px; }
+.tc {
+background:#0c1c0c; border:1px solid #1a3a1a;
+border-radius:10px; padding:18px; transition:border-color 0.12s;
+}
+.tc:hover { border-color:#d4f53c; }
+.tc-ic {
+width:34px; height:34px; border-radius:7px;
+background:rgba(212,245,60,0.08);
+display:flex; align-items:center; justify-content:center;
+font-size:17px; margin-bottom:11px;
+}
+.tc-name { font-size:14px; font-weight:800; color:#e8f5e8; margin-bottom:5px; }
+.tc-desc { font-size:12px; color:#5a9a5a; line-height:1.5; margin-bottom:10px; }
+.tc-stat { font-size:11px; color:#d4f53c; font-weight:700; margin-bottom:10px; }
+.tc-input {
+width:100%; background:#060a06; border:1px solid #1a3a1a;
+border-radius:6px; padding:8px 10px; color:#e8f5e8;
+font-size:12px; resize:vertical; min-height:55px;
+margin-bottom:7px; font-family:inherit;
+}
+.tc-input:focus { outline:none; border-color:#d4f53c; }
+.tc-out {
+background:#060a06; border:1px solid #1a3a1a;
+border-radius:6px; padding:9px; font-size:12px;
+color:#c8e8c8; min-height:55px; line-height:1.6;
+display:none; margin-top:7px; white-space:pre-wrap;
+}
+.btn-gen {
+width:100%; background:#d4f53c; color:#000;
+border:none; padding:8px; border-radius:6px;
+font-size:12px; font-weight:800; cursor:pointer;
+}
+.btn-gen:hover { background:#c5e020; }
+.btn-gen:disabled { background:#1a3a1a; color:#5a9a5a; cursor:not-allowed; }
 
-/* ANALYTICS */
-.an-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 13px; margin-bottom: 20px; }
-.bar-card { background: #0f1f0f; border: 1px solid #2a4a2a; border-radius: 10px; padding: 18px; }
-.bar-card-title { font-size: 13px; font-weight: 700; margin-bottom: 15px; }
-.bar-row { display: flex; align-items: center; gap: 11px; margin-bottom: 11px; }
-.bar-row:last-child { margin-bottom: 0; }
-.bar-lbl { font-size: 12px; width: 125px; flex-shrink: 0; }
-.bar-track { flex: 1; height: 6px; background: #2a4a2a; border-radius: 3px; overflow: hidden; }
-.bar-fill { height: 100%; background: #d4f53c; border-radius: 3px; }
-.bar-val { font-size: 12px; color: #90b890; width: 52px; text-align: right; }
+/* ── AUTOMATIONS ── */
+.zap-bar {
+background:rgba(255,74,0,0.07); border:1px solid rgba(255,74,0,0.2);
+border-radius:8px; padding:10px 15px; margin-bottom:18px;
+display:flex; align-items:center; justify-content:space-between;
+}
+.zap-bar span { font-size:12px; color:#ff7a40; }
+.zap-cta {
+background:#ff4a00; color:#fff; padding:5px 11px;
+border-radius:5px; font-size:11px; font-weight:700; text-decoration:none;
+}
+.as { margin-bottom:22px; }
+.as-head {
+display:flex; align-items:center; gap:9px;
+padding-bottom:9px; border-bottom:1px solid #1a3a1a; margin-bottom:11px;
+}
+.as-title { font-size:13px; font-weight:800; color:#e8f5e8; }
+.as-desc { font-size:11px; color:#5a9a5a; }
+.zg { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
+.zt {
+background:#0c1c0c; border:1px solid #1a3a1a;
+border-radius:8px; padding:13px; text-decoration:none;
+color:#e8f5e8; display:block; transition:all 0.12s;
+}
+.zt:hover { border-color:#d4f53c; transform:translateY(-1px); }
+.zt-name { font-size:12px; font-weight:700; color:#e8f5e8; margin-bottom:3px; }
+.zt-desc { font-size:11px; color:#5a9a5a; line-height:1.4; margin-bottom:9px; }
+.zt-foot { display:flex; align-items:center; justify-content:space-between; }
+.zt-apps { display:flex; align-items:center; gap:3px; }
+.ad {
+width:15px; height:15px; border-radius:3px;
+font-size:9px; display:flex; align-items:center;
+justify-content:center; font-weight:700; color:#fff;
+}
+.arr { color:#5a9a5a; margin:0 2px; font-size:9px; }
+.zt-open { font-size:10px; color:#d4f53c; font-weight:700; }
 
-/* FORM */
-.form-label { font-size: 11px; font-weight: 700; color: #90b890; margin-bottom: 5px; display: block; text-transform: uppercase; letter-spacing: 0.3px; }
-.form-input, .form-select, .form-textarea { width: 100%; background: #050905; border: 1px solid #2a4a2a; border-radius: 7px; padding: 8px 10px; color: #f0fff0; font-size: 12px; font-family: inherit; transition: border-color 0.12s; }
-.form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: #d4f53c; }
-.form-textarea { resize: vertical; min-height: 68px; }
+/* ── REQUESTS ── */
+.req-top {
+display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
+}
+.req-top h2 { font-size:15px; font-weight:700; color:#e8f5e8; }
+.req-top p { font-size:12px; color:#5a9a5a; }
+.req-table {
+background:#0c1c0c; border:1px solid #1a3a1a;
+border-radius:10px; overflow:hidden;
+}
+.req-head {
+display:grid; grid-template-columns:2fr 1fr 1.1fr 1.5fr 0.7fr;
+padding:10px 16px; background:#102010; border-bottom:1px solid #1a3a1a;
+}
+.req-head span { font-size:10px; font-weight:700; color:#2a5a2a; text-transform:uppercase; letter-spacing:0.5px; }
+.req-row {
+display:grid; grid-template-columns:2fr 1fr 1.1fr 1.5fr 0.7fr;
+padding:13px 16px; border-bottom:1px solid #1a3a1a;
+align-items:center; transition:background 0.12s;
+}
+.req-row:last-child { border-bottom:none; }
+.req-row:hover { background:#102010; }
+.req-proj { font-size:13px; font-weight:700; color:#e8f5e8; }
+.req-type { font-size:12px; color:#5a9a5a; }
+.sbadge {
+display:inline-flex; align-items:center; gap:4px;
+padding:3px 9px; border-radius:20px; font-size:11px; font-weight:700;
+}
+.s-build { background:rgba(212,245,60,0.12); color:#d4f53c; }
+.s-review { background:rgba(245,166,35,0.12); color:#f5a623; }
+.s-done { background:rgba(46,213,115,0.12); color:#2ed573; }
+.s-pend { background:rgba(90,154,90,0.12); color:#5a9a5a; }
+.prog { height:5px; background:#1a3a1a; border-radius:3px; overflow:hidden; }
+.prog-fill { height:100%; background:#d4f53c; border-radius:3px; }
+.req-eta { font-size:12px; color:#5a9a5a; }
+
+/* ── ANALYTICS ── */
+.an-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:13px; margin-bottom:20px; }
+.bar-card {
+background:#0c1c0c; border:1px solid #1a3a1a;
+border-radius:10px; padding:18px;
+}
+.bar-title { font-size:13px; font-weight:700; color:#e8f5e8; margin-bottom:15px; }
+.bar-row { display:flex; align-items:center; gap:11px; margin-bottom:11px; }
+.bar-row:last-child { margin-bottom:0; }
+.bar-lbl { font-size:12px; color:#c8e8c8; width:125px; flex-shrink:0; }
+.bar-track { flex:1; height:6px; background:#1a3a1a; border-radius:3px; overflow:hidden; }
+.bar-fill { height:100%; background:#d4f53c; border-radius:3px; }
+.bar-val { font-size:12px; color:#5a9a5a; width:52px; text-align:right; }
+
+/* ── FORM ── */
+.fl { font-size:11px; font-weight:700; color:#5a9a5a; margin-bottom:5px; display:block; text-transform:uppercase; letter-spacing:0.3px; }
+.fi, .fs, .fta {
+width:100%; background:#060a06; border:1px solid #1a3a1a;
+border-radius:7px; padding:8px 10px; color:#e8f5e8;
+font-size:12px; font-family:inherit; transition:border-color 0.12s;
+}
+.fi:focus, .fs:focus, .fta:focus { outline:none; border-color:#d4f53c; }
+.fta { resize:vertical; min-height:68px; }
 </style>
 
 </head>
 <body>
 
+<!-- SIDEBAR -->
+
 <div class="sidebar">
-  <div class="sidebar-logo">
+  <div class="logo-wrap">
     <div class="logo-box">B</div>
-    <div class="logo-name">BizAI</div>
+    <div class="logo-text">BizAI</div>
   </div>
-  <div class="sidebar-user">
-    <div class="user-icon">👤</div>
+  <div class="user-wrap">
+    <div class="user-av">👤</div>
     <div>
       <div class="user-name">Your Business</div>
       <div class="user-plan">Growth Plan</div>
     </div>
   </div>
-  <div class="nav-section">Overview</div>
-  <div class="nav-item active" onclick="nav('overview',this)"><span class="ni">🏠</span>Overview</div>
-  <div class="nav-section">Tools</div>
-  <div class="nav-item" onclick="nav('tools',this)"><span class="ni">🔧</span>AI Tools<span class="nav-badge">6</span></div>
-  <div class="nav-item" onclick="nav('automations',this)"><span class="ni">⚡</span>Automations<span class="nav-badge">5</span></div>
-  <div class="nav-item" onclick="nav('requests',this)"><span class="ni">📋</span>Requests<span class="nav-badge">2</span></div>
-  <div class="nav-section">Insights</div>
-  <div class="nav-item" onclick="nav('analytics',this)"><span class="ni">📊</span>Analytics</div>
-  <div class="nav-section">Account</div>
-  <div class="nav-item" onclick="window.location.href='index.html'"><span class="ni">🌐</span>Back to Site</div>
-  <div class="nav-extra" onclick="nav('requests',document.querySelectorAll('.nav-item')[3])"><span>＋</span>New Request</div>
+  <div class="nav-lbl">Overview</div>
+  <div class="nav-item active" onclick="go('overview',this)"><span class="nav-ic">🏠</span>Overview</div>
+  <div class="nav-lbl">Tools</div>
+  <div class="nav-item" onclick="go('tools',this)"><span class="nav-ic">🔧</span>AI Tools<span class="nav-dot">6</span></div>
+  <div class="nav-item" onclick="go('automations',this)"><span class="nav-ic">⚡</span>Automations<span class="nav-dot">5</span></div>
+  <div class="nav-item" onclick="go('requests',this)"><span class="nav-ic">📋</span>Requests<span class="nav-dot">2</span></div>
+  <div class="nav-lbl">Insights</div>
+  <div class="nav-item" onclick="go('analytics',this)"><span class="nav-ic">📊</span>Analytics</div>
+  <div class="nav-lbl">Account</div>
+  <div class="nav-item" onclick="window.location.href='index.html'"><span class="nav-ic">🌐</span>Back to Site</div>
+  <div class="nav-plus" onclick="go('requests',document.querySelectorAll('.nav-item')[3])"><span>＋</span>New Request</div>
 </div>
+
+<!-- MAIN -->
 
 <div class="main">
   <div class="topbar">
     <div>
-      <h1 id="ptitle">Overview</h1>
-      <p id="psub">Your BizAI command center</p>
+      <h1 id="pt">Overview</h1>
+      <p id="ps">Your BizAI command center</p>
     </div>
-    <div class="topbar-btns">
-      <button class="btn btn-outline" onclick="nav('analytics',document.querySelectorAll('.nav-item')[4])">📊 Analytics</button>
-      <button class="btn btn-accent" onclick="nav('requests',document.querySelectorAll('.nav-item')[3])">+ New Request</button>
+    <div class="tb-btns">
+      <button class="btn btn-ol" onclick="go('analytics',document.querySelectorAll('.nav-item')[4])">📊 Analytics</button>
+      <button class="btn btn-ac" onclick="go('requests',document.querySelectorAll('.nav-item')[3])">+ New Request</button>
     </div>
   </div>
 
@@ -216,14 +358,14 @@ html { background: #050905 !important; color-scheme: dark; }
 <!-- OVERVIEW -->
 <div class="page active" id="page-overview">
   <div class="stats-row">
-    <div class="stat-box"><div class="stat-icon">⚡</div><div><div class="stat-label">Active Automations</div><div class="stat-val">4</div><div class="stat-sub">↑ 2 this month</div></div></div>
-    <div class="stat-box"><div class="stat-icon">⏱</div><div><div class="stat-label">Hours Saved</div><div class="stat-val">47</div><div class="stat-sub">↑ 12 vs last month</div></div></div>
-    <div class="stat-box"><div class="stat-icon">✨</div><div><div class="stat-label">AI Generations</div><div class="stat-val">284</div><div class="stat-sub">↑ 18% this week</div></div></div>
-    <div class="stat-box"><div class="stat-icon">📋</div><div><div class="stat-label">Pending Requests</div><div class="stat-val">2</div><div class="stat-sub">In progress</div></div></div>
+    <div class="stat-box"><div class="stat-ic">⚡</div><div><div class="stat-lbl">Active Automations</div><div class="stat-val">4</div><div class="stat-sub">↑ 2 this month</div></div></div>
+    <div class="stat-box"><div class="stat-ic">⏱</div><div><div class="stat-lbl">Hours Saved</div><div class="stat-val">47</div><div class="stat-sub">↑ 12 vs last month</div></div></div>
+    <div class="stat-box"><div class="stat-ic">✨</div><div><div class="stat-lbl">AI Generations</div><div class="stat-val">284</div><div class="stat-sub">↑ 18% this week</div></div></div>
+    <div class="stat-box"><div class="stat-ic">📋</div><div><div class="stat-lbl">Pending Requests</div><div class="stat-val">2</div><div class="stat-sub">In progress</div></div></div>
   </div>
   <div class="two-col">
     <div class="card">
-      <div class="card-hrow"><div><div class="card-title">Active Automations</div><div class="card-sub">Running right now</div></div><a class="card-link" onclick="nav('automations',document.querySelectorAll('.nav-item')[2])">View all →</a></div>
+      <div class="card-hrow"><div><div class="card-title">Active Automations</div><div class="card-sub">Running right now</div></div><a class="card-link" onclick="go('automations',document.querySelectorAll('.nav-item')[2])">View all →</a></div>
       <div class="auto-row"><div class="auto-ic">💬</div><div><div class="auto-name">Customer Support Chatbot</div><div class="auto-desc">Handling FAQs & lead capture</div></div><div class="auto-num"><div class="auto-num-val">247 chats</div><div class="auto-num-lbl">this week</div></div></div>
       <div class="auto-row"><div class="auto-ic">📧</div><div><div class="auto-name">Email Follow-up Sequence</div><div class="auto-desc">3-email drip after quote requests</div></div><div class="auto-num"><div class="auto-num-val">18 sent</div><div class="auto-num-lbl">this week</div></div></div>
       <div class="auto-row"><div class="auto-ic">📱</div><div><div class="auto-name">Social Media Auto-Publisher</div><div class="auto-desc">Posts 3x/week to Instagram & LinkedIn</div></div><div class="auto-num"><div class="auto-num-val">6 posts</div><div class="auto-num-lbl">this month</div></div></div>
@@ -238,68 +380,71 @@ html { background: #050905 !important; color-scheme: dark; }
       <div class="act-row"><div class="act-dot warn"></div><div class="act-text">Invoice generator paused — needs attention</div><div class="act-time">5h ago</div></div>
     </div>
   </div>
-  <div class="card-hrow" style="margin-bottom:12px"><div><div class="card-title">Quick AI Tools</div><div class="card-sub" style="margin-bottom:0">Generate content instantly</div></div><a class="card-link" onclick="nav('tools',document.querySelectorAll('.nav-item')[1])">See all tools →</a></div>
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">
+    <div><div style="font-size:13px;font-weight:700;color:#e8f5e8">Quick AI Tools</div><div style="font-size:11px;color:#5a9a5a;margin-top:2px">Generate content instantly</div></div>
+    <a class="card-link" onclick="go('tools',document.querySelectorAll('.nav-item')[1])">See all tools →</a>
+  </div>
   <div class="qt-grid">
-    <div class="qt-card" onclick="nav('tools',document.querySelectorAll('.nav-item')[1])"><div class="qt-ic">✉️</div><div class="qt-name">Email Writer</div><div class="qt-desc">Professional emails in seconds</div><div class="qt-stat">284 used this month</div></div>
-    <div class="qt-card" onclick="nav('tools',document.querySelectorAll('.nav-item')[1])"><div class="qt-ic">💬</div><div class="qt-name">Customer Reply</div><div class="qt-desc">Smart, empathetic responses</div><div class="qt-stat">147 used this month</div></div>
-    <div class="qt-card" onclick="nav('tools',document.querySelectorAll('.nav-item')[1])"><div class="qt-ic">📲</div><div class="qt-name">Social Post</div><div class="qt-desc">Engaging posts with hashtags</div><div class="qt-stat">89 used this month</div></div>
+    <div class="qt-card" onclick="go('tools',document.querySelectorAll('.nav-item')[1])"><div class="qt-ic">✉️</div><div class="qt-name">Email Writer</div><div class="qt-desc">Professional emails in seconds</div><div class="qt-stat">284 used this month</div></div>
+    <div class="qt-card" onclick="go('tools',document.querySelectorAll('.nav-item')[1])"><div class="qt-ic">💬</div><div class="qt-name">Customer Reply</div><div class="qt-desc">Smart, empathetic responses</div><div class="qt-stat">147 used this month</div></div>
+    <div class="qt-card" onclick="go('tools',document.querySelectorAll('.nav-item')[1])"><div class="qt-ic">📲</div><div class="qt-name">Social Post</div><div class="qt-desc">Engaging posts with hashtags</div><div class="qt-stat">89 used this month</div></div>
   </div>
 </div>
 
 <!-- AI TOOLS -->
 <div class="page" id="page-tools">
-  <div style="margin-bottom:16px"><div style="font-size:15px;font-weight:700;margin-bottom:3px">All AI Tools</div><div style="font-size:12px;color:var(--muted)">Click any tool to use it instantly</div></div>
+  <div style="margin-bottom:16px"><div style="font-size:15px;font-weight:700;color:#e8f5e8;margin-bottom:3px">All AI Tools</div><div style="font-size:12px;color:#5a9a5a">Click any tool to use it instantly</div></div>
   <div class="tools-grid">
-    <div class="tc"><div class="tc-icon">✉️</div><div class="tc-name">Email Writer</div><div class="tc-desc">Professional emails written in seconds for any situation.</div><div class="tc-stat">284 used this month</div><textarea class="tc-input" placeholder="Describe the email you need..."></textarea><button class="btn-gen" onclick="runTool(this,'Write a professional email. Make it clear, concise and actionable.')">Generate ✨</button><div class="tc-out"></div></div>
-    <div class="tc"><div class="tc-icon">💬</div><div class="tc-name">Customer Reply</div><div class="tc-desc">Turn difficult customers into happy ones instantly.</div><div class="tc-stat">147 used this month</div><textarea class="tc-input" placeholder="Paste the customer message here..."></textarea><button class="btn-gen" onclick="runTool(this,'Write a professional empathetic customer service reply. Acknowledge the issue and offer a clear solution.')">Generate ✨</button><div class="tc-out"></div></div>
-    <div class="tc"><div class="tc-icon">📄</div><div class="tc-name">Invoice Descriptions</div><div class="tc-desc">Professional line-items that justify your rates.</div><div class="tc-stat">98 used this month</div><textarea class="tc-input" placeholder="Describe the work done, hours, tasks..."></textarea><button class="btn-gen" onclick="runTool(this,'Convert these notes into clean professional invoice line items.')">Generate ✨</button><div class="tc-out"></div></div>
-    <div class="tc"><div class="tc-icon">📱</div><div class="tc-name">Social Media Posts</div><div class="tc-desc">Engaging posts with hashtags for any platform.</div><div class="tc-stat">89 used this month</div><textarea class="tc-input" placeholder="What do you want to post about?"></textarea><button class="btn-gen" onclick="runTool(this,'Write an engaging social media post with strong hook, value, CTA and 5 hashtags.')">Generate ✨</button><div class="tc-out"></div></div>
-    <div class="tc"><div class="tc-icon">📋</div><div class="tc-name">Business Proposals</div><div class="tc-desc">Win more clients with polished, persuasive proposals.</div><div class="tc-stat">61 used this month</div><textarea class="tc-input" placeholder="Client name, project scope, your services..."></textarea><button class="btn-gen" onclick="runTool(this,'Write a professional business proposal with executive summary, scope, deliverables, timeline and close.')">Generate ✨</button><div class="tc-out"></div></div>
-    <div class="tc"><div class="tc-icon">👤</div><div class="tc-name">Business Bio</div><div class="tc-desc">Compelling brand story in short, medium, and full length.</div><div class="tc-stat">43 used this month</div><textarea class="tc-input" placeholder="Your name, business, what you do, who you help..."></textarea><button class="btn-gen" onclick="runTool(this,'Write a business bio in 3 versions: short (1 sentence), medium (1 paragraph), full (3 paragraphs).')">Generate ✨</button><div class="tc-out"></div></div>
+    <div class="tc"><div class="tc-ic">✉️</div><div class="tc-name">Email Writer</div><div class="tc-desc">Professional emails written in seconds for any situation.</div><div class="tc-stat">284 used this month</div><textarea class="tc-input" placeholder="Describe the email you need..."></textarea><button class="btn-gen" onclick="run(this,'Write a professional email. Make it clear, concise and actionable.')">Generate ✨</button><div class="tc-out"></div></div>
+    <div class="tc"><div class="tc-ic">💬</div><div class="tc-name">Customer Reply</div><div class="tc-desc">Turn difficult customers into happy ones instantly.</div><div class="tc-stat">147 used this month</div><textarea class="tc-input" placeholder="Paste the customer message here..."></textarea><button class="btn-gen" onclick="run(this,'Write a professional empathetic customer service reply. Acknowledge the issue and offer a clear solution.')">Generate ✨</button><div class="tc-out"></div></div>
+    <div class="tc"><div class="tc-ic">📄</div><div class="tc-name">Invoice Descriptions</div><div class="tc-desc">Professional line-items that justify your rates.</div><div class="tc-stat">98 used this month</div><textarea class="tc-input" placeholder="Describe the work done, hours, tasks..."></textarea><button class="btn-gen" onclick="run(this,'Convert these notes into clean professional invoice line items.')">Generate ✨</button><div class="tc-out"></div></div>
+    <div class="tc"><div class="tc-ic">📱</div><div class="tc-name">Social Media Posts</div><div class="tc-desc">Engaging posts with hashtags for any platform.</div><div class="tc-stat">89 used this month</div><textarea class="tc-input" placeholder="What do you want to post about?"></textarea><button class="btn-gen" onclick="run(this,'Write an engaging social media post with strong hook, value, CTA and 5 hashtags.')">Generate ✨</button><div class="tc-out"></div></div>
+    <div class="tc"><div class="tc-ic">📋</div><div class="tc-name">Business Proposals</div><div class="tc-desc">Win more clients with polished, persuasive proposals.</div><div class="tc-stat">61 used this month</div><textarea class="tc-input" placeholder="Client name, project scope, your services..."></textarea><button class="btn-gen" onclick="run(this,'Write a professional business proposal with executive summary, scope, deliverables, timeline and close.')">Generate ✨</button><div class="tc-out"></div></div>
+    <div class="tc"><div class="tc-ic">👤</div><div class="tc-name">Business Bio</div><div class="tc-desc">Compelling brand story in short, medium, and full length.</div><div class="tc-stat">43 used this month</div><textarea class="tc-input" placeholder="Your name, business, what you do, who you help..."></textarea><button class="btn-gen" onclick="run(this,'Write a business bio in 3 versions: short (1 sentence), medium (1 paragraph), full (3 paragraphs).')">Generate ✨</button><div class="tc-out"></div></div>
   </div>
 </div>
 
 <!-- AUTOMATIONS -->
 <div class="page" id="page-automations">
-  <div class="zap-notice"><span>⚡ These automations open directly in the Zapier editor — click any template, connect your apps, and publish your Zap in minutes.</span><a href="https://zapier.com/sign-up" target="_blank" class="zap-cta">Get Zapier Free →</a></div>
+  <div class="zap-bar"><span>⚡ These automations open directly in the Zapier editor — click any template, connect your apps, and publish in minutes.</span><a href="https://zapier.com/sign-up" target="_blank" class="zap-cta">Get Zapier Free →</a></div>
   <div class="as">
     <div class="as-head"><span style="font-size:17px">🎯</span><div><div class="as-title">Customer Acquisition & Sales</div><div class="as-desc">Auto-fill CRM, capture leads, send outreach</div></div></div>
     <div class="zg">
-      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=linkedin,google-sheets" target="_blank"><div class="zt-name">LinkedIn leads → Google Sheets</div><div class="zt-desc">Auto-save new LinkedIn leads to your spreadsheet</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#0077b5">in</div><span style="color:var(--muted);margin:0 2px;font-size:9px">→</span><div class="ad" style="background:#1e7e34">Sh</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
-      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=gmail,hubspot" target="_blank"><div class="zt-name">Gmail → HubSpot CRM contact</div><div class="zt-desc">Create CRM contacts from new emails automatically</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#ea4335">G</div><span style="color:var(--muted);margin:0 2px;font-size:9px">→</span><div class="ad" style="background:#ff7a59">Hs</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
-      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=google-sheets,gmail" target="_blank"><div class="zt-name">Google Sheets → Send cold email</div><div class="zt-desc">Trigger personalized emails from new sheet rows</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#1e7e34">Sh</div><span style="color:var(--muted);margin:0 2px;font-size:9px">→</span><div class="ad" style="background:#ea4335">G</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
+      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=linkedin,google-sheets" target="_blank"><div class="zt-name">LinkedIn leads → Google Sheets</div><div class="zt-desc">Auto-save new LinkedIn leads to your spreadsheet</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#0077b5">in</div><span class="arr">→</span><div class="ad" style="background:#1e7e34">Sh</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
+      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=gmail,hubspot" target="_blank"><div class="zt-name">Gmail → HubSpot CRM contact</div><div class="zt-desc">Create CRM contacts from new emails automatically</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#ea4335">G</div><span class="arr">→</span><div class="ad" style="background:#ff7a59">Hs</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
+      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=google-sheets,gmail" target="_blank"><div class="zt-name">Google Sheets → Send cold email</div><div class="zt-desc">Trigger personalized emails from new sheet rows</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#1e7e34">Sh</div><span class="arr">→</span><div class="ad" style="background:#ea4335">G</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
     </div>
   </div>
   <div class="as">
     <div class="as-head"><span style="font-size:17px">💬</span><div><div class="as-title">Customer Support & Success</div><div class="as-desc">Auto-reply, log tickets, track feedback</div></div></div>
     <div class="zg">
-      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=gmail,google-sheets" target="_blank"><div class="zt-name">Gmail support emails → Google Sheets</div><div class="zt-desc">Log all incoming support emails automatically</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#ea4335">G</div><span style="color:var(--muted);margin:0 2px;font-size:9px">→</span><div class="ad" style="background:#1e7e34">Sh</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
-      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=gmail,notion" target="_blank"><div class="zt-name">Gmail ticket → Notion task</div><div class="zt-desc">Turn support emails into trackable Notion tasks</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#ea4335">G</div><span style="color:var(--muted);margin:0 2px;font-size:9px">→</span><div class="ad" style="background:#333">N</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
-      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=gmail,slack" target="_blank"><div class="zt-name">New Gmail → Slack notification</div><div class="zt-desc">Get instant Slack alerts for important emails</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#ea4335">G</div><span style="color:var(--muted);margin:0 2px;font-size:9px">→</span><div class="ad" style="background:#611f69">Sl</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
+      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=gmail,google-sheets" target="_blank"><div class="zt-name">Gmail support emails → Google Sheets</div><div class="zt-desc">Log all incoming support emails automatically</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#ea4335">G</div><span class="arr">→</span><div class="ad" style="background:#1e7e34">Sh</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
+      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=gmail,notion" target="_blank"><div class="zt-name">Gmail ticket → Notion task</div><div class="zt-desc">Turn support emails into trackable Notion tasks</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#ea4335">G</div><span class="arr">→</span><div class="ad" style="background:#333">N</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
+      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=gmail,slack" target="_blank"><div class="zt-name">New Gmail → Slack notification</div><div class="zt-desc">Get instant Slack alerts for important emails</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#ea4335">G</div><span class="arr">→</span><div class="ad" style="background:#611f69">Sl</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
     </div>
   </div>
   <div class="as">
     <div class="as-head"><span style="font-size:17px">⚙️</span><div><div class="as-title">Internal Operations & Productivity</div><div class="as-desc">Meeting notes, task management, reminders</div></div></div>
     <div class="zg">
-      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=google-calendar,notion" target="_blank"><div class="zt-name">Google Calendar → Notion meeting notes</div><div class="zt-desc">Auto-create Notion pages for every calendar event</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#4285f4">Ca</div><span style="color:var(--muted);margin:0 2px;font-size:9px">→</span><div class="ad" style="background:#333">N</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
-      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=slack,notion" target="_blank"><div class="zt-name">Slack message → Notion task</div><div class="zt-desc">Save important Slack messages as Notion tasks</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#611f69">Sl</div><span style="color:var(--muted);margin:0 2px;font-size:9px">→</span><div class="ad" style="background:#333">N</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
-      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=google-calendar,gmail" target="_blank"><div class="zt-name">Daily calendar summary → Gmail</div><div class="zt-desc">Get a daily digest of your schedule by email</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#4285f4">Ca</div><span style="color:var(--muted);margin:0 2px;font-size:9px">→</span><div class="ad" style="background:#ea4335">G</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
+      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=google-calendar,notion" target="_blank"><div class="zt-name">Google Calendar → Notion meeting notes</div><div class="zt-desc">Auto-create Notion pages for every calendar event</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#4285f4">Ca</div><span class="arr">→</span><div class="ad" style="background:#333">N</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
+      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=slack,notion" target="_blank"><div class="zt-name">Slack message → Notion task</div><div class="zt-desc">Save important Slack messages as Notion tasks</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#611f69">Sl</div><span class="arr">→</span><div class="ad" style="background:#333">N</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
+      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=google-calendar,gmail" target="_blank"><div class="zt-name">Daily calendar summary → Gmail</div><div class="zt-desc">Get a daily digest of your schedule by email</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#4285f4">Ca</div><span class="arr">→</span><div class="ad" style="background:#ea4335">G</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
     </div>
   </div>
   <div class="as">
     <div class="as-head"><span style="font-size:17px">💰</span><div><div class="as-title">Data Management & Finance</div><div class="as-desc">Invoices, reports, data sync</div></div></div>
     <div class="zg">
-      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=stripe,google-sheets" target="_blank"><div class="zt-name">Stripe payments → Google Sheets</div><div class="zt-desc">Auto-log every payment to your finance spreadsheet</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#635bff">St</div><span style="color:var(--muted);margin:0 2px;font-size:9px">→</span><div class="ad" style="background:#1e7e34">Sh</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
-      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=google-forms,gmail" target="_blank"><div class="zt-name">Google Form → Email invoice</div><div class="zt-desc">Auto-send invoice when a form is submitted</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#7248b9">Fo</div><span style="color:var(--muted);margin:0 2px;font-size:9px">→</span><div class="ad" style="background:#ea4335">G</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
-      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=stripe,slack" target="_blank"><div class="zt-name">Stripe payment → Slack alert</div><div class="zt-desc">Get notified in Slack every time you get paid</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#635bff">St</div><span style="color:var(--muted);margin:0 2px;font-size:9px">→</span><div class="ad" style="background:#611f69">Sl</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
+      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=stripe,google-sheets" target="_blank"><div class="zt-name">Stripe payments → Google Sheets</div><div class="zt-desc">Auto-log every payment to your finance spreadsheet</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#635bff">St</div><span class="arr">→</span><div class="ad" style="background:#1e7e34">Sh</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
+      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=google-forms,gmail" target="_blank"><div class="zt-name">Google Form → Email invoice</div><div class="zt-desc">Auto-send invoice when a form is submitted</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#7248b9">Fo</div><span class="arr">→</span><div class="ad" style="background:#ea4335">G</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
+      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=stripe,slack" target="_blank"><div class="zt-name">Stripe payment → Slack alert</div><div class="zt-desc">Get notified in Slack every time you get paid</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#635bff">St</div><span class="arr">→</span><div class="ad" style="background:#611f69">Sl</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
     </div>
   </div>
   <div class="as">
     <div class="as-head"><span style="font-size:17px">🤖</span><div><div class="as-title">BPA — Business Process Automation</div><div class="as-desc">End-to-end workflows connecting your whole business stack</div></div></div>
     <div class="zg">
-      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=google-forms,hubspot,slack" target="_blank"><div class="zt-name">New lead → CRM + Email + Slack</div><div class="zt-desc">Full lead intake workflow from one form submission</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#7248b9">Fo</div><span style="color:var(--muted);margin:0 2px;font-size:9px">→</span><div class="ad" style="background:#ff7a59">Hs</div><span style="color:var(--muted);margin:0 1px;font-size:9px">+</span><div class="ad" style="background:#611f69">Sl</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
-      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=gmail,google-sheets,notion" target="_blank"><div class="zt-name">New client onboarding workflow</div><div class="zt-desc">Welcome email + task creation + sheet logging</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#ea4335">G</div><span style="color:var(--muted);margin:0 2px;font-size:9px">→</span><div class="ad" style="background:#1e7e34">Sh</div><span style="color:var(--muted);margin:0 1px;font-size:9px">+</span><div class="ad" style="background:#333">N</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
-      <a class="zt" href="https://zapier.com/explore" target="_blank"><div class="zt-name">Browse all 7000+ Zapier templates</div><div class="zt-desc">Connect any app — Gmail, Sheets, Slack, Stripe & more</div><div class="zt-foot"><div style="font-size:11px;color:var(--muted)">7000+ templates</div><span class="zt-open">Browse all ↗️</span></div></a>
+      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=google-forms,hubspot,slack" target="_blank"><div class="zt-name">New lead → CRM + Email + Slack</div><div class="zt-desc">Full lead intake workflow from one form submission</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#7248b9">Fo</div><span class="arr">→</span><div class="ad" style="background:#ff7a59">Hs</div><span class="arr">+</span><div class="ad" style="background:#611f69">Sl</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
+      <a class="zt" href="https://zapier.com/webintent/create-zap?apps=gmail,google-sheets,notion" target="_blank"><div class="zt-name">New client onboarding workflow</div><div class="zt-desc">Welcome email + task creation + sheet logging</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#ea4335">G</div><span class="arr">→</span><div class="ad" style="background:#1e7e34">Sh</div><span class="arr">+</span><div class="ad" style="background:#333">N</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a>
+      <a class="zt" href="https://zapier.com/explore" target="_blank"><div class="zt-name">Browse all 7000+ Zapier templates</div><div class="zt-desc">Connect any app — Gmail, Sheets, Slack, Stripe & more</div><div class="zt-foot"><div style="font-size:11px;color:#5a9a5a">7000+ templates</div><span class="zt-open">Browse all ↗️</span></div></a>
     </div>
   </div>
 </div>
@@ -308,7 +453,7 @@ html { background: #050905 !important; color-scheme: dark; }
 <div class="page" id="page-requests">
   <div class="req-top">
     <div><h2>All Requests</h2><p>Projects being built for you</p></div>
-    <button class="btn btn-accent" onclick="toggleReqForm()">+ New request</button>
+    <button class="btn btn-ac" onclick="toggleForm()">+ New request</button>
   </div>
   <div class="req-table" id="reqtable">
     <div class="req-head"><span>Project</span><span>Type</span><span>Status</span><span>Progress</span><span>ETA</span></div>
@@ -317,19 +462,19 @@ html { background: #050905 !important; color-scheme: dark; }
   </div>
   <div id="req-form" style="display:none;margin-top:18px">
     <div class="card" style="max-width:540px">
-      <div style="font-size:14px;font-weight:700;margin-bottom:14px">Submit New Request</div>
+      <div style="font-size:14px;font-weight:700;color:#e8f5e8;margin-bottom:14px">Submit New Request</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px">
-        <div><label class="form-label">Your Name</label><input class="form-input" id="rn" placeholder="Sandeep Mintu"></div>
-        <div><label class="form-label">Email</label><input class="form-input" id="re" placeholder="mintu73127@gmail.com"></div>
+        <div><label class="fl">Your Name</label><input class="fi" id="rn" placeholder="Sandeep Mintu"></div>
+        <div><label class="fl">Email</label><input class="fi" id="re" placeholder="mintu73127@gmail.com"></div>
       </div>
-      <div style="margin-bottom:11px"><label class="form-label">Project Name</label><input class="form-input" id="rp" placeholder="e.g. Email automation for leads"></div>
-      <div style="margin-bottom:11px"><label class="form-label">Type</label><select class="form-select" id="rt"><option>Workflow</option><option>AI Tool</option><option>Chatbot</option><option>Integration</option><option>Other</option></select></div>
-      <div style="margin-bottom:14px"><label class="form-label">Description</label><textarea class="form-textarea" id="rd" placeholder="Describe what you need..."></textarea></div>
+      <div style="margin-bottom:11px"><label class="fl">Project Name</label><input class="fi" id="rp" placeholder="e.g. Email automation for leads"></div>
+      <div style="margin-bottom:11px"><label class="fl">Type</label><select class="fs" id="rt"><option>Workflow</option><option>AI Tool</option><option>Chatbot</option><option>Integration</option><option>Other</option></select></div>
+      <div style="margin-bottom:14px"><label class="fl">Description</label><textarea class="fta" id="rd" placeholder="Describe what you need..."></textarea></div>
       <div style="display:flex;gap:9px">
-        <button class="btn btn-accent" style="flex:1" onclick="submitReq()">Submit Request →</button>
-        <button class="btn btn-outline" onclick="document.getElementById('req-form').style.display='none'">Cancel</button>
+        <button class="btn btn-ac" style="flex:1" onclick="submitR()">Submit Request →</button>
+        <button class="btn btn-ol" onclick="document.getElementById('req-form').style.display='none'">Cancel</button>
       </div>
-      <div id="req-ok" style="display:none;margin-top:10px;background:rgba(212,245,60,0.1);border:1px solid var(--accent);border-radius:7px;padding:10px;text-align:center;font-size:12px;color:var(--accent);font-weight:700">✅ Request submitted! We'll email you within 24 hours.</div>
+      <div id="req-ok" style="display:none;margin-top:10px;background:rgba(212,245,60,0.08);border:1px solid #d4f53c;border-radius:7px;padding:10px;text-align:center;font-size:12px;color:#d4f53c;font-weight:700">✅ Request submitted! We'll email you within 24 hours.</div>
     </div>
   </div>
 </div>
@@ -337,13 +482,13 @@ html { background: #050905 !important; color-scheme: dark; }
 <!-- ANALYTICS -->
 <div class="page" id="page-analytics">
   <div class="an-stats">
-    <div class="stat-box"><div class="stat-icon">⏱</div><div><div class="stat-label">Hours Saved</div><div class="stat-val">47</div><div class="stat-sub">↑ 12 this month</div></div></div>
-    <div class="stat-box"><div class="stat-icon">✨</div><div><div class="stat-label">AI Generations</div><div class="stat-val">284</div><div class="stat-sub">↑ 18% this week</div></div></div>
-    <div class="stat-box"><div class="stat-icon">⚡</div><div><div class="stat-label">Automations Run</div><div class="stat-val">302</div><div class="stat-sub">↑ 34 this week</div></div></div>
-    <div class="stat-box"><div class="stat-icon">💰</div><div><div class="stat-label">Est. $ Saved</div><div class="stat-val">$940</div><div class="stat-sub">@ $20/hr rate</div></div></div>
+    <div class="stat-box"><div class="stat-ic">⏱</div><div><div class="stat-lbl">Hours Saved</div><div class="stat-val">47</div><div class="stat-sub">↑ 12 this month</div></div></div>
+    <div class="stat-box"><div class="stat-ic">✨</div><div><div class="stat-lbl">AI Generations</div><div class="stat-val">284</div><div class="stat-sub">↑ 18% this week</div></div></div>
+    <div class="stat-box"><div class="stat-ic">⚡</div><div><div class="stat-lbl">Automations Run</div><div class="stat-val">302</div><div class="stat-sub">↑ 34 this week</div></div></div>
+    <div class="stat-box"><div class="stat-ic">💰</div><div><div class="stat-lbl">Est. $ Saved</div><div class="stat-val">$940</div><div class="stat-sub">@ $20/hr rate</div></div></div>
   </div>
   <div class="bar-card">
-    <div class="bar-card-title">Top Tools Used This Month</div>
+    <div class="bar-title">Top Tools Used This Month</div>
     <div class="bar-row"><div class="bar-lbl">Email Writer</div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><div class="bar-val">284 uses</div></div>
     <div class="bar-row"><div class="bar-lbl">Customer Reply</div><div class="bar-track"><div class="bar-fill" style="width:52%"></div></div><div class="bar-val">147 uses</div></div>
     <div class="bar-row"><div class="bar-lbl">Social Post</div><div class="bar-track"><div class="bar-fill" style="width:31%"></div></div><div class="bar-val">89 uses</div></div>
@@ -358,38 +503,44 @@ html { background: #050905 !important; color-scheme: dark; }
 </div>
 
 <script>
-const pinfo = { overview:['Overview','Your BizAI command center'], tools:['AI Tools','Generate content instantly'], automations:['Automations','Powered by Zapier — click any template to set it up in minutes'], requests:['Requests','Projects in progress'], analytics:['Analytics','Track your AI usage and time saved'] };
-function nav(id, el) {
+const PI = {
+  overview:['Overview','Your BizAI command center'],
+  tools:['AI Tools','Generate content instantly'],
+  automations:['Automations','Powered by Zapier — click any template to set it up in minutes'],
+  requests:['Requests','Projects in progress'],
+  analytics:['Analytics','Track your AI usage and time saved']
+};
+function go(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   if(el) el.classList.add('active');
-  const [t,s] = pinfo[id]||[id,''];
-  document.getElementById('ptitle').textContent = t;
-  document.getElementById('psub').textContent = s;
+  const [t,s]=PI[id]||[id,''];
+  document.getElementById('pt').textContent=t;
+  document.getElementById('ps').textContent=s;
 }
-async function runTool(btn, prompt) {
-  const card = btn.closest('.tc');
-  const inp = card.querySelector('.tc-input').value.trim();
-  const out = card.querySelector('.tc-out');
-  if(!inp){out.style.display='block';out.textContent='⚠️ Please enter some input first.';return;}
-  btn.disabled=true; btn.textContent='Generating...';
-  out.style.display='block'; out.textContent='⏳ Generating...';
-  try {
-    const r = await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt+'\n\nUser input:\n'+inp})});
-    const d = await r.json();
-    out.textContent = d.content?.[0]?.text || d.error?.message || '⚠️ Error — check API setup.';
-  } catch(e){ out.textContent='⚠️ Connection error. Check API configuration.'; }
-  btn.disabled=false; btn.textContent='Generate ✨';
+async function run(btn,prompt){
+  const card=btn.closest('.tc');
+  const inp=card.querySelector('.tc-input').value.trim();
+  const out=card.querySelector('.tc-out');
+  if(!inp){out.style.display='block';out.textContent='Please enter some input first.';return;}
+  btn.disabled=true;btn.textContent='Generating...';
+  out.style.display='block';out.textContent='Generating...';
+  try{
+    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt+'\n\nUser input:\n'+inp})});
+    const d=await r.json();
+    out.textContent=d.content?.[0]?.text||d.error?.message||'Error — check API setup.';
+  }catch(e){out.textContent='Connection error. Check API configuration.';}
+  btn.disabled=false;btn.textContent='Generate ✨';
 }
-function toggleReqForm(){ const f=document.getElementById('req-form'); f.style.display=f.style.display==='none'?'block':'none'; }
-function submitReq(){
-  const n=document.getElementById('rn').value.trim(), e=document.getElementById('re').value.trim(), p=document.getElementById('rp').value.trim(), t=document.getElementById('rt').value, d=document.getElementById('rd').value.trim();
+function toggleForm(){const f=document.getElementById('req-form');f.style.display=f.style.display==='none'?'block':'none';}
+function submitR(){
+  const n=document.getElementById('rn').value.trim(),e=document.getElementById('re').value.trim(),p=document.getElementById('rp').value.trim(),t=document.getElementById('rt').value,d=document.getElementById('rd').value.trim();
   if(!n||!p||!d){alert('Please fill in all required fields.');return;}
   window.location.href='mailto:mintu73127@gmail.com?subject='+encodeURIComponent('[BizAI] '+p)+'&body='+encodeURIComponent('Name: '+n+'\nEmail: '+e+'\nProject: '+p+'\nType: '+t+'\n\nDescription:\n'+d);
   document.getElementById('req-ok').style.display='block';
-  const row=document.createElement('div'); row.className='req-row';
-  row.innerHTML='<div class="req-proj">'+p+'</div><div class="req-type">'+t+'</div><div><span class="sbadge s-pend">⏳ Pending</span></div><div><div class="prog"><div class="prog-fill" style="width:5%"></div></div></div><div class="req-eta">TBD</div>';
+  const row=document.createElement('div');row.className='req-row';
+  row.innerHTML='<div class="req-proj">'+p+'</div><div class="req-type">'+t+'</div><div><span class="sbadge s-pend">Pending</span></div><div><div class="prog"><div class="prog-fill" style="width:5%"></div></div></div><div class="req-eta">TBD</div>';
   document.getElementById('reqtable').appendChild(row);
 }
 </script>
