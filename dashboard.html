@@ -135,7 +135,6 @@ body { display:flex; height:100vh; overflow:hidden; }
 .fi, .fs, .fta { width:100%; background:#0a0a0a; border:1px solid #222222; border-radius:7px; padding:8px 10px; color:#f0f0f0; font-size:12px; font-family:inherit; transition:border-color 0.12s; }
 .fi:focus, .fs:focus, .fta:focus { outline:none; border-color:#c6f135; }
 .fta { resize:vertical; min-height:68px; }
-
 /* ── MOBILE RESPONSIVE ── */
 @media (max-width: 768px) {
   body { flex-direction:column; height:auto; overflow:auto; }
@@ -190,14 +189,14 @@ body { display:flex; height:100vh; overflow:hidden; }
   <div class="nav-item" onclick="go('analytics',this)"><span class="nav-ic">📊</span>Analytics</div>
   <div class="nav-lbl">Account</div>
   <div class="nav-item" onclick="window.location.href='index.html'"><span class="nav-ic">🌐</span>Back to Site</div>
-  <div class="nav-plus" onclick="go('requests',document.querySelectorAll('.nav-item')[3])"><span>＋</span>window.open('https://docs.google.com/forms/d/e/1FAIpQLSfl-hxXxyo_xZDSZKsMM8IwDU06DXO4g5T48nF1iccbJm39ig/viewform','_blank')</div>
+  <div class="nav-plus" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfl-hxXxyo_xZDSZKsMM8IwDU06DXO4g5T48nF1iccbJm39ig/viewform','_blank')"><span>＋</span>New Request</div>
 </div>
 <div class="main">
   <div class="topbar">
     <div><h1 id="pt">Overview</h1><p id="ps">Your BizAI command center</p></div>
     <div class="tb-btns">
       <button class="btn btn-ol" onclick="go('analytics',document.querySelectorAll('.nav-item')[4])">📊 Analytics</button>
-      <button class="btn btn-ac" onclick="go('requests',document.querySelectorAll('.nav-item')[3])">+ New Request</button>
+      <button class="btn btn-ac" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSfl-hxXxyo_xZDSZKsMM8IwDU06DXO4g5T48nF1iccbJm39ig/viewform','_blank')">+ New Request</button>
     </div>
   </div>
   <div class="content">
