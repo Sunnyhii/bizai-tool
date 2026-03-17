@@ -190,14 +190,14 @@ body { display:flex; height:100vh; overflow:hidden; }
   <div class="nav-item" onclick="go('analytics',this)"><span class="nav-ic">📊</span>Analytics</div>
   <div class="nav-lbl">Account</div>
   <div class="nav-item" onclick="window.location.href='index.html'"><span class="nav-ic">🌐</span>Back to Site</div>
-  <div class="nav-plus" onclick="go('requests',document.querySelectorAll('.nav-item')[3])"><span>＋</span>New Request</div>
+  <div class="nav-plus" onclick="go('requests',document.querySelectorAll('.nav-item')[3])"><span>＋</span>window.open('https://docs.google.com/forms/d/e/1FAIpQLSfl-hxXxyo_xZDSZKsMM8IwDU06DXO4g5T48nF1iccbJm39ig/viewform','_blank')</div>
 </div>
 <div class="main">
   <div class="topbar">
     <div><h1 id="pt">Overview</h1><p id="ps">Your BizAI command center</p></div>
     <div class="tb-btns">
       <button class="btn btn-ol" onclick="go('analytics',document.querySelectorAll('.nav-item')[4])">📊 Analytics</button>
-      <button class="btn btn-ac" onclick="go('requests',document.querySelectorAll('.nav-item')[3])">+ New Request</button>
+      <button class="btn btn-ac" onclick="go('requests',document.querySelectorAll('.nav-item')[3])">+ window.open('https://docs.google.com/forms/d/e/1FAIpQLSfl-hxXxyo_xZDSZKsMM8IwDU06DXO4g5T48nF1iccbJm39ig/viewform','_blank')</button>
     </div>
   </div>
   <div class="content">
@@ -255,7 +255,7 @@ body { display:flex; height:100vh; overflow:hidden; }
   <div class="as"><div class="as-head"><span style="font-size:17px">🤖</span><div><div class="as-title">BPA — Business Process Automation</div><div class="as-desc">End-to-end workflows connecting your whole business stack</div></div></div><div class="zg"><a class="zt" href="https://zapier.com/webintent/create-zap?apps=google-forms,hubspot,slack" target="_blank"><div class="zt-name">New lead → CRM + Email + Slack</div><div class="zt-desc">Full lead intake workflow from one form submission</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#7248b9">Fo</div><span class="arr">→</span><div class="ad" style="background:#ff7a59">Hs</div><span class="arr">+</span><div class="ad" style="background:#611f69">Sl</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a><a class="zt" href="https://zapier.com/webintent/create-zap?apps=gmail,google-sheets,notion" target="_blank"><div class="zt-name">New client onboarding workflow</div><div class="zt-desc">Welcome email + task creation + sheet logging</div><div class="zt-foot"><div class="zt-apps"><div class="ad" style="background:#ea4335">G</div><span class="arr">→</span><div class="ad" style="background:#1e7e34">Sh</div><span class="arr">+</span><div class="ad" style="background:#333">N</div></div><span class="zt-open">Open in Zapier ↗️</span></div></a><a class="zt" href="https://zapier.com/explore" target="_blank"><div class="zt-name">Browse all 7000+ Zapier templates</div><div class="zt-desc">Connect any app — Gmail, Sheets, Slack, Stripe & more</div><div class="zt-foot"><div style="font-size:11px;color:#888">7000+ templates</div><span class="zt-open">Browse all ↗️</span></div></a></div></div>
 </div>
 <div class="page" id="page-requests">
-  <div class="req-top"><div><h2>All Requests</h2><p>Projects being built for you</p></div><button class="btn btn-ac" onclick="toggleForm()">+ New request</button></div>
+  <div class="req-top"><div><h2>All Requests</h2><p>Projects being built for you</p></div><button class="btn btn-ac" onclick="toggleForm()">+ window.open('https://docs.google.com/forms/d/e/1FAIpQLSfl-hxXxyo_xZDSZKsMM8IwDU06DXO4g5T48nF1iccbJm39ig/viewform','_blank')</button></div>
   <div class="req-table" id="reqtable">
     <div class="req-head"><span>Project</span><span>Type</span><span>Status</span><span>Progress</span><span>ETA</span></div>
     <div class="req-row"><div class="req-proj">CRM Lead Sync Automation</div><div class="req-type">Workflow</div><div><span class="sbadge s-build">⚡ Building</span></div><div><div class="prog"><div class="prog-fill" style="width:65%"></div></div></div><div class="req-eta">Mar 17</div></div>
@@ -263,7 +263,7 @@ body { display:flex; height:100vh; overflow:hidden; }
   </div>
   <div id="req-form" style="display:none;margin-top:18px">
     <div class="card" style="max-width:540px">
-      <div style="font-size:14px;font-weight:700;color:#f0f0f0;margin-bottom:14px">Submit New Request</div>
+      <div style="font-size:14px;font-weight:700;color:#f0f0f0;margin-bottom:14px">Submit window.open('https://docs.google.com/forms/d/e/1FAIpQLSfl-hxXxyo_xZDSZKsMM8IwDU06DXO4g5T48nF1iccbJm39ig/viewform','_blank')</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px">
         <div><label class="fl">Your Name</label><input class="fi" id="rn" placeholder="Sandeep Mintu"></div>
         <div><label class="fl">Email</label><input class="fi" id="re" placeholder="mintu73127@gmail.com"></div>
