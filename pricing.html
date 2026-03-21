@@ -12,8 +12,8 @@
   gtag('js', new Date());
   gtag('config', 'G-YHBCPELWN5');
 </script>
-<!-- Stripe -->
-<script src="https://js.stripe.com/v3/"></script>
+<!-- Razorpay -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -85,8 +85,6 @@ nav { display:flex; align-items:center; justify-content:space-between; padding:2
 .form-label { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px; display:block; }
 .form-input { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text); font-size:13px; font-family:'DM Sans',sans-serif; outline:none; transition:border 0.2s; }
 .form-input:focus { border-color:var(--accent); }
-#card-element { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:12px; }
-#card-element.focused { border-color:var(--accent); }
 #card-errors { color:#ef4444; font-size:12px; margin-top:6px; min-height:18px; }
 .modal-btns { display:flex; gap:10px; margin-top:20px; }
 .modal-btn { flex:1; padding:12px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; border:none; font-family:'DM Sans',sans-serif; }
@@ -166,7 +164,7 @@ nav { display:flex; align-items:center; justify-content:space-between; padding:2
   <div class="plan-card">
     <div class="plan-name">Starter</div>
     <div class="plan-desc">Perfect for solopreneurs and small businesses just getting started with AI.</div>
-    <div class="plan-price"><span class="amount" id="price-starter">$29</span><span class="period">/mo</span></div>
+    <div class="plan-price"><span class="amount" id="price-starter">₹2,499</span><span class="period">/mo</span></div>
     <div class="plan-save" id="save-starter"></div>
     <ul class="plan-features">
       <li>6 AI Tools (unlimited use)</li>
@@ -177,7 +175,7 @@ nav { display:flex; align-items:center; justify-content:space-between; padding:2
       <li class="no">Priority support</li>
       <li class="no">Agency services</li>
     </ul>
-    <button class="plan-btn plan-btn-outline" onclick="window.open('https://calendly.com/mintu73127/30min','_blank');gtag('event','book_call',{plan:'Starter'})">Book Free Call →</button>
+    <button class="plan-btn plan-btn-outline" onclick="openCheckout('Starter','starter')">Get Started →</button>
   </div>
 
   <!-- GROWTH -->
@@ -185,7 +183,7 @@ nav { display:flex; align-items:center; justify-content:space-between; padding:2
     <div class="popular-badge">⚡ Most Popular</div>
     <div class="plan-name">Growth</div>
     <div class="plan-desc">For growing businesses that need more power and automation.</div>
-    <div class="plan-price"><span class="amount" id="price-growth">$79</span><span class="period">/mo</span></div>
+    <div class="plan-price"><span class="amount" id="price-growth">₹6,499</span><span class="period">/mo</span></div>
     <div class="plan-save" id="save-growth"></div>
     <ul class="plan-features">
       <li>All 6 AI Tools (unlimited)</li>
@@ -196,14 +194,14 @@ nav { display:flex; align-items:center; justify-content:space-between; padding:2
       <li>Priority support</li>
       <li class="no">Agency services</li>
     </ul>
-    <button class="plan-btn plan-btn-accent" onclick="window.open('https://calendly.com/mintu73127/30min','_blank');gtag('event','book_call',{plan:'Growth'})">Book Free Call →</button>
+    <button class="plan-btn plan-btn-accent" onclick="openCheckout('Growth','growth')">Get Started →</button>
   </div>
 
   <!-- AGENCY -->
   <div class="plan-card">
     <div class="plan-name">Agency</div>
     <div class="plan-desc">Full-service AI automation for established businesses ready to scale.</div>
-    <div class="plan-price"><span class="amount" id="price-agency">$199</span><span class="period">/mo</span></div>
+    <div class="plan-price"><span class="amount" id="price-agency">₹16,499</span><span class="period">/mo</span></div>
     <div class="plan-save" id="save-agency"></div>
     <ul class="plan-features">
       <li>Everything in Growth</li>
@@ -214,7 +212,7 @@ nav { display:flex; align-items:center; justify-content:space-between; padding:2
       <li>24/7 priority support</li>
       <li>Full agency services</li>
     </ul>
-    <button class="plan-btn plan-btn-outline" onclick="window.open('https://calendly.com/mintu73127/30min','_blank');gtag('event','book_call',{plan:'Agency'})">Book Free Call →</button>
+    <button class="plan-btn plan-btn-outline" onclick="openCheckout('Agency','agency')">Get Started →</button>
   </div>
 </div>
 
@@ -231,7 +229,7 @@ nav { display:flex; align-items:center; justify-content:space-between; padding:2
   </div>
   <div class="faq-item" onclick="toggleFaq(this)">
     <div class="faq-q">What payment methods do you accept? <span class="faq-arrow">+</span></div>
-    <div class="faq-a">We accept all major credit and debit cards (Visa, Mastercard, Amex) through our secure Stripe payment processor.</div>
+    <div class="faq-a">We accept UPI, all major credit and debit cards (Visa, Mastercard, RuPay), and Net Banking through Razorpay — India's most trusted payment gateway.</div>
   </div>
   <div class="faq-item" onclick="toggleFaq(this)">
     <div class="faq-q">Can I upgrade or downgrade my plan? <span class="faq-arrow">+</span></div>
@@ -248,30 +246,30 @@ nav { display:flex; align-items:center; justify-content:space-between; padding:2
   <div class="modal">
     <div id="checkout-form">
       <div class="modal-title">Complete your order</div>
-      <div class="modal-sub">Secure payment powered by Stripe 🔒</div>
+      <div class="modal-sub">Secure payment powered by Razorpay 🔒</div>
       <div class="modal-plan">
         <div>
           <div class="modal-plan-name" id="modal-plan-name">Growth Plan</div>
           <div style="font-size:12px;color:#888;margin-top:2px">Billed monthly • Cancel anytime</div>
         </div>
-        <div class="modal-plan-price" id="modal-plan-price">$79/mo</div>
+        <div class="modal-plan-price" id="modal-plan-price">₹6,499/mo</div>
       </div>
       <div class="form-group">
         <label class="form-label">Full Name</label>
-        <input class="form-input" id="checkout-name" placeholder="Sandeep Mintu" type="text"/>
+        <input class="form-input" id="checkout-name" placeholder="Your Name" type="text"/>
       </div>
       <div class="form-group">
         <label class="form-label">Email Address</label>
         <input class="form-input" id="checkout-email" placeholder="you@company.com" type="email"/>
       </div>
       <div class="form-group">
-        <label class="form-label">Card Details</label>
-        <div id="card-element"></div>
-        <div id="card-errors"></div>
+        <label class="form-label">Phone Number</label>
+        <input class="form-input" id="checkout-phone" placeholder="9876543210" type="tel"/>
       </div>
+      <div id="card-errors"></div>
       <div class="modal-btns">
         <button class="modal-btn modal-btn-cancel" onclick="closeCheckout()">Cancel</button>
-        <button class="modal-btn modal-btn-pay" id="pay-btn" onclick="processPayment()">Pay Now →</button>
+        <button class="modal-btn modal-btn-pay" id="pay-btn" onclick="processPayment()">Pay with Razorpay →</button>
       </div>
     </div>
     <div class="success-msg" id="checkout-success" style="display:none">
@@ -304,23 +302,20 @@ nav { display:flex; align-items:center; justify-content:space-between; padding:2
 </div>
 
 <script>
-// ── STRIPE SETUP ──
-const stripe = Stripe('pk_test_51T8HtU2NVhcKJQBuRivWWDjG3WsVHhiv2yGC9E3tPaBNrGD6Y4K6eEZ7Qv3xvOBlqGcyMGyYup5NprvQmp0uKMFr00wE346bsy');
-const elements = stripe.elements();
-const cardElement = elements.create('card', {
-  style: {
-    base: { color:'#f0f0f0', fontFamily:'DM Sans, sans-serif', fontSize:'14px', '::placeholder':{ color:'#555' } },
-    invalid: { color:'#ef4444' }
-  }
-});
-cardElement.mount('#card-element');
-cardElement.on('focus', ()=>document.getElementById('card-element').classList.add('focused'));
-cardElement.on('blur', ()=>document.getElementById('card-element').classList.remove('focused'));
-cardElement.on('change', e=>{ document.getElementById('card-errors').textContent = e.error ? e.error.message : ''; });
+// ── RAZORPAY KEY ──
+const RAZORPAY_KEY = 'rzp_test_STwf27zRxh3JuT';
 
 // ── BILLING TOGGLE ──
 let isYearly = false;
-const prices = { starter:{monthly:29,yearly:23}, growth:{monthly:79,yearly:63}, agency:{monthly:199,yearly:159} };
+const prices = {
+  starter: { monthly: 2499, yearly: 1999 },
+  growth:  { monthly: 6499, yearly: 5199 },
+  agency:  { monthly: 16499, yearly: 13199 }
+};
+
+function formatPrice(amount) {
+  return '₹' + amount.toLocaleString('en-IN');
+}
 
 function toggleBilling() {
   isYearly = !isYearly;
@@ -330,24 +325,26 @@ function toggleBilling() {
   document.getElementById('lbl-yearly').classList.toggle('active', isYearly);
   ['starter','growth','agency'].forEach(p => {
     const price = isYearly ? prices[p].yearly : prices[p].monthly;
-    document.getElementById('price-'+p).textContent = '$'+price;
-    document.getElementById('save-'+p).textContent = isYearly ? 'Save $'+((prices[p].monthly-prices[p].yearly)*12)+'/year' : '';
+    document.getElementById('price-'+p).textContent = formatPrice(price);
+    const saved = (prices[p].monthly - prices[p].yearly) * 12;
+    document.getElementById('save-'+p).textContent = isYearly ? 'Save ₹' + saved.toLocaleString('en-IN') + '/year' : '';
   });
 }
 
 // ── CHECKOUT ──
-const planPrices = { starter:'$29/mo', growth:'$79/mo', agency:'$199/mo' };
 let currentPlan = '';
+let currentKey = '';
 
 function openCheckout(name, key) {
   currentPlan = name;
+  currentKey = key;
   document.getElementById('modal-plan-name').textContent = name + ' Plan';
   const price = isYearly ? prices[key].yearly : prices[key].monthly;
-  document.getElementById('modal-plan-price').textContent = '$'+price+(isYearly?'/mo (billed yearly)':'/mo');
+  document.getElementById('modal-plan-price').textContent = formatPrice(price) + (isYearly ? '/mo (billed yearly)' : '/mo');
   document.getElementById('checkout-modal').classList.add('show');
   document.getElementById('checkout-form').style.display = 'block';
   document.getElementById('checkout-success').style.display = 'none';
-  // Track in GA
+  document.getElementById('card-errors').textContent = '';
   gtag('event', 'begin_checkout', { plan: name });
 }
 
@@ -355,37 +352,60 @@ function closeCheckout() {
   document.getElementById('checkout-modal').classList.remove('show');
 }
 
-async function processPayment() {
-  const name = document.getElementById('checkout-name').value.trim();
+function processPayment() {
+  const name  = document.getElementById('checkout-name').value.trim();
   const email = document.getElementById('checkout-email').value.trim();
-  if (!name || !email) { document.getElementById('card-errors').textContent = 'Please fill in your name and email.'; return; }
+  const phone = document.getElementById('checkout-phone').value.trim();
+  const errEl = document.getElementById('card-errors');
 
-  const btn = document.getElementById('pay-btn');
-  btn.disabled = true;
-  btn.textContent = 'Processing...';
-
-  const { paymentMethod, error } = await stripe.createPaymentMethod({
-    type: 'card',
-    card: cardElement,
-    billing_details: { name, email }
-  });
-
-  if (error) {
-    document.getElementById('card-errors').textContent = error.message;
-    btn.disabled = false;
-    btn.textContent = 'Pay Now →';
+  if (!name || !email || !phone) {
+    errEl.textContent = 'Please fill in all fields.';
     return;
   }
+  if (!/^\S+@\S+\.\S+$/.test(email)) {
+    errEl.textContent = 'Please enter a valid email address.';
+    return;
+  }
+  errEl.textContent = '';
 
-  // Track purchase in GA
-  gtag('event', 'purchase', { plan: currentPlan, payment_method: paymentMethod.id });
+  const price = isYearly ? prices[currentKey].yearly : prices[currentKey].monthly;
+  const amountPaise = price * 100; // Razorpay uses paise
 
-  // Show success (in production, send paymentMethod.id to your backend)
-  document.getElementById('checkout-form').style.display = 'none';
-  document.getElementById('checkout-success').style.display = 'block';
+  const options = {
+    key: RAZORPAY_KEY,
+    amount: amountPaise,
+    currency: 'INR',
+    name: 'BizAI',
+    description: currentPlan + ' Plan — Monthly Subscription',
+    image: 'https://bizai-tool.vercel.app/favicon.ico',
+    prefill: { name, email, contact: phone },
+    theme: { color: '#c6f135' },
+    handler: function(response) {
+      // Payment successful
+      gtag('event', 'purchase', {
+        plan: currentPlan,
+        payment_id: response.razorpay_payment_id,
+        value: price
+      });
+      document.getElementById('checkout-form').style.display = 'none';
+      document.getElementById('checkout-success').style.display = 'block';
+      // Notify you by email
+      window.open(
+        'mailto:mintu73127@gmail.com?subject=New BizAI Payment!&body=Name: ' + name +
+        '%0AEmail: ' + email + '%0APlan: ' + currentPlan +
+        '%0APayment ID: ' + response.razorpay_payment_id, '_blank'
+      );
+    },
+    modal: {
+      ondismiss: function() {
+        gtag('event', 'checkout_dismissed', { plan: currentPlan });
+      }
+    }
+  };
 
-  // Notify via email
-  window.open('mailto:mintu73127@gmail.com?subject=New BizAI Signup!&body=Name: '+name+'%0AEmail: '+email+'%0APlan: '+currentPlan, '_blank');
+  const rzp = new Razorpay(options);
+  rzp.open();
+  closeCheckout();
 }
 
 // ── FAQ ──
@@ -397,7 +417,6 @@ function toggleChat() {
   const b = document.getElementById('chat-btn');
   w.classList.toggle('open');
   b.textContent = w.classList.contains('open') ? '✕' : '💬';
-  // Track in GA
   if (w.classList.contains('open')) gtag('event', 'chat_opened');
 }
 
@@ -406,30 +425,22 @@ async function sendChat() {
   const msg = input.value.trim();
   if (!msg) return;
   input.value = '';
-
   const msgs = document.getElementById('chat-messages');
-
-  // Add user message
   const userMsg = document.createElement('div');
   userMsg.className = 'msg msg-user';
   userMsg.textContent = msg;
   msgs.appendChild(userMsg);
-
-  // Add typing indicator
   const typing = document.createElement('div');
   typing.className = 'msg msg-bot msg-typing';
   typing.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
   msgs.appendChild(typing);
   msgs.scrollTop = msgs.scrollHeight;
-
   try {
     const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        prompt: `You are BizAI's friendly sales assistant. BizAI is an AI business automation tool with 3 plans: Starter ($29/mo), Growth ($79/mo), Agency ($199/mo). You help visitors understand features, pricing, and how AI can help their business. Keep replies short (2-3 sentences max), friendly and helpful. Never make up features that don't exist. If anyone wants to get started or book a call, share this link: https://calendly.com/mintu73127/30min
-
-User question: ${msg}`
+        prompt: `You are BizAI's friendly sales assistant. BizAI is an AI business automation tool with 3 plans: Starter (₹2,499/mo), Growth (₹6,499/mo), Agency (₹16,499/mo). You help visitors understand features, pricing, and how AI can help their business. Keep replies short (2-3 sentences max), friendly and helpful. Never make up features that don't exist. If anyone wants to get started or book a call, share this link: https://calendly.com/mintu73127/30min\n\nUser question: ${msg}`
       })
     });
     const data = await res.json();
@@ -446,8 +457,6 @@ User question: ${msg}`
     msgs.appendChild(botMsg);
   }
   msgs.scrollTop = msgs.scrollHeight;
-
-  // Track chat in GA
   gtag('event', 'chat_message_sent');
 }
 
