@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI Data Analyst – BizAI</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #2a2a2a;
+    --lime: #c8ff00;
+    --lime-dim: #a0cc00;
+    --text: #f0f0f0;
+    --muted: #666;
+    --danger: #ff4444;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 40px;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 22px;
+    color: var(--lime); letter-spacing: -0.5px;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 14px;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .btn-nav {
+    background: var(--lime); color: #000;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    border: none; padding: 8px 18px; border-radius: 8px;
+    font-size: 13px; cursor: pointer; text-decoration: none;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 60px 40px 40px;
+    max-width: 900px; margin: 0 auto;
+    text-align: center;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 999px; padding: 6px 14px;
+    font-size: 12px; color: var(--lime); font-family: 'DM Mono', monospace;
+    margin-bottom: 24px;
+  }
+  .hero-badge span { width: 6px; height: 6px; border-radius: 50%; background: var(--lime); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 800; line-height: 1.05;
+    letter-spacing: -2px; margin-bottom: 16px;
+  }
+  .hero h1 em { color: var(--lime); font-style: normal; }
+  .hero p { color: var(--muted); font-size: 16px; max-width: 520px; margin: 0 auto; line-height: 1.6; }
+
+  /* MAIN LAYOUT */
+  .main { max-width: 1200px; margin: 0 auto; padding: 40px 40px 80px; }
+
+  /* UPLOAD ZONE */
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 16px;
+    padding: 52px 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .25s, background .25s;
+    position: relative; overflow: hidden;
+    margin-bottom: 32px;
+    background: var(--surface);
+  }
+  .upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--lime);
+    background: rgba(200,255,0,0.03);
+  }
+  .upload-zone input[type=file] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+  .upload-icon {
+    width: 56px; height: 56px; margin: 0 auto 16px;
+    background: var(--surface2); border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+  }
+  .upload-zone h3 {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; margin-bottom: 6px;
+  }
+  .upload-zone p { color: var(--muted); font-size: 13px; }
+  .file-types {
+    display: flex; gap: 8px; justify-content: center; margin-top: 16px; flex-wrap: wrap;
+  }
+  .file-tag {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 3px 10px; font-size: 11px;
+    font-family: 'DM Mono', monospace; color: var(--muted);
+  }
+
+  /* FILE PREVIEW */
+  .file-preview {
+    display: none;
+    align-items: center; gap: 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+  .file-preview.show { display: flex; }
+  .file-preview-icon { font-size: 28px; }
+  .file-preview-info { flex: 1; }
+  .file-preview-name { font-weight: 600; font-size: 14px; }
+  .file-preview-size { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .file-preview-remove {
+    background: none; border: 1px solid var(--border);
+    color: var(--muted); border-radius: 8px; padding: 6px 12px;
+    font-size: 12px; cursor: pointer; transition: .2s;
+  }
+  .file-preview-remove:hover { border-color: var(--danger); color: var(--danger); }
+
+  /* QUESTION INPUT */
+  .question-row {
+    display: flex; gap: 12px; margin-bottom: 32px;
+  }
+  .question-input {
+    flex: 1;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 18px;
+    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px;
+    outline: none; transition: border-color .2s;
+  }
+  .question-input::placeholder { color: var(--muted); }
+  .question-input:focus { border-color: var(--lime); }
+  .btn-analyze {
+    background: var(--lime); color: #000;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    border: none; border-radius: 12px; padding: 14px 28px;
+    font-size: 15px; cursor: pointer; white-space: nowrap;
+    transition: background .2s, transform .1s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-analyze:hover { background: var(--lime-dim); }
+  .btn-analyze:active { transform: scale(0.98); }
+  .btn-analyze:disabled { opacity: .5; cursor: not-allowed; }
+
+  /* QUICK ACTIONS */
+  .quick-actions { margin-bottom: 32px; }
+  .quick-actions-label { font-size: 12px; color: var(--muted); margin-bottom: 10px; font-family: 'DM Mono', monospace; }
+  .quick-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 999px; padding: 7px 14px; font-size: 12px;
+    cursor: pointer; transition: .2s; color: var(--text);
+  }
+  .chip:hover { border-color: var(--lime); color: var(--lime); }
+
+  /* RESULTS AREA */
+  .results { display: none; }
+  .results.show { display: block; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 1px solid var(--border); }
+  .tab {
+    background: none; border: none; color: var(--muted);
+    font-family: 'Syne', sans-serif; font-weight: 600;
+    padding: 10px 18px; cursor: pointer; font-size: 13px;
+    border-bottom: 2px solid transparent; transition: .2s;
+    margin-bottom: -1px;
+  }
+  .tab.active { color: var(--lime); border-bottom-color: var(--lime); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* INSIGHT CARD */
+  .insight-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px; margin-bottom: 20px;
+  }
+  .insight-card h3 {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 16px; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .insight-content { line-height: 1.8; color: #ccc; font-size: 14px; }
+  .insight-content h1, .insight-content h2, .insight-content h3 {
+    font-family: 'Syne', sans-serif; color: var(--text);
+    margin: 16px 0 8px;
+  }
+  .insight-content h2 { font-size: 17px; }
+  .insight-content h3 { font-size: 15px; color: var(--lime); }
+  .insight-content ul, .insight-content ol { padding-left: 20px; margin: 8px 0; }
+  .insight-content li { margin-bottom: 4px; }
+  .insight-content strong { color: var(--lime); }
+  .insight-content code {
+    background: var(--surface2); padding: 2px 6px;
+    border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 13px;
+  }
+  .insight-content p { margin-bottom: 10px; }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px; margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px;
+  }
+  .stat-label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-bottom: 6px; }
+  .stat-value { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 24px; color: var(--lime); }
+
+  /* TABLE */
+  .table-wrap {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; overflow: auto; max-height: 400px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead { position: sticky; top: 0; z-index: 2; }
+  th {
+    background: var(--surface2); padding: 12px 16px; text-align: left;
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    color: var(--lime); font-weight: 500; border-bottom: 1px solid var(--border);
+  }
+  td { padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: #ccc; }
+  tr:hover td { background: var(--surface2); }
+
+  /* CHART SECTION */
+  .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media(max-width: 700px) { .chart-grid { grid-template-columns: 1fr; } }
+  .chart-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px;
+  }
+  .chart-card h4 {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 13px; color: var(--muted); margin-bottom: 16px; text-transform: uppercase; letter-spacing: .05em;
+  }
+  canvas { max-height: 220px; }
+
+  /* EXPORT */
+  .export-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .export-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px; text-align: center; cursor: pointer;
+    transition: .2s;
+  }
+  .export-card:hover { border-color: var(--lime); }
+  .export-card-icon { font-size: 32px; margin-bottom: 12px; }
+  .export-card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+  .export-card-desc { font-size: 12px; color: var(--muted); }
+
+  /* LOADING */
+  .loading {
+    display: none; align-items: center; gap: 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 24px; margin-bottom: 24px;
+  }
+  .loading.show { display: flex; }
+  .loading-dots { display: flex; gap: 5px; }
+  .loading-dots span {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--lime);
+    animation: dot-bounce 1.4s infinite;
+  }
+  .loading-dots span:nth-child(2) { animation-delay: .2s; }
+  .loading-dots span:nth-child(3) { animation-delay: .4s; }
+  @keyframes dot-bounce { 0%,80%,100%{transform:scale(.8);opacity:.4} 40%{transform:scale(1.1);opacity:1} }
+  .loading-text { font-size: 14px; color: var(--muted); }
+
+  /* ERROR */
+  .error-msg {
+    display: none; background: rgba(255,68,68,.08);
+    border: 1px solid rgba(255,68,68,.3);
+    border-radius: 12px; padding: 16px 20px;
+    color: #ff8888; font-size: 14px; margin-bottom: 24px;
+  }
+  .error-msg.show { display: block; }
+
+  /* CHAT HISTORY */
+  .chat-history { margin-bottom: 24px; }
+  .chat-item {
+    margin-bottom: 16px;
+  }
+  .chat-q {
+    font-size: 13px; color: var(--lime);
+    font-family: 'DM Mono', monospace; margin-bottom: 6px;
+  }
+  .chat-q::before { content: '> '; }
+
+  @media(max-width:600px) {
+    nav { padding: 14px 20px; }
+    .hero { padding: 40px 20px 24px; }
+    .main { padding: 24px 20px 60px; }
+    .question-row { flex-direction: column; }
+    .chart-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">BizAI</a>
+  <div class="nav-links">
+    <a href="index.html#tools">AI Tools</a>
+    <a href="agency.html">Agency</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="auth.html" class="btn-nav">Start Free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge"><span></span> AI DATA ANALYST</div>
+  <h1>Turn your data into<br/><em>instant insights.</em></h1>
+  <p>Upload any file — CSV, Excel, PDF, image — and ask questions in plain English. Claude analyzes it and returns charts, summaries, and recommendations.</p>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- UPLOAD -->
+  <div class="upload-zone" id="uploadZone">
+    <input type="file" id="fileInput" accept=".csv,.xlsx,.xls,.pdf,.png,.jpg,.jpeg,.gif,.webp,.txt,.json" />
+    <div class="upload-icon">📂</div>
+    <h3>Drop your file here</h3>
+    <p>or click to browse from your computer</p>
+    <div class="file-types">
+      <span class="file-tag">CSV</span>
+      <span class="file-tag">Excel</span>
+      <span class="file-tag">PDF</span>
+      <span class="file-tag">Images</span>
+      <span class="file-tag">JSON</span>
+      <span class="file-tag">TXT</span>
+    </div>
+  </div>
+
+  <!-- FILE PREVIEW -->
+  <div class="file-preview" id="filePreview">
+    <div class="file-preview-icon" id="fileIcon">📄</div>
+    <div class="file-preview-info">
+      <div class="file-preview-name" id="fileName">–</div>
+      <div class="file-preview-size" id="fileSize">–</div>
+    </div>
+    <button class="file-preview-remove" onclick="removeFile()">✕ Remove</button>
+  </div>
+
+  <!-- QUESTION -->
+  <div class="question-row">
+    <input class="question-input" id="questionInput"
+      placeholder="Ask anything about your data... e.g. 'What are the top 5 sales by region?'" />
+    <button class="btn-analyze" id="analyzeBtn" onclick="analyze()">
+      <span>⚡</span> Analyze
+    </button>
+  </div>
+
+  <!-- QUICK CHIPS -->
+  <div class="quick-actions">
+    <div class="quick-actions-label">// QUICK PROMPTS</div>
+    <div class="quick-chips">
+      <div class="chip" onclick="setQ('Give me a full summary and key insights from this data')">📊 Full Summary</div>
+      <div class="chip" onclick="setQ('What are the top trends and patterns in this data?')">📈 Trends & Patterns</div>
+      <div class="chip" onclick="setQ('Find any anomalies or outliers in this data')">🔍 Find Anomalies</div>
+      <div class="chip" onclick="setQ('What business recommendations can you make based on this data?')">💡 Recommendations</div>
+      <div class="chip" onclick="setQ('Show me statistical analysis: mean, median, min, max for all numeric columns')">🧮 Statistics</div>
+      <div class="chip" onclick="setQ('What data quality issues or missing values are there?')">🩺 Data Quality</div>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading" id="loading">
+    <div class="loading-dots"><span></span><span></span><span></span></div>
+    <div class="loading-text" id="loadingText">Analyzing your data with Claude AI...</div>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-msg" id="errorMsg"></div>
+
+  <!-- RESULTS -->
+  <div class="results" id="results">
+
+    <!-- STATS -->
+    <div class="stats-row" id="statsRow"></div>
+
+    <!-- CHAT HISTORY -->
+    <div class="chat-history" id="chatHistory"></div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('insights', this)">💡 Insights</button>
+      <button class="tab" onclick="switchTab('charts', this)">📊 Charts</button>
+      <button class="tab" onclick="switchTab('table', this)">📋 Data Table</button>
+      <button class="tab" onclick="switchTab('export', this)">⬇ Export</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-insights">
+      <div class="insight-card">
+        <h3>🤖 AI Analysis</h3>
+        <div class="insight-content" id="insightContent"></div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-charts">
+      <div class="chart-grid" id="chartGrid"></div>
+    </div>
+
+    <div class="tab-panel" id="tab-table">
+      <div class="table-wrap">
+        <table id="dataTable">
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-export">
+      <div class="export-grid">
+        <div class="export-card" onclick="exportMarkdown()">
+          <div class="export-card-icon">📝</div>
+          <div class="export-card-title">Markdown Report</div>
+          <div class="export-card-desc">Full AI analysis as a .md file</div>
+        </div>
+        <div class="export-card" onclick="exportCSV()">
+          <div class="export-card-icon">📊</div>
+          <div class="export-card-title">CSV Data</div>
+          <div class="export-card-desc">Processed data as CSV</div>
+        </div>
+        <div class="export-card" onclick="exportJSON()">
+          <div class="export-card-icon">🗂</div>
+          <div class="export-card-title">JSON Export</div>
+          <div class="export-card-desc">Structured data + insights as JSON</div>
+        </div>
+        <div class="export-card" onclick="copyInsights()">
+          <div class="export-card-icon">📋</div>
+          <div class="export-card-title">Copy Insights</div>
+          <div class="export-card-desc">Copy AI analysis to clipboard</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /results -->
+</div><!-- /main -->
+
+<script>
+  let fileData = null;
+  let parsedData = [];
+  let parsedHeaders = [];
+  let insightText = '';
+  let chartInstances = [];
+
+  // ── Drag & Drop ──────────────────────────────────────
+  const zone = document.getElementById('uploadZone');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('drag-over');
+    const f = e.dataTransfer.files[0];
+    if (f) handleFile(f);
+  });
+  document.getElementById('fileInput').addEventListener('change', e => {
+    if (e.target.files[0]) handleFile(e.target.files[0]);
+  });
+
+  function handleFile(file) {
+    fileData = file;
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileSize').textContent = formatBytes(file.size);
+    document.getElementById('fileIcon').textContent = getIcon(file.name);
+    document.getElementById('filePreview').classList.add('show');
+
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (['csv','xlsx','xls'].includes(ext)) parseSpreadsheet(file);
+  }
+
+  function removeFile() {
+    fileData = null; parsedData = []; parsedHeaders = [];
+    document.getElementById('filePreview').classList.remove('show');
+    document.getElementById('fileInput').value = '';
+    document.getElementById('results').classList.remove('show');
+  }
+
+  function formatBytes(b) {
+    if (b < 1024) return b + ' B';
+    if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+    return (b/1048576).toFixed(1) + ' MB';
+  }
+
+  function getIcon(name) {
+    const ext = name.split('.').pop().toLowerCase();
+    const m = {csv:'📊',xlsx:'📗',xls:'📗',pdf:'📕',png:'🖼',jpg:'🖼',jpeg:'🖼',gif:'🖼',webp:'🖼',json:'🗂',txt:'📄'};
+    return m[ext] || '📄';
+  }
+
+  // ── Parse spreadsheet ───────────────────────────────
+  function parseSpreadsheet(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const wb = XLSX.read(e.target.result, { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const json = XLSX.utils.sheet_to_json(ws, { header: 1 });
+      if (json.length > 0) {
+        parsedHeaders = json[0].map(String);
+        parsedData = json.slice(1).filter(r => r.some(c => c !== '' && c !== null && c !== undefined));
+        renderTable();
+        renderCharts();
+        updateStats();
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  function updateStats() {
+    const row = document.getElementById('statsRow');
+    row.innerHTML = `
+      <div class="stat-card"><div class="stat-label">ROWS</div><div class="stat-value">${parsedData.length.toLocaleString()}</div></div>
+      <div class="stat-card"><div class="stat-label">COLUMNS</div><div class="stat-value">${parsedHeaders.length}</div></div>
+      <div class="stat-card"><div class="stat-label">FILE SIZE</div><div class="stat-value">${formatBytes(fileData.size)}</div></div>
+      <div class="stat-card"><div class="stat-label">DATA TYPE</div><div class="stat-value" style="font-size:14px">${fileData.name.split('.').pop().toUpperCase()}</div></div>
+    `;
+    document.getElementById('results').classList.add('show');
+  }
+
+  // ── Table ────────────────────────────────────────────
+  function renderTable() {
+    const head = document.getElementById('tableHead');
+    const body = document.getElementById('tableBody');
+    head.innerHTML = '<tr>' + parsedHeaders.map(h => `<th>${h}</th>`).join('') + '</tr>';
+    const rows = parsedData.slice(0, 200);
+    body.innerHTML = rows.map(row =>
+      '<tr>' + parsedHeaders.map((_, i) => `<td>${row[i] !== undefined ? row[i] : ''}</td>`).join('') + '</tr>'
+    ).join('');
+  }
+
+  // ── Charts ───────────────────────────────────────────
+  function renderCharts() {
+    chartInstances.forEach(c => c.destroy());
+    chartInstances = [];
+    const grid = document.getElementById('chartGrid');
+    grid.innerHTML = '';
+
+    const numCols = parsedHeaders.filter((h, i) => {
+      const vals = parsedData.map(r => parseFloat(r[i])).filter(v => !isNaN(v));
+      return vals.length > parsedData.length * 0.5;
+    });
+
+    const strCols = parsedHeaders.filter((h, i) => {
+      const vals = parsedData.map(r => r[i]).filter(v => v && typeof v === 'string');
+      return vals.length > parsedData.length * 0.5;
+    });
+
+    const lime = '#c8ff00';
+    const limeAlpha = 'rgba(200,255,0,0.15)';
+
+    // Bar chart for first numeric col
+    if (numCols.length > 0 && strCols.length > 0) {
+      const labelIdx = parsedHeaders.indexOf(strCols[0]);
+      const valIdx = parsedHeaders.indexOf(numCols[0]);
+      const top10 = parsedData.slice(0, 10);
+      const labels = top10.map(r => String(r[labelIdx] || '').slice(0, 15));
+      const vals = top10.map(r => parseFloat(r[valIdx]) || 0);
+      addChart(grid, 'bar', `${numCols[0]} by ${strCols[0]}`, labels, vals, lime, limeAlpha);
+    }
+
+    // Line chart for second numeric col
+    if (numCols.length > 1) {
+      const valIdx = parsedHeaders.indexOf(numCols[1]);
+      const top15 = parsedData.slice(0, 15);
+      const labels = top15.map((_, i) => `Row ${i+1}`);
+      const vals = top15.map(r => parseFloat(r[valIdx]) || 0);
+      addChart(grid, 'line', `${numCols[1]} Trend`, labels, vals, lime, limeAlpha);
+    } else if (numCols.length === 1) {
+      const valIdx = parsedHeaders.indexOf(numCols[0]);
+      const top15 = parsedData.slice(0, 15);
+      const labels = top15.map((_, i) => `Row ${i+1}`);
+      const vals = top15.map(r => parseFloat(r[valIdx]) || 0);
+      addChart(grid, 'line', `${numCols[0]} Trend`, labels, vals, lime, limeAlpha);
+    }
+
+    // Category distribution
+    if (strCols.length > 0) {
+      const colIdx = parsedHeaders.indexOf(strCols[0]);
+      const freq = {};
+      parsedData.forEach(r => { const v = String(r[colIdx] || 'Other'); freq[v] = (freq[v]||0)+1; });
+      const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,7);
+      addChart(grid, 'doughnut', `${strCols[0]} Distribution`,
+        sorted.map(x=>x[0]), sorted.map(x=>x[1]),
+        ['#c8ff00','#a0cc00','#78aa00','#507800','#284600','#c8ff0066','#a0cc0066']);
+    }
+
+    if (grid.innerHTML === '') {
+      grid.innerHTML = '<div style="color:var(--muted);font-size:14px;padding:20px">Upload a CSV or Excel file to generate charts automatically.</div>';
+    }
+  }
+
+  function addChart(grid, type, title, labels, data, color, bgColor) {
+    const card = document.createElement('div');
+    card.className = 'chart-card';
+    card.innerHTML = `<h4>${title}</h4><canvas></canvas>`;
+    grid.appendChild(card);
+    const ctx = card.querySelector('canvas').getContext('2d');
+    const isDoughnut = type === 'doughnut';
+    const c = new Chart(ctx, {
+      type,
+      data: {
+        labels,
+        datasets: [{
+          label: title,
+          data,
+          backgroundColor: isDoughnut ? color : bgColor,
+          borderColor: isDoughnut ? '#0a0a0a' : color,
+          borderWidth: isDoughnut ? 2 : 2,
+          fill: type === 'line',
+          tension: 0.4,
+          pointBackgroundColor: color,
+          pointRadius: 3,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: isDoughnut, labels: { color: '#888', font: { size: 11 } } },
+          tooltip: { backgroundColor: '#1a1a1a', titleColor: '#c8ff00', bodyColor: '#ccc' }
+        },
+        scales: isDoughnut ? {} : {
+          x: { ticks: { color: '#555', font: { size: 10 } }, grid: { color: '#1e1e1e' } },
+          y: { ticks: { color: '#555', font: { size: 10 } }, grid: { color: '#1e1e1e' } }
+        }
+      }
+    });
+    chartInstances.push(c);
+  }
+
+  // ── Analysis ─────────────────────────────────────────
+  function setQ(q) { document.getElementById('questionInput').value = q; }
+
+  async function analyze() {
+    const q = document.getElementById('questionInput').value.trim();
+    if (!q && !fileData) { showError('Please upload a file and enter a question.'); return; }
+    if (!fileData) { showError('Please upload a file first.'); return; }
+
+    hideError();
+    showLoading('Analyzing your data with Claude AI...');
+    document.getElementById('analyzeBtn').disabled = true;
+
+    try {
+      let dataContext = '';
+
+      if (parsedData.length > 0) {
+        // Spreadsheet data
+        const preview = [parsedHeaders, ...parsedData.slice(0, 50)];
+        dataContext = `File: ${fileData.name}\nRows: ${parsedData.length}\nColumns: ${parsedHeaders.length}\n\nDATA (first 50 rows):\n${preview.map(r => r.join('\t')).join('\n')}`;
+      } else {
+        // Read file as text/base64
+        dataContext = await readFileContext(fileData);
+      }
+
+      const prompt = q || 'Give me a comprehensive analysis with key insights, trends, and business recommendations.';
+
+      const systemPrompt = `You are an expert data analyst and business intelligence consultant. Analyze the provided data and answer the user's question with deep insights.
+
+Format your response with:
+- Clear section headers using ##
+- **Bold** for key metrics and important findings
+- Bullet points for lists
+- Specific numbers and percentages where relevant
+- Actionable business recommendations
+- Data quality observations if relevant
+
+Be thorough, specific, and insightful. Use the actual data values in your analysis.`;
+
+      const messages = [{ role: 'user', content: `Data context:\n\n${dataContext}\n\nQuestion: ${prompt}` }];
+
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: systemPrompt,
+          messages
+        })
+      });
+
+      const result = await resp.json();
+      const text = result.content?.find(b => b.type === 'text')?.text || 'No response received.';
+      insightText = text;
+
+      // Add to chat history
+      const history = document.getElementById('chatHistory');
+      const item = document.createElement('div');
+      item.className = 'chat-item';
+      item.innerHTML = `<div class="chat-q">${escapeHtml(prompt)}</div>`;
+      history.appendChild(item);
+
+      // Show insights
+      document.getElementById('insightContent').innerHTML = marked.parse(text);
+      document.getElementById('results').classList.add('show');
+      switchTabById('insights');
+
+      if (parsedData.length > 0) {
+        updateStats();
+        renderCharts();
+      }
+
+    } catch(err) {
+      showError('Analysis failed: ' + err.message);
+    } finally {
+      hideLoading();
+      document.getElementById('analyzeBtn').disabled = false;
+      document.getElementById('questionInput').value = '';
+    }
+  }
+
+  async function readFileContext(file) {
+    return new Promise((resolve) => {
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (['txt','json','csv'].includes(ext)) {
+        const r = new FileReader();
+        r.onload = e => resolve(`File: ${file.name}\n\nContent:\n${e.target.result.slice(0, 8000)}`);
+        r.readAsText(file);
+      } else if (['png','jpg','jpeg','gif','webp'].includes(ext)) {
+        resolve(`File: ${file.name} (image file, ${formatBytes(file.size)}). Please describe what you see or provide context about this image for analysis.`);
+      } else {
+        resolve(`File: ${file.name} (${formatBytes(file.size)}). This is a ${ext.toUpperCase()} file.`);
+      }
+    });
+  }
+
+  // ── UI helpers ───────────────────────────────────────
+  function showLoading(msg) {
+    document.getElementById('loadingText').textContent = msg;
+    document.getElementById('loading').classList.add('show');
+  }
+  function hideLoading() { document.getElementById('loading').classList.remove('show'); }
+  function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = msg; el.classList.add('show');
+  }
+  function hideError() { document.getElementById('errorMsg').classList.remove('show'); }
+
+  function switchTab(id, btn) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + id).classList.add('active');
+  }
+
+  function switchTabById(id) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab')[0].classList.add('active');
+    document.getElementById('tab-' + id).classList.add('active');
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // Allow Enter key
+  document.getElementById('questionInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') analyze();
+  });
+
+  // ── Export ───────────────────────────────────────────
+  function exportMarkdown() {
+    if (!insightText) { alert('Run an analysis first!'); return; }
+    const blob = new Blob([`# BizAI Data Analysis Report\n\n**File:** ${fileData?.name || 'Unknown'}\n**Date:** ${new Date().toLocaleDateString()}\n\n---\n\n${insightText}`], { type: 'text/markdown' });
+    download(blob, 'bizai-report.md');
+  }
+
+  function exportCSV() {
+    if (!parsedData.length) { alert('No spreadsheet data to export!'); return; }
+    const rows = [parsedHeaders, ...parsedData];
+    const csv = rows.map(r => r.map(c => `"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+    download(new Blob([csv], {type:'text/csv'}), 'bizai-data.csv');
+  }
+
+  function exportJSON() {
+    const obj = { file: fileData?.name, analysis: insightText, data: parsedData.slice(0,500).map(r => Object.fromEntries(parsedHeaders.map((h,i)=>[h,r[i]]))) };
+    download(new Blob([JSON.stringify(obj, null, 2)], {type:'application/json'}), 'bizai-export.json');
+  }
+
+  function copyInsights() {
+    if (!insightText) { alert('Run an analysis first!'); return; }
+    navigator.clipboard.writeText(insightText).then(() => alert('Insights copied to clipboard!'));
+  }
+
+  function download(blob, name) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name; a.click();
+  }
+</script>
+</body>
+</html>
